@@ -90,7 +90,6 @@ router.post("/login", loginValidation, (req, res, next) => {
     }
   );
 });
-
 router.get("/get-user", signupValidation, (req, res, next) => {
   if (
     !req.headers.authorization ||
@@ -193,5 +192,4 @@ router.put("/update-user", (req, res, next) => {
     }
   );
 });
-
 module.exports = router;
