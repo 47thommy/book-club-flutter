@@ -90,7 +90,8 @@ router.post("/login", loginValidation, (req, res, next) => {
     }
   );
 });
-router.get("/get-user", signupValidation, (req, res, next) => {
+
+router.get("/user", signupValidation, (req, res, next) => {
   if (
     !req.headers.authorization ||
     !req.headers.authorization.startsWith("Bearer") ||
@@ -116,24 +117,27 @@ router.get("/get-user", signupValidation, (req, res, next) => {
   );
 });
 
-router.delete("/delete-user", (req, res, next) => {
+router.delete("/user", (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, "the-super-strong-secrect");
     const userId = decoded.id;
 
-    db.query(`DELETE FROM users WHERE id = ${db.escape(userId)};`, (err) => {
-      if (err) {
-        return res.status(400).send({
-          msg: err,
+    db.query(
+      `DELETE FROM users WHERE id = ${db.escape(userId)};`,
+      (err, result) => {
+        if (err) {
+          return res.status(400).send({
+            msg: err,
+          });
+        }
+
+        return res.status(200).send({
+          msg: "User deleted successfully!",
         });
       }
-
-      return res.status(200).send({
-        msg: "User deleted successfully!",
-      });
-    });
+    );
   } catch (err) {
     return res.status(401).send({
       msg: "Invalid token",
@@ -141,7 +145,7 @@ router.delete("/delete-user", (req, res, next) => {
   }
 });
 
-router.put("/update-user", (req, res, next) => {
+router.patch("/user", (req, res, next) => {
   if (
     !req.headers.authorization ||
     !req.headers.authorization.startsWith("Bearer") ||
@@ -171,13 +175,13 @@ router.put("/update-user", (req, res, next) => {
         `UPDATE users SET name = ${db.escape(
           req.body.name
         )}, email = ${db.escape(req.body.email)} WHERE id = ${decoded.id}`,
-        function (error, results) {
+        function (error) {
           if (error) throw error;
 
           db.query(
             "SELECT * FROM users where id=?",
             decoded.id,
-            function (error) {
+            function (error, results) {
               if (error) throw error;
 
               return res.send({
