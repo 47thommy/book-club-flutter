@@ -22,8 +22,10 @@ app.use(express.json());
 //                              Routes
 // ==================================================================
 const authRouter = require("./src/routes/auth.routes");
+const userRouter = require("./src/routes/user.routes");
 
 app.use("/auth", authRouter);
+app.use("/user", userRouter);
 
 // ==================================================================
 //                      Initialize Database

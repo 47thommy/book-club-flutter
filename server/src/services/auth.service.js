@@ -1,8 +1,8 @@
+const { getUserByEmail, getUserById } = require("./user.service");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const database = require("../configs/db.config");
 const { User } = require("../models/");
-const { getUserByEmail, getUserById } = require("./user.service");
 
 const generateToken = async (email) => {
   const user = await getUserByEmail(email);

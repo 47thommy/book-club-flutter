@@ -1,11 +1,11 @@
 const { StatusCodes } = require("http-status-codes");
 const { validationResult } = require("express-validator");
-const { getUserByEmail, createUser } = require("../services/user.service");
+
 const {
   verifyCredentials,
   generateToken,
 } = require("../services/auth.service");
-
+const { getUserByEmail, createUser } = require("../services/user.service");
 const register = async (req, res, next) => {
   const result = validationResult(req);
 
@@ -15,14 +15,20 @@ const register = async (req, res, next) => {
   }
 
   try {
-    const { email, password } = req.body;
+    const { email, password, first_name, middle_name, last_name } = req.body;
 
     if (await getUserByEmail(email)) {
       res
         .status(StatusCodes.CONFLICT)
         .json("User with provided email already exists.");
     } else {
-      const newUser = createUser(email, password);
+      const newUser = createUser(
+        email,
+        password,
+        first_name,
+        middle_name,
+        last_name
+      );
 
       if (newUser) {
         res.status(StatusCodes.CREATED).json({ email });
