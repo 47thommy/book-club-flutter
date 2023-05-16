@@ -1,16 +1,35 @@
 const { User } = require("../models/");
 const database = require("../configs/db.config");
-
 const bcrypt = require("bcryptjs");
-const loginRequired = require("../middlewares/auth");
 
-const getUserByEmail = async (email) => {
-  const user = await database.getRepository(User).findOneBy({ email });
+const getUserByEmail = async (email, includePassword = false) => {
+  if (!email) return null;
+
+  const user = await database.getRepository(User).findOne({
+    where: { email },
+    relations: { memberships: true, createdGroups: true },
+  });
+
+  // censor password hash if not required
+  if (user && !includePassword) {
+    delete user.password;
+  }
+
   return user;
 };
 
-const getUserById = async (id) => {
-  const user = await database.getRepository(User).findOneBy({ id });
+const getUserById = async (id, includePassword = false) => {
+  if (!id) return null;
+
+  const user = await database.getRepository(User).findOne({
+    where: { id },
+    relations: { memberships: true, createdGroups: true },
+  });
+
+  // censor password hash if not required
+  if (user && !includePassword) {
+    delete user.password;
+  }
 
   return user;
 };
@@ -35,8 +54,6 @@ const createUser = async (
 
   return user;
 };
-
-loginRequired;
 
 const updateUser = async (
   id,
@@ -69,6 +86,7 @@ const updateUser = async (
 
   return user;
 };
+
 const deleteUser = async (id) => {
   const user = await getUserById(id);
 

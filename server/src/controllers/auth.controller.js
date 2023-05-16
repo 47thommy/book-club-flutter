@@ -1,12 +1,12 @@
 const { StatusCodes } = require("http-status-codes");
 const { validationResult } = require("express-validator");
-
 const {
   verifyCredentials,
   generateToken,
 } = require("../services/auth.service");
 const { getUserByEmail, createUser } = require("../services/user.service");
-const register = async (req, res, next) => {
+
+const register = async (req, res) => {
   const result = validationResult(req);
 
   if (!result.isEmpty()) {
@@ -41,7 +41,7 @@ const register = async (req, res, next) => {
   }
 };
 
-const login = async (req, res, next) => {
+const login = async (req, res) => {
   const result = validationResult(req);
 
   if (!result.isEmpty()) {

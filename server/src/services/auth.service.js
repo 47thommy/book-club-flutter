@@ -1,8 +1,6 @@
 const { getUserByEmail, getUserById } = require("./user.service");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const database = require("../configs/db.config");
-const { User } = require("../models/");
 
 const generateToken = async (email) => {
   const user = await getUserByEmail(email);
@@ -23,7 +21,7 @@ const generateToken = async (email) => {
 };
 
 const verifyCredentials = async (email, password) => {
-  const user = await getUserByEmail(email);
+  const user = await getUserByEmail(email, true);
 
   if (user == null) return false;
   return bcrypt.compareSync(password, user.password);
