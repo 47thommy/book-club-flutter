@@ -1,5 +1,5 @@
 const express = require("express");
-const { loginRequired } = require("../middlewares/auth");
+const { loginRequired, isAuthorized } = require("../middlewares/auth");
 const {
   deleteGroupValidation,
   createGroupValidation,
@@ -22,6 +22,14 @@ router.delete(
   loginRequired,
   deleteGroupValidation,
   groupController.deleteGroup
+);
+router.post("/:groupId/join", loginRequired, groupController.joinGroup);
+router.post("/:groupId/leave", loginRequired, groupController.leaveGroup);
+router.delete(
+  "/:groupId/members/:memberId",
+  loginRequired,
+  isAuthorized("creator"),
+  groupController.removeMember
 );
 
 module.exports = router;
