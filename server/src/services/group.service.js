@@ -88,10 +88,20 @@ const deleteGroup = async (groupId, user) => {
 
 const addMember = async (memberId, roleId, groupId, actionIssuer) => {
   const newMember = await userService.getUserById(memberId);
-  const memberRole = await roleService.getRoleById(roleId);
+  let memberRole = await roleService.getRoleById(roleId);
   const group = await getGroupById(groupId);
 
-  if (!newMember || !memberRole || !group) throw Error("Not found");
+  if (!newMember || !group) throw Error("Not found");
+
+  if (!memberRole) {
+    for (let role of group.roles) {
+      if (role.name != roleService.CREATOR) memberRole = role;
+      if (role.name == roleService.MEMBER) {
+        memberRole = role;
+        break;
+      }
+    }
+  }
 
   // by pass authorization for group creator
   if (group.creator.id != memberId) {
@@ -135,8 +145,12 @@ const removeMember = async (userId, groupId, actionIssuer) => {
   }
 };
 
-const removeAllMembers = async (groupId) => {
+const removeAllMembers = async (groupId, actionIssuer) => {
   const group = await getGroupById(groupId);
+
+  await permissionService.isAuthorized(actionIssuer, group, [
+    Permissions.REMOVE_MEMBER,
+  ]);
 
   for (let member of group.members) {
     await database.getRepository(Membership).remove(member);
@@ -145,63 +159,36 @@ const removeAllMembers = async (groupId) => {
 
 //join a group
 const joinGroup = async (groupId, userId) => {
-  try {
-    const group = await userService.getGroupById(groupId);
-    if (!group) {
-      throw new Error("Group not found");
-    }
-    const user = await userService.getUserById(userId);
-
-    const existingMembership = await database
-      .getRepository(Membership)
-      .findOne({
-        where: {
-          user: user,
-          group: group,
-        },
-      });
-
-    if (existingMembership) {
-      throw new Error("User is already a member of the group");
-    }
-    const membership = database.getRepository(Membership).create({
-      user: user,
-      group: group,
-      role: "member",
-    });
-
-    await database.getRepository(Membership).save(membership);
-  } catch (error) {
-    throw new Error(error.message);
+  const group = await getGroupById(groupId);
+  if (!group) {
+    throw new Error("Group not found");
   }
+  const user = await userService.getUserById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const groupCreator = await userService.getUserById(group.creator.id);
+  await addMember(userId, roleService.MEMBER, groupId, groupCreator);
 };
 
 //leave a group
 const leaveGroup = async (groupId, userId) => {
-  try {
-    const group = await userService.getGroupById(groupId);
+  const group = await getGroupById(groupId);
 
-    if (!group) {
-      throw new Error("Group not found");
-    }
-    const user = await userService.getUserById(userId);
-    const existingMembership = await database
-      .getRepository(Membership)
-      .findOne({
-        where: {
-          user: user,
-          group: group,
-        },
-      });
-
-    if (!existingMembership) {
-      throw new Error("Member not found");
-    }
-
-    await database.getRepository(Membership).remove(existingMembership);
-  } catch (error) {
-    throw new Error(error.message);
+  if (!group) {
+    throw new Error("Group not found");
   }
+  const user = await userService.getUserById(userId);
+
+  const [membership] = user.memberships.filter(
+    (membership) => membership.group.id === group.id
+  );
+  if (!membership) throw Error("Unauthorized");
+
+  const groupCreator = await userService.getUserById(group.creator.id);
+  removeMember(userId, groupId, groupCreator);
 };
 // remove a member
 module.exports = {

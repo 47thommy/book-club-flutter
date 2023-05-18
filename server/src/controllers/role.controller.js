@@ -32,9 +32,29 @@ const createRole = async (req, res) => {
       return res.status(StatusCodes.CREATED).json();
     }
   } catch (err) {
-    return res.status(StatusCodes.CONFLICT).json("Role already exists.");
+    switch (err.message) {
+      case "Unauthorized":
+        return res
+          .status(StatusCodes.FORBIDDEN)
+          .json("Insufficient priviledges to perform action.");
+      case "Not found":
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .json("Role, group or user not found.");
+      case "Conflict":
+        return res
+          .status(StatusCodes.CONFLICT)
+          .json("User is already a member.");
+      default:
+        return res.status(StatusCodes.BAD_REQUEST).json();
+    }
   }
   res.status(StatusCodes.BAD_REQUEST).json();
+};
+
+const getGroupRoles = async (req, res) => {
+  if (req.params.groupId) {
+  }
 };
 
 module.exports = {

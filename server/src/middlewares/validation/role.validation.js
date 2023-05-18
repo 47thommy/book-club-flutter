@@ -6,6 +6,11 @@ const createRoleValidator = [
   param("groupId", "Group id must be an integer").isInt(),
 ];
 
+const getRoleValidator = [
+  param("groupId", "Group id must be an integer").isInt(),
+];
+
 module.exports = {
   createRoleValidator,
+  getRoleValidator,
 };

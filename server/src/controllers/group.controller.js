@@ -119,25 +119,20 @@ const joinGroup = async (req, res) => {
 
     req.user = user;
     const userId = user.id;
-    console.log(userId);
 
     await groupService.joinGroup(groupId, userId);
-    res.status(200).json({ message: "Welcome to the group!" });
+
+    res.json({ message: "Welcome to the group!" });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res
+      .status(StatusCodes.INTERNAL_SERVER_ERROR)
+      .json({ error: error.message });
   }
 };
 // leave a group
 const leaveGroup = async (req, res) => {
   try {
-    const { groupId } = req.params;
-    const token = req.headers.token;
-    const user = await verifyToken(token);
-
-    req.user = user;
-    const userId = user.id;
-
-    await groupService.leaveGroup(groupId, userId);
+    await groupService.leaveGroup(req.params.groupId, req.user.id);
     res.status(200).json({ message: "You have left the group!" });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -146,6 +141,7 @@ const leaveGroup = async (req, res) => {
 
 // remove a member
 const removeMember = async (req, res) => {
+  perm;
   const { groupId, memberId } = req.params;
 
   try {
