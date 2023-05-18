@@ -3,6 +3,29 @@ const { validationResult } = require("express-validator");
 
 const groupService = require("../services/group.service");
 
+const getGroup = async (req, res) => {
+  // get user by id
+  if (req.query.id) {
+    const group = await groupService.getGroupById(req.query.id);
+
+    if (group) {
+      return res.json(group);
+    } else {
+      return res.status(StatusCodes.NOT_FOUND).json();
+    }
+  } else if (req.query.name) {
+    const group = await groupService.getGroupsByName(req.query.name);
+
+    if (group) {
+      return res.json(group);
+    } else {
+      return res.status(StatusCodes.NOT_FOUND).json();
+    }
+  } else {
+    return res.json(await groupService.getAllGroups());
+  }
+};
+
 const createGroup = async (req, res) => {
   const result = validationResult(req);
 
@@ -36,19 +59,54 @@ const deleteGroup = async (req, res) => {
   }
 
   try {
-    if (group.creator.id == req.user.id) {
-      const deletedGroup = await groupService.deleteGroup(group.id);
+    const deletedGroup = await groupService.deleteGroup(group.id, req.user);
 
-      if (deletedGroup) {
-        return res.status(StatusCodes.OK).json();
-      }
-      res.status(StatusCodes.BAD_REQUEST).json();
-    } else {
-      return res.status(StatusCodes.FORBIDDEN).json();
+    if (deletedGroup) {
+      return res.status(StatusCodes.OK).json();
     }
   } catch (err) {
-    res.status(StatusCodes.BAD_REQUEST).json();
+    if (err.message == "Unauthorized") {
+      return res
+        .status(StatusCodes.FORBIDDEN)
+        .json("Insufficient priviledge to perform action.");
+    }
+  }
+  return res.status(StatusCodes.BAD_REQUEST).json();
+};
+
+const addMember = async (req, res) => {
+  const result = validationResult(req);
+
+  if (!result.isEmpty()) {
+    res.status(StatusCodes.BAD_REQUEST).json({ errors: result.array() });
+    return;
+  }
+
+  const groupId = req.params.groupId;
+  const memberId = req.body.memberId;
+  const roleId = req.body.roleId;
+
+  try {
+    await groupService.addMember(memberId, roleId, groupId, req.user);
+    res.json();
+  } catch (err) {
+    switch (err.message) {
+      case "Unauthorized":
+        return res
+          .status(StatusCodes.FORBIDDEN)
+          .json("Insufficient priviledges to perform action.");
+      case "Not found":
+        return res
+          .status(StatusCodes.NOT_FOUND)
+          .json("Role, group or user not found.");
+      case "Conflict":
+        return res
+          .status(StatusCodes.CONFLICT)
+          .json("User is already a member.");
+      default:
+        return res.status(StatusCodes.BAD_REQUEST).json();
+    }
   }
 };
 
-module.exports = { createGroup, deleteGroup };
+module.exports = { getGroup, createGroup, deleteGroup, addMember };

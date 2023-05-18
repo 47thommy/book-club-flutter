@@ -16,6 +16,7 @@ const User = new UserSchema({
 
     password: {
       type: "varchar",
+      select: false,
     },
     first_name: {
       type: "varchar",

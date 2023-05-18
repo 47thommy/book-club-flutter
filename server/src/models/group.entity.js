@@ -25,6 +25,7 @@ const Group = new GroupSchema({
       target: "User",
       type: "many-to-one",
       joinColumn: true,
+      eager: true,
     },
 
     members: {
@@ -32,6 +33,14 @@ const Group = new GroupSchema({
       type: "one-to-many",
       inverseSide: "group",
       cascade: true,
+    },
+
+    roles: {
+      target: "Role",
+      type: "one-to-many",
+      inverseSide: "group",
+      cascade: true,
+      eager: true,
     },
   },
 });
@@ -45,10 +54,6 @@ const Membership = new MembershipSchema({
       type: "int",
       generated: true,
     },
-
-    role: {
-      type: "varchar",
-    },
   },
 
   relations: {
@@ -56,12 +61,21 @@ const Membership = new MembershipSchema({
       target: "User",
       type: "many-to-one",
       joinColumn: true,
+      eager: true,
     },
 
     group: {
       target: "Group",
       type: "many-to-one",
       joinColumn: true,
+      eager: true,
+    },
+
+    role: {
+      target: "Role",
+      type: "many-to-one",
+      joinColumn: true,
+      eager: true,
     },
   },
 });

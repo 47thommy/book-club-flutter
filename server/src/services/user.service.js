@@ -5,14 +5,23 @@ const bcrypt = require("bcryptjs");
 const getUserByEmail = async (email, includePassword = false) => {
   if (!email) return null;
 
+  // since select is false password hash will not be included here
   const user = await database.getRepository(User).findOne({
     where: { email },
     relations: { memberships: true, createdGroups: true },
   });
 
-  // censor password hash if not required
-  if (user && !includePassword) {
-    delete user.password;
+  // include password here if required
+  if (user && includePassword) {
+    user.password = (
+      await database
+        .getRepository(User)
+        .createQueryBuilder("user")
+        .select("user.email")
+        .addSelect("user.password")
+        .where("user.email = :email", { email })
+        .getOne()
+    ).password;
   }
 
   return user;
@@ -21,14 +30,23 @@ const getUserByEmail = async (email, includePassword = false) => {
 const getUserById = async (id, includePassword = false) => {
   if (!id) return null;
 
+  // since select is false password hash will not be included here
   const user = await database.getRepository(User).findOne({
     where: { id },
     relations: { memberships: true, createdGroups: true },
   });
 
-  // censor password hash if not required
-  if (user && !includePassword) {
-    delete user.password;
+  // include password here if required
+  if (user && includePassword) {
+    user.password = (
+      await database
+        .getRepository(User)
+        .createQueryBuilder("user")
+        .select("user.id")
+        .addSelect("user.password")
+        .where("user.id = :id", { id })
+        .getOne()
+    ).password;
   }
 
   return user;

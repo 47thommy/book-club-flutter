@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const database = require("./src/configs/db.config");
+const permissions = require("./src/services/permissions.service");
 
 const app = express();
 
@@ -24,10 +25,12 @@ app.use(express.json());
 const authRouter = require("./src/routes/auth.routes");
 const userRouter = require("./src/routes/user.routes");
 const groupRouter = require("./src/routes/group.routes");
+const roleRouter = require("./src/routes/role.routes");
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/group", groupRouter);
+app.use("/group", roleRouter);
 
 // ==================================================================
 //                      Initialize Database
@@ -35,7 +38,9 @@ app.use("/group", groupRouter);
 database
   .initialize()
   .then(() => {
-    console.log("Database successfully initialized!");
+    permissions
+      .initializePermissions()
+      .then(console.log("Database successfully initialized!"));
   })
   .catch((err) => {
     console.log("Error during database initialization:", err);
