@@ -17,7 +17,7 @@ const Poll = new PollSchema({
 
         options: {
             type: "varchar",
-            array: true,
+            // array: true,
         },
     },
 
@@ -26,12 +26,13 @@ const Poll = new PollSchema({
             target: "User",
             type: "many-to-one",
             joinColumn: true,
+            eager: true,
         },
 
         votes: {
             target: "Vote",
             type: "one-to-many",
-            joinColumn: true,
+            inverseSide: "poll"
         },
     },
 });
@@ -58,12 +59,14 @@ const Vote = new VoteSchema({
             target: "Poll",
             type: "many-to-one",
             joinColumn: true,
+            eager: true,
         },
 
         voter: {
             target: "User",
-            type: "one-to-one",
+            type: "many-to-one",
             joinColumn: true,
+            eager: true
         },
     },
 });
