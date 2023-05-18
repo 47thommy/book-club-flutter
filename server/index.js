@@ -24,10 +24,14 @@ app.use(express.json());
 const authRouter = require("./src/routes/auth.routes");
 const userRouter = require("./src/routes/user.routes");
 const groupRouter = require("./src/routes/group.routes");
+const pollRouter = require("./src/routes/poll.routes");
+const voteRouter = require("./src/routes/vote.routes");
 
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/group", groupRouter);
+app.use("/poll", pollRouter);
+app.use("/vote", voteRouter);
 
 // ==================================================================
 //                      Initialize Database
