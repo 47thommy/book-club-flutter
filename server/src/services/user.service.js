@@ -1,4 +1,4 @@
-const { User } = require("../models/");
+const { User, Group, Membership } = require("../models/");
 const database = require("../configs/db.config");
 const bcrypt = require("bcryptjs");
 
@@ -83,6 +83,7 @@ const updateUser = async (
 ) => {
   const user = await getUserById(id);
   if (!user) throw new Error("User not found");
+  // check if the user deleted his/her account
 
   if (email) {
     const existingUser = await getUserByEmail(email);
@@ -110,6 +111,21 @@ const deleteUser = async (id) => {
 
   if (!user) {
     throw new Error("User not found");
+  }
+
+  if (user.createdGroups.length > 0) {
+    await Promise.all(
+      user.createdGroups.map(async (group) => {
+        await database.getRepository(Group).remove(group);
+      })
+    );
+  }
+  if (user.memberships.length > 0) {
+    await Promise.all(
+      user.memberships.map(async (membership) => {
+        await database.getRepository(Membership).remove(membership);
+      })
+    );
   }
 
   await database.getRepository(User).remove(user);

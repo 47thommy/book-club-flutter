@@ -51,7 +51,6 @@ const createGroup = async (groupName, creator, description) => {
   });
 
   group.creator = creator;
-
   const newGroup = await database.getRepository(Group).save(group);
 
   const creatorRole = await roleService.createRole(
@@ -144,6 +143,67 @@ const removeAllMembers = async (groupId) => {
   }
 };
 
+//join a group
+const joinGroup = async (groupId, userId) => {
+  try {
+    const group = await userService.getGroupById(groupId);
+    if (!group) {
+      throw new Error("Group not found");
+    }
+    const user = await userService.getUserById(userId);
+
+    const existingMembership = await database
+      .getRepository(Membership)
+      .findOne({
+        where: {
+          user: user,
+          group: group,
+        },
+      });
+
+    if (existingMembership) {
+      throw new Error("User is already a member of the group");
+    }
+    const membership = database.getRepository(Membership).create({
+      user: user,
+      group: group,
+      role: "member",
+    });
+
+    await database.getRepository(Membership).save(membership);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+//leave a group
+const leaveGroup = async (groupId, userId) => {
+  try {
+    const group = await userService.getGroupById(groupId);
+
+    if (!group) {
+      throw new Error("Group not found");
+    }
+    const user = await userService.getUserById(userId);
+    const existingMembership = await database
+      .getRepository(Membership)
+      .findOne({
+        where: {
+          user: user,
+          group: group,
+        },
+      });
+
+    if (!existingMembership) {
+      throw new Error("Member not found");
+    }
+
+    await database.getRepository(Membership).remove(existingMembership);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+// remove a member
 module.exports = {
   getAllGroups,
   getGroupById,
@@ -151,5 +211,7 @@ module.exports = {
   createGroup,
   deleteGroup,
   addMember,
+  joinGroup,
+  leaveGroup,
   removeMember,
 };
