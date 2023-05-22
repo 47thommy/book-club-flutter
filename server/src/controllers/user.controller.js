@@ -3,13 +3,6 @@ const userService = require("../services/user.service");
 const { validationResult } = require("express-validator");
 
 const getUser = async (req, res) => {
-  const result = validationResult(req);
-
-  if (!result.isEmpty()) {
-    res.status(StatusCodes.BAD_REQUEST).json({ errors: result.array() });
-    return;
-  }
-
   // get user by id
   if (req.query.id) {
     const user = await userService.getUserById(req.query.id);
@@ -27,9 +20,15 @@ const getUser = async (req, res) => {
     } else {
       return res.status(StatusCodes.NOT_FOUND).json();
     }
-  }
+  } else {
+    const user = await userService.getUserById(req.user.id);
 
-  res.status(StatusCodes.BAD_REQUEST).json();
+    if (user) {
+      return res.json(user);
+    } else {
+      return res.status(StatusCodes.NOT_FOUND).json();
+    }
+  }
 };
 
 const updateUser = async (req, res) => {
