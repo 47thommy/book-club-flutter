@@ -1,15 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:client/home.dart';
 import 'package:client/reading_list.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   static const String routeName = '/profile';
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  XFile? pickedImage;
+  bool isEditing = false;
+  String email = 'email@gmail.com';
+  String username = 'loremipsum';
+  String bio =
+      'Lorem ipsum dolor sit amet consectetur.\nMauris mattis neque magna purus purus.';
+
+  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
+  final bioController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    usernameController.dispose();
+    bioController.dispose();
+    super.dispose();
+  }
+
   void navigateToReadingList(BuildContext context) {
     Navigator.pushNamed(context, ReadingListPage.routeName);
   }
 
   void navigateToHomePage(BuildContext context) {
     Navigator.pushNamed(context, HomePage.routeName);
+  }
+
+  Future<void> pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        pickedImage = pickedFile;
+      });
+    }
+  }
+
+  void toggleEdit() {
+    setState(() {
+      isEditing = !isEditing;
+      if (isEditing) {
+        emailController.text = email;
+        usernameController.text = username;
+        bioController.text = bio;
+      }
+    });
+  }
+
+  void saveFormChanges() {
+    setState(() {
+      email = emailController.text;
+      username = usernameController.text;
+      bio = bioController.text;
+      isEditing = false;
+    });
   }
 
   @override
@@ -19,8 +77,8 @@ class ProfilePage extends StatelessWidget {
         title: const Text('Profile'),
         actions: [
           IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {},
+            icon: isEditing ? const Icon(Icons.save) : const Icon(Icons.edit),
+            onPressed: isEditing ? saveFormChanges : toggleEdit,
           ),
           IconButton(
             icon: const Icon(Icons.more_vert),
@@ -36,26 +94,7 @@ class ProfilePage extends StatelessWidget {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      const CircleAvatar(
-                        radius: 50,
-                        backgroundImage: AssetImage('assets/profile.png'),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 10,
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.add_a_photo_outlined,
-                            color: Colors.white,
-                          ),
-                          onPressed: () {},
-                        ),
-                      ),
-                    ],
-                  ),
+                  _buildProfileImage(),
                   const SizedBox(width: 16),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,35 +128,47 @@ class ProfilePage extends StatelessWidget {
               Card(
                 child: ListTile(
                   title: const Text('Email'),
-                  subtitle: const Text('email@gmail.com'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {},
-                  ),
+                  subtitle: isEditing
+                      ? TextFormField(
+                          controller: emailController,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        )
+                      : Text(email),
                 ),
               ),
               const SizedBox(height: 8),
               Card(
                 child: ListTile(
                   title: const Text('Username'),
-                  subtitle: const Text('loremipsum'),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {},
-                  ),
+                  subtitle: isEditing
+                      ? TextFormField(
+                          controller: usernameController,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        )
+                      : Text(username),
                 ),
               ),
               const SizedBox(height: 8),
               Card(
                 child: ListTile(
                   title: const Text('Bio'),
-                  subtitle: const Text(
-                    'Lorem ipsum dolor sit amet consectetur.\nMauris mattis neque magna purus purus.',
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {},
-                  ),
+                  subtitle: isEditing
+                      ? TextFormField(
+                          controller: bioController,
+                          maxLines: 2,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                        )
+                      : Text(
+                          bio,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                 ),
               ),
             ],
@@ -165,6 +216,31 @@ class ProfilePage extends StatelessWidget {
           }
         },
       ),
+    );
+  }
+
+  Widget _buildProfileImage() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundImage: pickedImage != null
+              ? FileImage(File(pickedImage!.path)) as ImageProvider<Object>?
+              : const AssetImage('assets/profile.png'),
+        ),
+        Positioned(
+          bottom: 0,
+          right: 10,
+          child: IconButton(
+            icon: const Icon(
+              Icons.add_a_photo_outlined,
+              color: Colors.white,
+            ),
+            onPressed: pickImage,
+          ),
+        ),
+      ],
     );
   }
 }
