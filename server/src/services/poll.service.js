@@ -57,19 +57,19 @@ const createVote = async (poll, choice, voter) => {
     const vote = database.getRepository(Vote).create({
         choice: choice,
     })
-    
+
     vote.poll = poll;
     vote.voter = voter;
-    
+
     console.log(vote, 66)
+    console.log(123)
     const newVote = await database.getRepository(Vote).save(vote);
-    console.log(newVote, 123)
 
     return newVote;
 };
 
 const updateVote = async (voteId, choice, user) => {
-    const vote = getVote(voteId);
+    const vote = getVoteById(voteId);
 
     if (!vote) {
         throw new Error("Vote Not Found");
@@ -82,9 +82,9 @@ const updateVote = async (voteId, choice, user) => {
 
 const deleteVote = async (id, user) => {
     const vote = await getVoteById(id);
-    
+
     if (!vote) {
-        
+
         throw new Error("Vote Not Found")
     }
 

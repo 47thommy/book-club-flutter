@@ -76,7 +76,7 @@ const createVote = async (req, res) => {
     //     return;
     // }
     
-    // try {
+    try {
         const poll = await pollService.getPollById(req.body.pollId);      
         
         if (!poll) {
@@ -95,9 +95,10 @@ const createVote = async (req, res) => {
 
         res.status(StatusCodes.BAD_REQUEST).json();
 
-    // } catch {
+    } catch (err) {
+        console.log(err)
         res.status(StatusCodes.BAD_REQUEST).json();
-    // }
+    }
 };
 
 const getVote = async (req, res) => {
@@ -109,6 +110,17 @@ const getVote = async (req, res) => {
     res.status(StatusCodes.OK).json(vote);
 }
 
+
+const updateVote = async (req, res) => {
+    const vote = await pollService.getVoteById(req.params.id);
+
+    if (!vote) {
+        return res.status(StatusCodes.NOT_FOUND).json();
+    }
+
+    const newVote = await pollService.updateVote(req.params.id);
+    res.status(StatusCodes.OK).json(newVote);
+}
 
 const deleteVote = async (req, res) => {
     const vote = await pollService.getVoteById(req.params.id);
@@ -145,5 +157,6 @@ module.exports = {
     deletePoll, 
     createVote, 
     getVote, 
+    updateVote,
     deleteVote
 };

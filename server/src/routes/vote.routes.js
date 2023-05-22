@@ -25,4 +25,10 @@ router.delete(
     voteController.deleteVote
 );
 
+router.patch(
+    '/:id',
+    loginRequired,
+    voteController.updateVote
+)
+
 module.exports = router;

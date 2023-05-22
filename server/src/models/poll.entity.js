@@ -64,7 +64,7 @@ const Vote = new VoteSchema({
 
         voter: {
             target: "User",
-            type: "many-to-one",
+            type: "one-to-one",
             joinColumn: true,
             eager: true
         },
