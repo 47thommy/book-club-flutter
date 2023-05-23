@@ -2,7 +2,6 @@ const { StatusCodes } = require("http-status-codes");
 const { validationResult } = require("express-validator");
 
 const groupService = require("../services/group.service");
-const { verifyToken } = require("../services/auth.service");
 
 const getGroup = async (req, res) => {
   // get user by id
@@ -114,11 +113,8 @@ const addMember = async (req, res) => {
 const joinGroup = async (req, res) => {
   try {
     const { groupId } = req.params;
-    const token = req.headers.token;
-    const user = await verifyToken(token);
 
-    req.user = user;
-    const userId = user.id;
+    const userId = req.user.id;
 
     await groupService.joinGroup(groupId, userId);
 

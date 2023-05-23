@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:client/home.dart';
+import 'package:client/group/screens/home.dart';
 import 'package:client/profile.dart';
+import 'package:go_router/go_router.dart';
 
 class ReadingListPage extends StatelessWidget {
-  static const String routeName = '/reading-list';
+  static const String routeName = 'reading-list';
 
-  void navigateToProfile(BuildContext context) {
-    Navigator.pushNamed(context, ProfilePage.routeName);
-  }
-
-  void navigateToHome(BuildContext context) {
-    Navigator.pushNamed(context, HomePage.routeName);
-  }
+  const ReadingListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -158,14 +153,14 @@ class ReadingListPage extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-              navigateToHome(context);
+              context.goNamed(HomePage.routeName);
               break;
             case 1:
               break;
             case 2:
               break;
             case 3:
-              navigateToProfile(context);
+              context.goNamed(ProfilePage.routeName);
               break;
           }
         },
