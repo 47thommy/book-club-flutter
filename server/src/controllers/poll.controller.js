@@ -115,7 +115,7 @@ const updateVote = async (req, res) => {
     return res.status(StatusCodes.NOT_FOUND).json();
   }
 
-  const newVote = await pollService.updateVote(req.params.id);
+  const newVote = await pollService.updateVote(req.params.id, req.body.choice);
   res.status(StatusCodes.OK).json(newVote);
 };
 

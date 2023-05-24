@@ -2,76 +2,72 @@ const PollSchema = require("typeorm").EntitySchema;
 const VoteSchema = require("typeorm").EntitySchema;
 
 const Poll = new PollSchema({
-    name: "Poll",
+  name: "Poll",
 
-    columns: {
-        id: {
-            primary: true,
-            type: "int",
-            generated: true,
-        },
-
-        question: {
-            type: "varchar",
-        },
-
-        options: {
-            type: "varchar",
-            // array: true,
-        },
+  columns: {
+    id: {
+      primary: true,
+      type: "int",
+      generated: true,
     },
 
-    relations: {
-        creator: {
-            target: "User",
-            type: "many-to-one",
-            joinColumn: true,
-            eager: true,
-        },
-
-        votes: {
-            target: "Vote",
-            type: "one-to-many",
-            inverseSide: "poll"
-        },
+    question: {
+      type: "varchar",
     },
+
+    options: {
+      type: "varchar",
+      // array: true,
+    },
+  },
+
+  relations: {
+    creator: {
+      target: "User",
+      type: "many-to-one",
+      joinColumn: true,
+      eager: true,
+    },
+
+    votes: {
+      target: "Vote",
+      type: "one-to-many",
+      inverseSide: "poll",
+    },
+  },
 });
-
-
 
 const Vote = new VoteSchema({
-    name: "Vote",
+  name: "Vote",
 
-    columns: {
-        id: {
-            primary: true,
-            type: "int",
-            generated: true,
-        },
-
-        choice: {
-            type: "varchar",
-        },
+  columns: {
+    id: {
+      primary: true,
+      type: "int",
+      generated: true,
     },
 
-    relations: {
-        poll: {
-            target: "Poll",
-            type: "many-to-one",
-            joinColumn: true,
-            eager: true,
-        },
+    choice: {
+      type: "varchar",
+    },
+  },
 
-        voter: {
-            target: "User",
-            type: "many-to-one",
-            joinColumn: true,
-            eager: true,
-            onDelete: "CASCADE"
-        },
+  relations: {
+    poll: {
+      target: "Poll",
+      type: "many-to-one",
+      joinColumn: true,
+      eager: true,
     },
 
+    voter: {
+      target: "User",
+      type: "many-to-one",
+      joinColumn: true,
+      eager: true,
+      onDelete: "CASCADE",
+    },
+  },
 });
-
 
 module.exports = { Poll, Vote };

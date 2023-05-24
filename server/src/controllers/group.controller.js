@@ -38,7 +38,8 @@ const createGroup = async (req, res) => {
     const newGroup = await groupService.createGroup(
       req.body.name,
       req.user,
-      req.body.description
+      req.body.description,
+      res.body.imageUrl
     );
 
     if (newGroup) {
