@@ -17,20 +17,22 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // ==================================================================
 //                              Routes
 // ==================================================================
+const uploadRoute = require("./src/routes/upload.routes");
 const authRouter = require("./src/routes/auth.routes");
 const userRouter = require("./src/routes/user.routes");
 const groupRouter = require("./src/routes/group.routes");
-
 const roleRouter = require("./src/routes/role.routes");
-
 const pollRouter = require("./src/routes/poll.routes");
 const voteRouter = require("./src/routes/vote.routes");
 
+app.use("/uploads", uploadRoute);
 app.use("/auth", authRouter);
 app.use("/user", userRouter);
 app.use("/group", groupRouter);
@@ -58,5 +60,3 @@ database
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
-module.exports = database;

@@ -18,6 +18,11 @@ const Group = new GroupSchema({
     description: {
       type: "varchar",
     },
+
+    imageUrl: {
+      default: "",
+      type: "varchar",
+    },
   },
 
   relations: {
