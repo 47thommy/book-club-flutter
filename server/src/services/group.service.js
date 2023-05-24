@@ -44,10 +44,11 @@ const getGroupById = async (id) => {
   return group;
 };
 
-const createGroup = async (groupName, creator, description) => {
+const createGroup = async (groupName, creator, description, imageUrl) => {
   const group = database.getRepository(Group).create({
     name: groupName,
     description,
+    imageUrl,
   });
 
   group.creator = creator;
