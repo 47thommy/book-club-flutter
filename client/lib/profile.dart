@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:client/group/screens/home.dart';
+import 'package:client/home.dart';
 import 'package:client/reading_list.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:client/schedule.dart';
 
 class ProfilePage extends StatefulWidget {
-  static const String routeName = 'profile';
+  static const String routeName = '/profile';
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -30,6 +30,18 @@ class _ProfilePageState extends State<ProfilePage> {
     usernameController.dispose();
     bioController.dispose();
     super.dispose();
+  }
+
+  void navigateToReadingList(BuildContext context) {
+    Navigator.pushNamed(context, ReadingListPage.routeName);
+  }
+
+  void navigateToHomePage(BuildContext context) {
+    Navigator.pushNamed(context, HomePage.routeName);
+  }
+
+  void navigateToSchedule(BuildContext context) {
+    Navigator.pushNamed(context, ScheduleListPage.routeName);
   }
 
   Future<void> pickImage() async {
@@ -197,12 +209,13 @@ class _ProfilePageState extends State<ProfilePage> {
         onTap: (index) {
           switch (index) {
             case 0:
-              context.goNamed(HomePage.routeName);
+              navigateToHomePage(context);
               break;
             case 1:
-              context.goNamed(ReadingListPage.routeName);
+              navigateToReadingList(context);
               break;
             case 2:
+              navigateToSchedule(context);
               break;
             case 3:
               break;
