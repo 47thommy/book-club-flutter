@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:client/profile.dart';
 import 'package:client/reading_list.dart';
-import 'login/login_page.dart';
+import 'user/screens/screens.dart';
 import 'home.dart';
 import 'schedule.dart';
 

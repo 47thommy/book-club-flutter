@@ -40,7 +40,7 @@ class _PollFormState extends State<PollForm> {
           content: Text('Please enter a question and at least two options'),
         ),
 
-        // leul use do your magic with the created poll
+        // // TODO:  use do your magic with the created poll
       );
       return;
     }
