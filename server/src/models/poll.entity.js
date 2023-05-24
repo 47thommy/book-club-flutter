@@ -64,11 +64,13 @@ const Vote = new VoteSchema({
 
         voter: {
             target: "User",
-            type: "one-to-one",
+            type: "many-to-one",
             joinColumn: true,
-            eager: true
+            eager: true,
+            onDelete: "CASCADE"
         },
     },
+
 });
 
 

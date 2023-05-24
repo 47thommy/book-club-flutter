@@ -104,7 +104,7 @@ class _ClubDetailsPageState extends State<ClubDetailsPage>
                   },
                   onSelected: (value) {
                     if (value == 'leave_group') {
-                      // Leul leave group
+                      // // TODO:  leave group
                     }
                   },
                 ),
@@ -147,9 +147,9 @@ class _ClubDetailsPageState extends State<ClubDetailsPage>
                   ElevatedButton(
                     onPressed: () {
                       if (widget.isJoined) {
-                        // Leul join
+                        // // TODO:  join
                       } else {
-                        // Leul invite
+                        // // TODO:  invite
                       }
                     },
                     child: Text(
@@ -171,7 +171,7 @@ class _ClubDetailsPageState extends State<ClubDetailsPage>
                         TextButton(
                           onPressed: () {
                             // Handle button click
-                            // Leul polls
+                            // // TODO:  polls
                           },
                           child: const Text('Polls'),
                         ),

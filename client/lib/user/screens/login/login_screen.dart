@@ -9,7 +9,7 @@ import 'login_form.dart';
 class LoginPage extends StatelessWidget {
   static const routeName = "login";
 
-  const LoginPage({super.key});
+  const LoginPage({super.key}); 
 
   @override
   Widget build(BuildContext context) {

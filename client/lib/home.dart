@@ -158,7 +158,7 @@ class HomePage extends StatelessWidget {
                           };
 
                           createdClubs.add(newClub);
-                          // leul new club
+                          // // TODO:  new club
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
@@ -215,7 +215,7 @@ class HomePage extends StatelessWidget {
                   const SizedBox(width: 10),
                   ElevatedButton(
                     onPressed: () {
-                      //leul search
+                      //// TODO:  search
                     },
                     child: const Text('Search'),
                   ),

@@ -6,6 +6,11 @@ import 'package:client/user/repository/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import './router.dart';
+import 'package:client/profile.dart';
+import 'package:client/reading_list.dart';
+import 'user/screens/screens.dart';
+import 'home.dart';
+import 'schedule.dart';
 
 void main() {
   BlocOverrides.runZoned(() => runApp(const BookclubApp()),
