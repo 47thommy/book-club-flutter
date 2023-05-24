@@ -1,22 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:client/home.dart';
+import 'package:client/group/screens/groups_screen.dart';
 import 'package:client/profile.dart';
-import 'package:client/schedule.dart';
+import 'package:go_router/go_router.dart';
 
 class ReadingListPage extends StatelessWidget {
-  static const String routeName = '/reading-list';
+  static const String routeName = 'reading-list';
 
-  void navigateToProfile(BuildContext context) {
-    Navigator.pushNamed(context, ProfilePage.routeName);
-  }
-
-  void navigateToHome(BuildContext context) {
-    Navigator.pushNamed(context, HomePage.routeName);
-  }
-
-  void navigateToSchedule(BuildContext context) {
-    Navigator.pushNamed(context, ScheduleListPage.routeName);
-  }
+  const ReadingListPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -133,48 +123,6 @@ class ReadingListPage extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            backgroundColor: Colors.black45,
-            icon: Icon(Icons.people_alt_rounded),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.black45,
-            icon: Icon(Icons.menu_book_rounded),
-            label: 'Reading List',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.black45,
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.black45,
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: 1,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              navigateToHome(context);
-              break;
-            case 1:
-              break;
-            case 2:
-              navigateToSchedule(context);
-              break;
-            case 3:
-              navigateToProfile(context);
-              break;
-          }
-        },
       ),
     );
   }

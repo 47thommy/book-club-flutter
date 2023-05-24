@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:client/home.dart';
-import 'package:client/reading_list.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:client/schedule.dart';
 
 class ProfilePage extends StatefulWidget {
-  static const String routeName = '/profile';
+  static const String routeName = 'profile';
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -30,18 +27,6 @@ class _ProfilePageState extends State<ProfilePage> {
     usernameController.dispose();
     bioController.dispose();
     super.dispose();
-  }
-
-  void navigateToReadingList(BuildContext context) {
-    Navigator.pushNamed(context, ReadingListPage.routeName);
-  }
-
-  void navigateToHomePage(BuildContext context) {
-    Navigator.pushNamed(context, HomePage.routeName);
-  }
-
-  void navigateToSchedule(BuildContext context) {
-    Navigator.pushNamed(context, ScheduleListPage.routeName);
   }
 
   Future<void> pickImage() async {
@@ -178,48 +163,6 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           );
-        },
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const [
-          BottomNavigationBarItem(
-            backgroundColor: Colors.black45,
-            icon: Icon(Icons.people_alt_rounded),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.black45,
-            icon: Icon(Icons.menu_book_rounded),
-            label: 'Reading List',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.black45,
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
-          ),
-          BottomNavigationBarItem(
-            backgroundColor: Colors.black45,
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: 3,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        onTap: (index) {
-          switch (index) {
-            case 0:
-              navigateToHomePage(context);
-              break;
-            case 1:
-              navigateToReadingList(context);
-              break;
-            case 2:
-              navigateToSchedule(context);
-              break;
-            case 3:
-              break;
-          }
         },
       ),
     );
