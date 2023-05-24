@@ -1,4 +1,7 @@
+import 'package:client/user/blocs/blocs.dart';
+import 'package:client/user/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignupForm extends StatefulWidget {
   final VoidCallback onLoginButtonPressed;
@@ -12,6 +15,10 @@ class SignupForm extends StatefulWidget {
 
 class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +45,7 @@ class _SignupFormState extends State<SignupForm> {
                               fontSize: 30, fontWeight: FontWeight.bold),
                         ),
                         TextFormField(
+                          controller: firstNameController,
                           decoration:
                               const InputDecoration(labelText: 'First Name'),
                           validator: (value) {
@@ -49,11 +57,7 @@ class _SignupFormState extends State<SignupForm> {
                           onSaved: (value) {},
                         ),
                         TextFormField(
-                          decoration:
-                              const InputDecoration(labelText: 'Middle Name'),
-                          onSaved: (value) {},
-                        ),
-                        TextFormField(
+                          controller: lastNameController,
                           decoration:
                               const InputDecoration(labelText: 'Last Name'),
                           validator: (value) {
@@ -65,23 +69,27 @@ class _SignupFormState extends State<SignupForm> {
                           onSaved: (value) {},
                         ),
                         TextFormField(
+                          controller: emailController,
                           decoration:
                               const InputDecoration(labelText: 'Email Address'),
                           validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter your email address';
+                            if (value!.isEmpty ||
+                                !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                    .hasMatch(value)) {
+                              return 'Please enter valid email address';
                             }
                             return null;
                           },
                           onSaved: (value) {},
                         ),
                         TextFormField(
+                          controller: passwordController,
                           decoration:
                               const InputDecoration(labelText: 'Password'),
                           obscureText: true,
                           validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter a password';
+                            if (value!.length < 6) {
+                              return 'Password must be atleast 6 characters';
                             }
                             return null;
                           },
@@ -92,6 +100,15 @@ class _SignupFormState extends State<SignupForm> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
+
+                              final user = User(
+                                  firstName: firstNameController.text,
+                                  lastName: lastNameController.text,
+                                  email: emailController.text,
+                                  password: passwordController.text);
+
+                              BlocProvider.of<UserBloc>(context)
+                                  .add(UserCreate(user));
                             }
                           },
                           child: const Text('Sign Up'),

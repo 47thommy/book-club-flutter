@@ -25,5 +25,14 @@ class UserBloc extends Bloc<UserEvent, UserState> {
         emit(UserLoading());
       }
     });
+
+    on<UserCreate>((event, emit) async {
+      try {
+        final user = await userRepository.register(event.user);
+        emit(UserCreated(user));
+      } catch (error) {
+        emit(UserOperationFailure(error));
+      }
+    });
   }
 }

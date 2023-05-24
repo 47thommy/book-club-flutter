@@ -1,3 +1,4 @@
+import 'package:client/group/blocs/blocs.dart';
 import 'package:flutter/material.dart';
 import 'package:client/user/screens/signup/signup_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<UserBloc, UserState>(listener: (context, state) {
       if (state is UserAuthenticated) {
+        context.read<GroupBloc>().add(GroupLoad(state.user.token!));
         context.goNamed("home");
       } else if (state is UserOperationFailure) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(

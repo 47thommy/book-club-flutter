@@ -3,9 +3,9 @@ import '../models/user.dart';
 import '../data_providers/data_providers.dart';
 
 class UserRepository {
-  final RemoteUserDataProvider remoteProvider = RemoteUserDataProvider();
+  final remoteProvider = RemoteUserProvider();
 
-  final LocalUserDataProvider localProvider = LocalUserDataProvider();
+  final localProvider = LocalUserProvider();
 
   Future<User> login(User user) async {
     final userData = await remoteProvider.login(user);
