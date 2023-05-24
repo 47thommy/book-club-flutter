@@ -31,6 +31,7 @@ const groupRouter = require("./src/routes/group.routes");
 const roleRouter = require("./src/routes/role.routes");
 const pollRouter = require("./src/routes/poll.routes");
 const voteRouter = require("./src/routes/vote.routes");
+const meetingRouter = require("./src/routes/meeting.routes");
 
 app.use("/uploads", uploadRoute);
 app.use("/auth", authRouter);
@@ -39,6 +40,7 @@ app.use("/group", groupRouter);
 app.use("/group", roleRouter);
 app.use("/poll", pollRouter);
 app.use("/vote", voteRouter);
+app.use("/meeting", meetingRouter);
 
 // ==================================================================
 //                      Initialize Database

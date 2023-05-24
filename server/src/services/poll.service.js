@@ -61,8 +61,6 @@ const createVote = async (poll, choice, voter) => {
     vote.poll = poll;
     vote.voter = voter;
 
-    console.log(vote, 66)
-    console.log(123, voter)
     const newVote = await database.getRepository(Vote).save(vote);
 
     return newVote;
