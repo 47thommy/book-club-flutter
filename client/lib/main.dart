@@ -1,33 +1,33 @@
-import 'package:client/block_observer.dart';
-import 'package:client/user/blocs/blocs.dart';
-import 'package:client/user/repository/user_repository.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import './router.dart';
+import 'package:client/profile.dart';
+import 'package:client/reading_list.dart';
+import 'login/login_page.dart';
+import 'home.dart';
+import 'schedule.dart';
 
 void main() {
-  final UserRepository userRepository = UserRepository();
-
-  BlocOverrides.runZoned(() => runApp(_InitHome(userRepository)),
-      blocObserver: SimpleBlocObserver());
+  runApp(const BookClubApp());
 }
 
-class _InitHome extends StatelessWidget {
-  final UserRepository userRepository;
-
-  const _InitHome(this.userRepository);
+class BookClubApp extends StatelessWidget {
+  const BookClubApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-        value: userRepository,
-        child: BlocProvider<UserBloc>(
-            create: (context) => UserBloc(userRepository),
-            child: MaterialApp.router(
-              theme: ThemeData(),
-              darkTheme: ThemeData.dark(),
-              themeMode: ThemeMode.system,
-              routerConfig: router,
-            )));
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Book Club',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const LoginPage(),
+      routes: {
+        ReadingListPage.routeName: (context) => ReadingListPage(),
+        LoginPage.routeName: (context) => const LoginPage(),
+        HomePage.routeName: (context) => HomePage(),
+        ProfilePage.routeName: (context) => ProfilePage(),
+        ScheduleListPage.routeName: (context) => ScheduleListPage()
+      },
+    );
   }
 }
