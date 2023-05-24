@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:client/group/screens/home.dart';
+import 'package:client/home.dart';
 import 'package:client/profile.dart';
-import 'package:go_router/go_router.dart';
+import 'package:client/schedule.dart';
 
 class ReadingListPage extends StatelessWidget {
-  static const String routeName = 'reading-list';
+  static const String routeName = '/reading-list';
 
-  const ReadingListPage({super.key});
+  void navigateToProfile(BuildContext context) {
+    Navigator.pushNamed(context, ProfilePage.routeName);
+  }
+
+  void navigateToHome(BuildContext context) {
+    Navigator.pushNamed(context, HomePage.routeName);
+  }
+
+  void navigateToSchedule(BuildContext context) {
+    Navigator.pushNamed(context, ScheduleListPage.routeName);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -153,14 +163,15 @@ class ReadingListPage extends StatelessWidget {
         onTap: (index) {
           switch (index) {
             case 0:
-              context.goNamed(HomePage.routeName);
+              navigateToHome(context);
               break;
             case 1:
               break;
             case 2:
+              navigateToSchedule(context);
               break;
             case 3:
-              context.goNamed(ProfilePage.routeName);
+              navigateToProfile(context);
               break;
           }
         },
