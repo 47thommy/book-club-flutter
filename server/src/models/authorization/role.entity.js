@@ -31,6 +31,8 @@ const Role = new RoleSchema({
         inverseJoinColumn: { name: "permissionId" },
       },
       eager: true,
+      cascade: true,
+      onDelete: "CASCADE",
     },
   },
 });
