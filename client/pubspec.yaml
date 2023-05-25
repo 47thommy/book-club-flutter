@@ -43,6 +43,9 @@ dependencies:
   http_status_code: ^0.0.2
   sqflite: ^2.2.8+4
   path: ^1.8.3
+  flutter_secure_storage: ^8.0.0
+  freezed_annotation: ^2.2.0
+  json_annotation: ^4.8.1
 
 dev_dependencies:
   flutter_test:
@@ -57,6 +60,9 @@ dev_dependencies:
   test: ^1.24.1
   bloc_test: ^9.1.2
   mockito: ^5.4.0
+  build_runner: ^2.4.4
+  freezed: ^2.3.4
+  json_serializable: ^6.7.0
   # build_runner: ^2.4.4
 
 # For information on the generic Dart part of this file, see the
