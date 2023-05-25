@@ -45,6 +45,7 @@ const Group = new GroupSchema({
       type: "one-to-many",
       inverseSide: "group",
       cascade: true,
+      onDelete: "CASCADE",
       eager: true,
     },
   },
