@@ -8,11 +8,29 @@ const {
 
 const router = express.Router();
 
+router.get(
+  "/:groupId/role/:roleId",
+  loginRequired,
+  roleController.getRole
+);
+
 router.post(
   "/:groupId/role",
   loginRequired,
   createRoleValidator,
   roleController.createRole
 );
+
+router.patch(
+  "/:groupId/role/:roleId",
+  loginRequired,
+  roleController.updateRole
+)
+
+router.delete(
+  "/:groupId/role/:roleId",
+  loginRequired,
+  roleController.deleteRole
+)
 
 module.exports = router;
