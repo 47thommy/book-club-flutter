@@ -1,10 +1,10 @@
 import 'package:client/utils/failure.dart';
 
 class Either<T> {
-  final T? val;
-  final Error? error;
+  final T? value;
+  final Failure? failure;
 
-  Either({this.val, this.error});
+  Either({this.value, this.failure});
 
-  bool get hasError => error != null;
+  bool get hasError => failure != null;
 }

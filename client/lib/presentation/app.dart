@@ -1,13 +1,14 @@
 import 'package:client/application/auth/auth.dart';
+import 'package:client/application/login/login.dart';
+import 'package:client/application/signup/signup.dart';
 import 'package:client/presentation/pages/group/group.dart';
+import 'package:client/presentation/pages/login/login_screen.dart';
+import 'package:client/presentation/pages/signup/signup_screen.dart';
 import 'package:client/presentation/pages/splash/splash_screen.dart';
-import 'package:client/user/repository/user_repository.dart';
+import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-import 'application/auth/screens/login/login_screen.dart';
-import 'application/auth/screens/signup/signup_screen.dart';
 
 class AppScaffold extends StatelessWidget {
   const AppScaffold({super.key});
@@ -19,7 +20,9 @@ class AppScaffold extends StatelessWidget {
 
     return BlocConsumer<AuthenticationBloc, AuthenticationState>(
         listener: (context, state) {
-      context.goNamed(GroupsPage.routeName);
+      if (state is Authenticated) {
+        context.goNamed(GroupsScreen.routeName);
+      }
     }, builder: (context, state) {
       if (state is AuthenticationUninitialized) {
         return const SplashScreen();
@@ -40,6 +43,7 @@ class AppScaffold extends StatelessWidget {
                 userRepository: userRepository, authenticationBloc: authBloc),
             child: const LoginPage());
       }
+
       return const SplashScreen();
     });
   }
@@ -114,7 +118,7 @@ class _HomeState extends State<Home> {
     print(value);
     switch (value) {
       case 0:
-        return context.goNamed(GroupsPage.routeName);
+        return context.goNamed(GroupsScreen.routeName);
       // case 1:
       //   return context.goNamed(ReadingListPage.routeName);
       // case 2:
@@ -122,7 +126,7 @@ class _HomeState extends State<Home> {
       case 3:
         return context.go("/");
       default:
-        return context.goNamed(GroupsPage.routeName);
+        return context.goNamed("sample");
     }
   }
 }

@@ -1,4 +1,6 @@
 import 'package:client/application/login/login_event.dart';
+import 'package:client/domain/auth/dto/login_form_dto.dart';
+import 'package:client/domain/core/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/application/auth/auth_bloc.dart';
@@ -66,8 +68,10 @@ class _LoginFormState extends State<LoginForm> {
                             decoration: const InputDecoration(
                                 labelText: 'Email Address'),
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter your email address';
+                              var result = validateEmail(value!);
+
+                              if (result != null) {
+                                return result.failure!.message;
                               }
                               return null;
                             },
@@ -78,21 +82,24 @@ class _LoginFormState extends State<LoginForm> {
                                 const InputDecoration(labelText: 'Password'),
                             obscureText: true,
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Please enter a password';
+                              var result = validatePassword(value!);
+
+                              if (result != null) {
+                                return result.failure!.message;
                               }
                               return null;
                             },
-                            onSaved: (value) {},
                           ),
                           const SizedBox(height: 16.0),
                           ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 _formKey.currentState!.save();
-                                loginBloc.add(LoginRequested(
+                                var form = LoginFormDto(
                                     email: emailController.text,
-                                    password: passwordController.text));
+                                    password: passwordController.text);
+
+                                loginBloc.add(LoginRequested(form));
                               }
                             },
                             child: const Text('Login'),

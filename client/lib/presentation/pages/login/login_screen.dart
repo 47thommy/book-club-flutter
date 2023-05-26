@@ -14,13 +14,12 @@ class LoginPage extends StatelessWidget {
     return BlocListener<LoginBloc, LoginState>(
         listener: (context, state) {
           if (state is LoginLoading) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text("Logging in...",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.error))));
+                    style: TextStyle(color: Colors.green))));
           } else if (state is LoginFailure) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(state.error,
+                content: Text(state.error.message,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.error))));
           }

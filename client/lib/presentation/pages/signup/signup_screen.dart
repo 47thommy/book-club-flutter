@@ -19,7 +19,7 @@ class SignupPage extends StatelessWidget {
                     style: TextStyle(color: Colors.green))));
           } else if (state is SignupFailure) {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(state.error,
+                content: Text(state.error.message,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.error))));
           }

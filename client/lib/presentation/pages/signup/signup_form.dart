@@ -2,6 +2,8 @@ import 'package:client/application/auth/auth_bloc.dart';
 import 'package:client/application/auth/auth_event.dart';
 import 'package:client/application/signup/signup_bloc.dart';
 import 'package:client/application/signup/signup_event.dart';
+import 'package:client/domain/auth/dto/registration_form_dto.dart';
+import 'package:client/domain/core/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -68,17 +70,16 @@ class _SignupFormState extends State<SignupForm> {
                             }
                             return null;
                           },
-                          onSaved: (value) {},
                         ),
                         TextFormField(
                           controller: emailController,
                           decoration:
                               const InputDecoration(labelText: 'Email Address'),
                           validator: (value) {
-                            if (value!.isEmpty ||
-                                !RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                    .hasMatch(value)) {
-                              return 'Please enter valid email address';
+                            var result = validateEmail(value!);
+
+                            if (result != null) {
+                              return result.failure!.message;
                             }
                             return null;
                           },
@@ -90,12 +91,14 @@ class _SignupFormState extends State<SignupForm> {
                               const InputDecoration(labelText: 'Password'),
                           obscureText: true,
                           validator: (value) {
-                            if (value!.length < 6) {
-                              return 'Password must be atleast 6 characters';
+                            var result =
+                                validateStringLength(value!, 'Password', 6);
+
+                            if (result != null) {
+                              return result.failure!.message;
                             }
                             return null;
                           },
-                          onSaved: (value) {},
                         ),
                         const SizedBox(height: 16.0),
                         ElevatedButton(
@@ -103,11 +106,13 @@ class _SignupFormState extends State<SignupForm> {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
 
-                              signupBloc.add(SignupRequested(
+                              var form = RegisterFormDto(
                                   firstName: firstNameController.text,
                                   lastName: lastNameController.text,
                                   email: emailController.text,
-                                  password: passwordController.text));
+                                  password: passwordController.text);
+
+                              signupBloc.add(SignupRequested(form));
                             }
                           },
                           child: const Text('Sign Up'),

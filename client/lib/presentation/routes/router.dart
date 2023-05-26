@@ -1,4 +1,4 @@
-import 'package:client/app.dart';
+import 'package:client/presentation/app.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:client/presentation/pages/group/group.dart';
@@ -13,8 +13,12 @@ final GoRouter router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
       builder: (context, state, child) => Home(child: child),
       routes: [
         GoRoute(
-            name: GroupsPage.routeName,
-            path: '/${GroupsPage.routeName}',
-            builder: (context, state) => GroupsPage()),
+            name: GroupsScreen.routeName,
+            path: '/${GroupsScreen.routeName}',
+            builder: (context, state) => const GroupsScreen()),
+        GoRoute(
+            name: "sample",
+            path: '/sample',
+            builder: (context, state) => const Text("Sampple")),
       ]),
 ]);
