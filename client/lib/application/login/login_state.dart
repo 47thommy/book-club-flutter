@@ -1,3 +1,4 @@
+import 'package:client/utils/failure.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class LoginState extends Equatable {
@@ -12,7 +13,7 @@ class LoginInitial extends LoginState {}
 class LoginLoading extends LoginState {}
 
 class LoginFailure extends LoginState {
-  final String error;
+  final Failure error;
 
   const LoginFailure(this.error);
 

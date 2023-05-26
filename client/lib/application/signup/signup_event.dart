@@ -1,3 +1,4 @@
+import 'package:client/domain/auth/dto/registration_form_dto.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SignupEvent extends Equatable {
@@ -8,20 +9,13 @@ abstract class SignupEvent extends Equatable {
 }
 
 class SignupRequested extends SignupEvent {
-  final String firstName;
-  final String lastName;
-  final String email;
-  final String password;
+  final RegisterFormDto form;
 
-  const SignupRequested(
-      {required this.firstName,
-      required this.lastName,
-      required this.email,
-      required this.password});
+  const SignupRequested(this.form);
 
   @override
-  List<Object?> get props => [firstName, lastName, email, password];
+  List<Object?> get props => [form];
 
   @override
-  String toString() => 'Login requested { email: $email }';
+  String toString() => 'Login requested { form: $form }';
 }

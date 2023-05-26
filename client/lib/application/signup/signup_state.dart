@@ -1,3 +1,4 @@
+import 'package:client/utils/failure.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class SignupState extends Equatable {
@@ -12,7 +13,7 @@ class SignupInitial extends SignupState {}
 class SignupLoading extends SignupState {}
 
 class SignupFailure extends SignupState {
-  final String error;
+  final Failure error;
 
   const SignupFailure(this.error);
 
@@ -20,5 +21,5 @@ class SignupFailure extends SignupState {
   List<Object> get props => [error];
 
   @override
-  String toString() => 'LoginFailure { error: $error }';
+  String toString() => 'SignupFailure { error: $error }';
 }

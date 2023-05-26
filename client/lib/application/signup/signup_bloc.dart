@@ -1,12 +1,10 @@
+import 'package:client/domain/auth/dto/login_form_dto.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/application/login/login_bloc.dart';
 import 'package:client/application/login/login_event.dart';
-import 'package:client/user/repository/user_repository.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:client/application/signup/signup_event.dart';
 import 'package:client/application/signup/signup_state.dart';
-
-import 'exceptions.dart';
+import 'package:client/infrastructure/user/user_repository.dart';
 
 class SignupBloc extends Bloc<SignupEvent, SignupState> {
   final UserRepository userRepository;
@@ -18,19 +16,18 @@ class SignupBloc extends Bloc<SignupEvent, SignupState> {
     on<SignupRequested>((event, emit) async {
       emit(SignupLoading());
 
-      try {
-        await userRepository.register(
-            event.firstName, event.lastName, event.email, event.password);
+      final result = await userRepository.register(event.form);
 
-        loginBloc
-            .add(LoginRequested(email: event.email, password: event.password));
+      if (result.hasError) {
+        emit(SignupFailure(result.failure!));
+      } else {
+        final loginForm = LoginFormDto(
+            email: event.form.email, password: event.form.password);
 
-        emit(SignupInitial());
-      } on AuthenticationFailure catch (error) {
-        emit(SignupFailure(error.message));
-      } catch (error) {
-        emit(SignupFailure(error.toString()));
+        loginBloc.add(LoginRequested(loginForm));
       }
+
+      emit(SignupInitial());
     });
   }
 }

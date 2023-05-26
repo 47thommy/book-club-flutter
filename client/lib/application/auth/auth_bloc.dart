@@ -1,4 +1,4 @@
-import 'package:client/user/repository/user_repository.dart';
+import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'auth_event.dart';
@@ -16,7 +16,12 @@ class AuthenticationBloc
 
       if (hasToken) {
         final user = await userRepository.getLoggedInUser();
-        emit(Authenticated(user));
+
+        if (user.isEmpty) {
+          emit(Unauthenticated());
+        } else {
+          emit(Authenticated(user));
+        }
       } else {
         emit(Unauthenticated());
       }

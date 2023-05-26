@@ -1,4 +1,4 @@
-import 'package:client/infrastructure/user/models/user_dto.dart';
+import 'package:client/domain/user/user_dto.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class AuthenticationEvent extends Equatable {

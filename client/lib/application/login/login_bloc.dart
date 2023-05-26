@@ -1,12 +1,10 @@
-import 'package:client/user/repository/user_repository.dart';
+import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:client/application/auth/auth_bloc.dart';
 import 'package:client/application/auth/auth_event.dart';
 import 'package:client/application/login/login_event.dart';
 import 'package:client/application/login/login_state.dart';
-
-import 'exceptions.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository userRepository;
@@ -18,16 +16,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     on<LoginRequested>((event, emit) async {
       emit(LoginLoading());
 
-      try {
-        final token = await userRepository.login(event.email, event.password);
-        final user = await userRepository.getUserByToken(token);
-        authenticationBloc.add(UserLoggedIn(user: user, token: token));
-        emit(LoginInitial());
-      } on AuthenticationFailure catch (error) {
-        emit(LoginFailure(error.message));
-      } catch (error) {
-        emit(LoginFailure(error.toString()));
+      final loginResult = await userRepository.login(event.form);
+
+      if (loginResult.hasError) {
+        emit(LoginFailure(loginResult.failure!));
       }
+
+      final result = await userRepository.getUserByToken(loginResult.value!);
+
+      if (result.hasError) {
+        emit(LoginFailure(result.failure!));
+      }
+
+      authenticationBloc
+          .add(UserLoggedIn(user: result.value!, token: loginResult.value!));
+
+      emit(LoginInitial());
     });
   }
 }
