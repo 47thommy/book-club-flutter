@@ -39,7 +39,7 @@ const createGroup = async (req, res) => {
       req.body.name,
       req.user,
       req.body.description,
-      res.body.imageUrl
+      req.body.imageUrl
     );
 
     if (newGroup) {
@@ -138,12 +138,20 @@ const leaveGroup = async (req, res) => {
 
 // remove a member
 const removeMember = async (req, res) => {
-  perm;
+
   const { groupId, memberId } = req.params;
 
   try {
-    await groupService.removeMember(groupId, memberId);
-    res.status(200).json({ message: "Member removed from the group" });
+    if (await groupService.isMember(groupId, memberId)) {
+
+      await groupService.removeMember(memberId, groupId, req.user);
+      return res.status(200).json({ message: "Member removed from the group" });
+
+    }
+    else {
+      return res.status(StatusCodes.NOT_FOUND).json();
+    }
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

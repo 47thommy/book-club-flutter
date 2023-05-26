@@ -1,4 +1,4 @@
-const { Role } = require("../models/");
+const { Role, Group } = require("../models/");
 const database = require("../configs/db.config");
 const permissionService = require("./permissions.service");
 
@@ -72,7 +72,7 @@ const createRole = async (roleName, creator, group, permissionIds) => {
 };
 
 const updateRole = async (roleId, user, newName, permissionIds) => {
-  const role = await getRoleById(id);
+  const role = await getRoleById(roleId);
 
   if (!role) throw Error("Role not found.");
 
@@ -106,6 +106,13 @@ const deleteRole = async (id) => {
 
   if (!role) {
     throw new Error("Role not found.");
+  }
+
+  const group = role.group;
+
+  if (group) {
+    group.roles = group.roles.filter(role => role.id !== id);
+    await database.getRepository(Group).save(role.group);
   }
 
   await database.getRepository(Role).remove(role);
