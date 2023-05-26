@@ -22,7 +22,7 @@ const register = async (req, res) => {
         .status(StatusCodes.CONFLICT)
         .json("User with provided email already exists.");
     } else {
-      const newUser = createUser(
+      const newUser = await createUser(
         email,
         password,
         first_name,
@@ -31,8 +31,8 @@ const register = async (req, res) => {
       );
 
       if (newUser) {
-        res.status(StatusCodes.CREATED).json({ email });
-        return;
+        delete newUser.password;
+        return res.status(StatusCodes.CREATED).json(newUser);
       }
       res.status(StatusCodes.BAD_REQUEST).json();
     }
