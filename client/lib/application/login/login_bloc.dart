@@ -20,16 +20,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       if (loginResult.hasError) {
         emit(LoginFailure(loginResult.failure!));
+      } else {
+        final result = await userRepository.getUserByToken(loginResult.value!);
+
+        if (result.hasError) {
+          emit(LoginFailure(result.failure!));
+        }
+
+        authenticationBloc
+            .add(UserLoggedIn(user: result.value!, token: loginResult.value!));
       }
-
-      final result = await userRepository.getUserByToken(loginResult.value!);
-
-      if (result.hasError) {
-        emit(LoginFailure(result.failure!));
-      }
-
-      authenticationBloc
-          .add(UserLoggedIn(user: result.value!, token: loginResult.value!));
 
       emit(LoginInitial());
     });

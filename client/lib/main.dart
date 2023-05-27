@@ -1,4 +1,6 @@
+import 'package:client/application/file/file_bloc.dart';
 import 'package:client/block_observer.dart';
+import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/presentation/routes/router.dart';
 import 'package:flutter/material.dart';
@@ -17,14 +19,27 @@ void main() async {
                   providers: [
                 RepositoryProvider(create: (_) => GroupRepository()),
                 RepositoryProvider(create: (_) => UserRepository()),
+                RepositoryProvider(create: (_) => FileRepository()),
               ],
 
                   // Bloc providers
-                  child: BlocProvider(
-                    create: (context) => AuthenticationBloc(
-                        userRepository:
-                            RepositoryProvider.of<UserRepository>(context))
-                      ..add(AppStarted()),
+                  child: MultiBlocProvider(
+                    providers: [
+                      // Authentication provider
+                      BlocProvider(
+                        create: (context) => AuthenticationBloc(
+                            userRepository:
+                                RepositoryProvider.of<UserRepository>(context))
+                          ..add(AppStarted()),
+                      ),
+
+                      // File provider
+                      BlocProvider(
+                          create: (context) => FileBloc(
+                              fileRepository:
+                                  RepositoryProvider.of<FileRepository>(
+                                      context))),
+                    ],
 
                     // App
                     child: MaterialApp.router(

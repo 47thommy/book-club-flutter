@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:client/infrastructure/auth/data_providers/auth_api.dart';
 import 'package:client/infrastructure/auth/data_providers/auth_local.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
@@ -21,8 +23,8 @@ class UserRepository {
       return Either(value: token);
     } on AuthenticationFailure catch (error) {
       return Either(failure: Failure(error.message));
-    } catch (error) {
-      return Either(failure: Failure(error.toString()));
+    } on TimeoutException catch (_) {
+      return Either(failure: const Failure("Connection timed out"));
     }
   }
 
@@ -32,6 +34,8 @@ class UserRepository {
       return Either(value: user);
     } on AuthenticationFailure catch (error) {
       return Either(failure: Failure(error.message));
+    } on TimeoutException catch (_) {
+      return Either(failure: const Failure("Connection timed out"));
     }
   }
 
@@ -46,22 +50,45 @@ class UserRepository {
   Future<UserDto> getLoggedInUser() async {
     final token = await getToken();
 
-    final result = await getUserByToken(token);
+    try {
+      final result = await _getUserByToken(token);
 
-    if (result.hasError) return UserDto.empty;
+      // authenticaion failure
+      if (result.hasError) return UserDto.empty;
 
-    return result.value!;
-
-    //   return await _cache.loadUser();}
-    // return UserDto.empty;
+      return result.value!;
+    }
+    // network error: return cached user
+    on TimeoutException catch (_) {
+      try {
+        return await _cache.loadUser();
+      } catch (_) {
+        return UserDto.empty;
+      }
+    }
   }
 
-  Future<Either<UserDto>> getUserByToken(String token) async {
+  // throws timeout exception (for internal use only)
+  Future<Either<UserDto>> _getUserByToken(String token) async {
     try {
       final user = await _authApi.getUser(token);
+
       return Either(value: user);
     } on AuthenticationFailure catch (error) {
       return Either(failure: Failure(error.message));
+    }
+  }
+
+  // returns Failure on timeout exception (safe version of _getUserByToken)
+  Future<Either<UserDto>> getUserByToken(String token) async {
+    try {
+      final user = await _authApi.getUser(token);
+
+      return Either(value: user);
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error.message));
+    } on TimeoutException catch (error) {
+      return Either(failure: Failure(error.toString()));
     }
   }
 

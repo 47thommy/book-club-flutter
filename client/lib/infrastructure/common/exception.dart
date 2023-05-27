@@ -1,11 +1,11 @@
-class HttpException implements Exception {
+class BCHttpException implements Exception {
   final String message;
 
-  const HttpException([this.message = 'An unknown exception occured.']);
+  const BCHttpException([this.message = 'An unknown exception occured.']);
 
-  factory HttpException.notFound() =>
-      const HttpException('Resource not found.');
+  factory BCHttpException.notFound() =>
+      const BCHttpException('Resource not found.');
 
-  factory HttpException.unauthorized() =>
-      const HttpException('Requested action requires authorization.');
+  factory BCHttpException.unauthorized() =>
+      const BCHttpException('Requested action requires authorization.');
 }

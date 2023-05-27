@@ -17,11 +17,12 @@ class AuthApi {
   Future<UserDto> register(RegisterFormDto registrationForm) async {
     final registerUrl = Uri.parse('${consts.apiUrl}/auth/register');
 
-    final http.Response response = await _client.post(registerUrl,
-        headers: <String, String>{"Content-Type": "application/json"},
-        body: jsonEncode(registrationForm.toJson()));
-    print(registrationForm.toJson());
-    print(response.body);
+    final http.Response response = await _client
+        .post(registerUrl,
+            headers: <String, String>{"Content-Type": "application/json"},
+            body: jsonEncode(registrationForm.toJson()))
+        .timeout(const Duration(seconds: 3));
+
     if (response.statusCode == HttpStatus.created) {
       final data = jsonDecode(response.body);
       return UserDto.fromJson(data);
@@ -34,10 +35,12 @@ class AuthApi {
   Future<String> login(LoginFormDto loginForm) async {
     final loginUrl = Uri.parse('${consts.apiUrl}/auth/login');
 
-    final http.Response response = await _client.post(loginUrl,
-        headers: <String, String>{"Content-Type": "application/json"},
-        body: jsonEncode(
-            {"email": loginForm.email, "password": loginForm.password}));
+    final http.Response response = await _client
+        .post(loginUrl,
+            headers: <String, String>{"Content-Type": "application/json"},
+            body: jsonEncode(
+                {"email": loginForm.email, "password": loginForm.password}))
+        .timeout(const Duration(seconds: 3));
 
     if (response.statusCode == HttpStatus.ok) {
       final token = jsonDecode(response.body)['token'];
@@ -53,8 +56,10 @@ class AuthApi {
 
     url = url.replace(queryParameters: {"id": id, "email": email});
 
-    final response = await _client.get(url,
-        headers: {"Content-Type": "application/json", "token": token});
+    final response = await _client.get(url, headers: {
+      "Content-Type": "application/json",
+      "token": token
+    }).timeout(const Duration(seconds: 3));
 
     if (response.statusCode == HttpStatus.ok) {
       final user = UserDto.fromJson(jsonDecode(response.body));

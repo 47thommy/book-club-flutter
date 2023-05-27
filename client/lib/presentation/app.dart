@@ -1,4 +1,5 @@
 import 'package:client/application/auth/auth.dart';
+import 'package:client/application/file/file_bloc.dart';
 import 'package:client/application/login/login.dart';
 import 'package:client/application/signup/signup.dart';
 import 'package:client/presentation/pages/group/group.dart';
