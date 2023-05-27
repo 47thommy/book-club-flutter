@@ -17,7 +17,7 @@ class GroupRepository {
     try {
       final group = await _groupApi.getGroup(id, token);
       return Either(value: group);
-    } on HttpException catch (error) {
+    } on BCHttpException catch (error) {
       return Either(failure: Failure(error.message));
     } catch (error) {
       return Either(failure: Failure(error.toString()));
@@ -28,7 +28,18 @@ class GroupRepository {
     try {
       final groups = await _groupApi.getGroups(token);
       return Either(value: groups);
-    } on HttpException catch (error) {
+    } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } catch (error) {
+      return Either(failure: Failure(error.toString()));
+    }
+  }
+
+  Future<Either<List<GroupDto>>> getJoinedGroups(String token) async {
+    try {
+      final groups = await _groupApi.getJoinedGroups(token);
+      return Either(value: groups);
+    } on BCHttpException catch (error) {
       return Either(failure: Failure(error.message));
     } catch (error) {
       return Either(failure: Failure(error.toString()));
@@ -39,7 +50,7 @@ class GroupRepository {
     try {
       final grp = await _groupApi.createGroup(group: group, token: token);
       return Either(value: grp);
-    } on HttpException catch (error) {
+    } on BCHttpException catch (error) {
       return Either(failure: Failure(error.message));
     } catch (error) {
       return Either(failure: Failure(error.toString()));

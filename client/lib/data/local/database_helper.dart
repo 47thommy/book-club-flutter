@@ -22,5 +22,15 @@ class DatabaseHelper {
     return await openDatabase(path, onCreate: _onCreate, version: version);
   }
 
-  Future _onCreate(Database db, int version) async {}
+  Future _onCreate(Database db, int version) async {
+    // image cache
+    await db.execute('''
+      CREATE TABLE $filetable (
+        image_url TEXT PRIMARY KEY,
+        data BLOB
+      )''');
+  }
+
+  // Table names
+  static const filetable = 'images';
 }

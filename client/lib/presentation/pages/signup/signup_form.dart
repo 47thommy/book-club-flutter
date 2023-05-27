@@ -1,5 +1,6 @@
 import 'package:client/application/auth/auth_bloc.dart';
 import 'package:client/application/auth/auth_event.dart';
+import 'package:client/application/signup/signup.dart';
 import 'package:client/application/signup/signup_bloc.dart';
 import 'package:client/application/signup/signup_event.dart';
 import 'package:client/domain/auth/dto/registration_form_dto.dart';
@@ -91,8 +92,7 @@ class _SignupFormState extends State<SignupForm> {
                               const InputDecoration(labelText: 'Password'),
                           obscureText: true,
                           validator: (value) {
-                            var result =
-                                validateStringLength(value!, 'Password', 6);
+                            var result = validatePassword(value!);
 
                             if (result != null) {
                               return result.failure!.message;
@@ -101,22 +101,31 @@ class _SignupFormState extends State<SignupForm> {
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              _formKey.currentState!.save();
+                        BlocBuilder<SignupBloc, SignupState>(
+                            builder: (context, state) {
+                          if (state is SignupLoading) {
+                            return CircularProgressIndicator(
+                              color: Theme.of(context).colorScheme.onBackground,
+                            );
+                          } else {
+                            return ElevatedButton(
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
 
-                              var form = RegisterFormDto(
-                                  firstName: firstNameController.text,
-                                  lastName: lastNameController.text,
-                                  email: emailController.text,
-                                  password: passwordController.text);
+                                  var form = RegisterFormDto(
+                                      firstName: firstNameController.text,
+                                      lastName: lastNameController.text,
+                                      email: emailController.text,
+                                      password: passwordController.text);
 
-                              signupBloc.add(SignupRequested(form));
-                            }
-                          },
-                          child: const Text('Sign Up'),
-                        ),
+                                  signupBloc.add(SignupRequested(form));
+                                }
+                              },
+                              child: const Text('Sign Up'),
+                            );
+                          }
+                        }),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

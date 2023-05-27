@@ -18,12 +18,17 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
       final token = await userRepository.getToken();
 
-      final result = await groupRepository.getGroups(token);
+      final trendingResult = await groupRepository.getGroups(token);
+      final joinedResult = await groupRepository.getJoinedGroups(token);
 
-      if (result.hasError) {
-        emit(GroupOperationFailure(result.failure!));
+      if (trendingResult.hasError) {
+        emit(GroupOperationFailure(trendingResult.failure!));
+      } else if (joinedResult.hasError) {
+        emit(GroupOperationFailure(joinedResult.failure!));
       } else {
-        emit(GroupsFetchSuccess(result.value!));
+        emit(GroupsFetchSuccess(
+            trendingGroups: trendingResult.value!,
+            joinedGroups: joinedResult.value!));
       }
     });
 

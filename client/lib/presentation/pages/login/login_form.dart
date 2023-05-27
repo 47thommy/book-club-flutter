@@ -1,11 +1,10 @@
-import 'package:client/application/login/login_event.dart';
+import 'package:client/application/login/login.dart';
 import 'package:client/domain/auth/dto/login_form_dto.dart';
 import 'package:client/domain/core/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/application/auth/auth_bloc.dart';
 import 'package:client/application/auth/auth_event.dart';
-import 'package:client/application/login/login_bloc.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -91,19 +90,29 @@ class _LoginFormState extends State<LoginForm> {
                             },
                           ),
                           const SizedBox(height: 16.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                var form = LoginFormDto(
-                                    email: emailController.text,
-                                    password: passwordController.text);
+                          BlocBuilder<LoginBloc, LoginState>(
+                              builder: (context, state) {
+                            if (state is LoginLoading) {
+                              return CircularProgressIndicator(
+                                color:
+                                    Theme.of(context).colorScheme.onBackground,
+                              );
+                            } else {
+                              return ElevatedButton(
+                                onPressed: () {
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
+                                    var form = LoginFormDto(
+                                        email: emailController.text,
+                                        password: passwordController.text);
 
-                                loginBloc.add(LoginRequested(form));
-                              }
-                            },
-                            child: const Text('Login'),
-                          ),
+                                    loginBloc.add(LoginRequested(form));
+                                  }
+                                },
+                                child: const Text('Login'),
+                              );
+                            }
+                          }),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [

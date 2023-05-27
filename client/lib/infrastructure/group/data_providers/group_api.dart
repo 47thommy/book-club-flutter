@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
+import 'package:client/infrastructure/auth/data_providers/auth_api.dart';
+
 import 'package:client/infrastructure/common/exception.dart';
 import 'package:http/http.dart' as http;
 
@@ -31,9 +33,9 @@ class GroupApi {
 
       return GroupDto.fromJson(json);
     } else if (response.statusCode == HttpStatus.notFound) {
-      throw HttpException.notFound();
+      throw BCHttpException.notFound();
     }
-    throw const HttpException();
+    throw const BCHttpException();
   }
 
   Future<List<GroupDto>> getGroups(String token) async {
@@ -52,9 +54,30 @@ class GroupApi {
 
       return data.map<GroupDto>((json) => GroupDto.fromJson(json)).toList();
     } else if (response.statusCode == HttpStatus.notFound) {
-      throw HttpException.notFound();
+      throw BCHttpException.notFound();
     }
-    throw const HttpException();
+    throw const BCHttpException();
+  }
+
+  Future<List<GroupDto>> getJoinedGroups(String token) async {
+    var url = Uri.parse('${consts.apiUrl}/user/');
+
+    final response = await _client.get(url,
+        headers: {"Content-Type": "application/json", "token": token});
+
+    if (response.statusCode == HttpStatus.ok) {
+      final memberships = jsonDecode(response.body)['memberships'];
+
+      final groups = memberships.map((json) => json['group']).toList();
+      print(groups);
+
+      groups.retainWhere((json) => json != null);
+
+      return groups.map<GroupDto>((json) => GroupDto.fromJson(json)).toList();
+    } else if (response.statusCode == HttpStatus.notFound) {
+      throw BCHttpException.notFound();
+    }
+    throw const BCHttpException();
   }
 
   Future<GroupDto> createGroup(
@@ -73,7 +96,7 @@ class GroupApi {
 
       return GroupDto.fromJson(json);
     }
-    throw const HttpException();
+    throw const BCHttpException();
   }
 
   Future<void> deleteGroup(
@@ -88,10 +111,10 @@ class GroupApi {
         body: jsonEncode(group.toJson()));
 
     if (response.statusCode == HttpStatus.notFound) {
-      throw HttpException.notFound();
+      throw BCHttpException.notFound();
     } else if (response.statusCode == HttpStatus.forbidden) {
-      throw HttpException.unauthorized();
+      throw BCHttpException.unauthorized();
     }
-    throw const HttpException();
+    throw const BCHttpException();
   }
 }

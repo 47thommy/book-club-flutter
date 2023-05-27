@@ -1,3 +1,4 @@
+import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/domain/groups/group_dto.dart';
 import 'package:flutter/material.dart';
@@ -38,28 +39,69 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
     }
   }
 
+  void uploadImage() {
+    final fileBloc = context.read<FileBloc>();
+    fileBloc.add(UploadFile(File(pickedImage!.path)));
+  }
+
+  void createGroup(imageUrl) {
+    final groupBloc = context.read<GroupBloc>();
+
+    final newGroup = GroupDto(
+        id: -1,
+        name: groupNameController.text,
+        description: groupDescriptionController.text,
+        imageUrl: imageUrl);
+
+    groupBloc.add(GroupCreate(newGroup));
+
+    groupNameController.text = '';
+    groupDescriptionController.text = '';
+    pickedImage = null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('New club'),
         actions: [
-          MaterialButton(
-            onPressed: () {
-              final groupBloc = context.read<GroupBloc>();
-              final newGroup = GroupDto(
-                  id: -1,
-                  name: groupNameController.text,
-                  description: groupDescriptionController.text,
-                  imageUrl: pickedImage?.name ?? '');
-              groupBloc.add(GroupCreate(newGroup));
+          BlocConsumer<FileBloc, FileState>(
+              // listener
+              listener: (context, state) {
+            // group image upload successfull, now create the group
+            if (state is FileUploaded) {
+              createGroup(state.url);
+            }
 
-              groupNameController.text = '';
-              groupDescriptionController.text = '';
-              pickedImage = null;
-            },
-            child: const Text('Create'),
-          )
+            // upload failure
+            else if (state is FileOperationFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(state.error.message,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.error))));
+            }
+          },
+
+              // builder
+              builder: (context, state) {
+            // image upload in progress
+            if (state is FileUploading) {
+              return MaterialButton(
+                  onPressed: () {}, child: const CircularProgressIndicator());
+            }
+
+            return MaterialButton(
+              onPressed: () {
+                if (pickedImage != null) {
+                  uploadImage();
+                } else {
+                  createGroup('');
+                }
+              },
+              child: const Text('Create'),
+            );
+          })
         ],
       ),
       body: LayoutBuilder(
@@ -112,7 +154,7 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
           radius: 40,
           backgroundImage: pickedImage != null
               ? FileImage(File(pickedImage!.path)) as ImageProvider<Object>?
-              : const AssetImage('assets/profile.png'),
+              : null,
         ),
         Positioned(
           child: IconButton(

@@ -1,3 +1,4 @@
+import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/user/user_repository.dart';

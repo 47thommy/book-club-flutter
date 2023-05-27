@@ -1,3 +1,4 @@
+import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/presentation/pages/group/widgets/create_group_page.dart';
 import 'package:client/presentation/pages/group/widgets/joined_groups_card.dart';
@@ -17,7 +18,11 @@ class _GroupsPageState extends State<GroupsPage> {
   final icons = [const Icon(Icons.add), const Icon(Icons.chevron_left)];
 
   Widget trendingClubsBuilder(context) {
-    return BlocBuilder<GroupBloc, GroupState>(builder: (context, state) {
+    return BlocConsumer<GroupBloc, GroupState>(listener: (context, state) {
+      if (state is GroupCreated) {
+        context.read<GroupBloc>().add(LoadGroups());
+      }
+    }, builder: (context, state) {
       // Show loading progress while loading groups
       if (state is GroupsLoading) {
         return const Center(
@@ -27,19 +32,19 @@ class _GroupsPageState extends State<GroupsPage> {
 
       // Show trending groups on success
       else if (state is GroupsFetchSuccess) {
-        if (state.groups.isEmpty) {
+        if (state.trendingGroups.isEmpty) {
           return const Center(
             child: Text('No groups'),
           );
         }
 
-        print("...${state.groups}");
         return ListView(
+          shrinkWrap: true,
           scrollDirection: Axis.horizontal,
-          children: state.groups
+          children: state.trendingGroups
               .map((group) => TrendingClubCard(
                   title: group.name,
-                  picture: group.imageUrl,
+                  imageUrl: group.imageUrl,
                   description: group.description))
               .toList(),
         );
@@ -50,7 +55,9 @@ class _GroupsPageState extends State<GroupsPage> {
         return ErrorWidget(state.error.message);
       }
 
-      return const LinearProgressIndicator();
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
     });
   }
 
@@ -63,23 +70,21 @@ class _GroupsPageState extends State<GroupsPage> {
         );
       }
 
-      // Show trending groups on success
+      // Show joined groups on success
       else if (state is GroupsFetchSuccess) {
-        if (state.groups.isEmpty) {
+        if (state.joinedGroups.isEmpty) {
           return const Padding(
             padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
             child: Center(child: Text('You haven\'t joined any groups yet.')),
           );
         }
 
-        print("...${state.groups}");
-
         return ListView(
-          scrollDirection: Axis.horizontal,
-          children: state.groups
+          scrollDirection: Axis.vertical,
+          children: state.joinedGroups
               .map((group) => JoinedClubCard(
                   title: group.name,
-                  picture: group.imageUrl,
+                  imageUrl: group.imageUrl,
                   description: group.description))
               .toList(),
         );
@@ -138,7 +143,7 @@ class _GroupsPageState extends State<GroupsPage> {
             SizedBox(height: 200, child: trendingClubsBuilder(context)),
             const Padding(
               padding:
-                  EdgeInsets.only(top: 16.0, right: 16, left: 16, bottom: 0),
+                  EdgeInsets.only(top: 16.0, right: 16, left: 16, bottom: 16),
               child: Text(
                 'Joined Clubs',
                 style: TextStyle(
@@ -147,10 +152,9 @@ class _GroupsPageState extends State<GroupsPage> {
                 ),
               ),
             ),
-            Container(
-              width: MediaQuery.of(context).size.width * 1,
-              child: joinedClubsBuilder(context),
-            ),
+            SizedBox(
+                height: MediaQuery.of(context).size.height * .4,
+                child: joinedClubsBuilder(context)),
             const SizedBox(
               height: 16.0,
             ),
@@ -162,6 +166,8 @@ class _GroupsPageState extends State<GroupsPage> {
 
   @override
   Widget build(BuildContext context) {
+    print(">>");
+    print(context.read<FileBloc>());
     return BlocListener<GroupBloc, GroupState>(
         listener: (context, state) {
           if (state is GroupCreated) {

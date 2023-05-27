@@ -30,12 +30,14 @@ class GroupCreated extends GroupState {
 }
 
 class GroupsFetchSuccess extends GroupState {
-  final List<GroupDto> groups;
+  final List<GroupDto> trendingGroups;
+  final List<GroupDto> joinedGroups;
 
-  const GroupsFetchSuccess(this.groups);
+  const GroupsFetchSuccess(
+      {required this.trendingGroups, required this.joinedGroups});
 
   @override
-  List<Object?> get props => [groups];
+  List<Object?> get props => [trendingGroups, joinedGroups];
 }
 
 class GroupOperationFailure extends GroupState {
