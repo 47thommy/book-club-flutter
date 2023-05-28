@@ -9,7 +9,7 @@ const { Permissions } = permissionService;
 const getAllGroups = async () => {
   return await database.getRepository(Group).find({
     include: { all: true },
-    // relations: { members: true, roles: true, creator: true },
+    relations: { members: true, roles: true, creator: true },
   });
 };
 
@@ -69,13 +69,13 @@ const createGroup = async (groupName, creator, description, imageUrl) => {
 
 const deleteGroup = async (groupId, user) => {
   const group = await getGroupById(groupId);
-  
+
   await permissionService.isAuthorized(user, group, [Permissions.DELETE_GROUP]);
-  
+
   if (!group) {
     throw new Error("Group not found");
   }
-  
+
   await removeAllMembers(groupId, user);
 
   for (let role of group.roles) {
@@ -83,7 +83,7 @@ const deleteGroup = async (groupId, user) => {
   }
 
   await database.getRepository(Group).remove(group);
-  console.log(group)
+  console.log(group);
   return group;
 };
 
@@ -163,22 +163,22 @@ const isMember = async (groupId, memberId) => {
   const group = await getGroupById(groupId);
   const user = await userService.getUserById(memberId);
 
-  if (!group || !user) { 
-    throw new Error("Group or user not found"); 
+  if (!group || !user) {
+    throw new Error("Group or user not found");
   }
 
   const [membership] = user.memberships.filter(
     (membership) => membership.group.id === group.id
   );
-  
-  console.log(membership, 666)
+
+  console.log(membership, 666);
 
   if (!membership) {
     return false;
   }
 
   return true;
-}
+};
 
 //join a group
 const joinGroup = async (groupId, userId) => {
@@ -224,5 +224,5 @@ module.exports = {
   joinGroup,
   leaveGroup,
   removeMember,
-  isMember
+  isMember,
 };

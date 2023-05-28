@@ -21,7 +21,7 @@ const getRoleById = async (id) => {
 
   const role = await database.getRepository(Role).findOne({
     where: { id },
-    relations: { group: true },
+    relations: { group: true, permissions: true },
   });
 
   return role;
@@ -111,7 +111,7 @@ const deleteRole = async (id) => {
   const group = role.group;
 
   if (group) {
-    group.roles = group.roles.filter(role => role.id !== id);
+    group.roles = group.roles.filter((role) => role.id !== id);
     await database.getRepository(Group).save(role.group);
   }
 

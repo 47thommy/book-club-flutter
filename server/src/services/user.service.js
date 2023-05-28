@@ -1,6 +1,7 @@
 const { User, Group, Membership } = require("../models/");
 const database = require("../configs/db.config");
 const bcrypt = require("bcryptjs");
+const { getGroupById } = require("./group.service");
 
 const getUserByEmail = async (email, includePassword = false) => {
   if (!email) return null;
@@ -35,6 +36,10 @@ const getUserById = async (id, includePassword = false) => {
     where: { id },
     relations: { memberships: true, createdGroups: true },
   });
+
+  for (var membership of user.memberships) {
+    membership.group = await getGroupById(membership.group.id);
+  }
 
   // include password here if required
   if (user && includePassword) {

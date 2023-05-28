@@ -57,6 +57,14 @@ const getGroupRoles = async (req, res) => {
   }
 };
 
+const getRole = async (req, res) => {};
+const updateRole = async (req, res) => {};
+const deleteRole = async (req, res) => {};
+
 module.exports = {
   createRole,
+  getGroupRoles,
+  getRole,
+  updateRole,
+  deleteRole,
 };
