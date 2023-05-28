@@ -38,6 +38,9 @@ class FileApi {
   String absoluteUrl(
     String relativeUrl,
   ) {
+    if (relativeUrl.isEmpty) {
+      return '${consts.apiUrl}/uploads';
+    }
     return '${consts.apiUrl}/$relativeUrl';
   }
 }
