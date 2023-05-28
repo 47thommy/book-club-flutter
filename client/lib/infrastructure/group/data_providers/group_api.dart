@@ -69,7 +69,6 @@ class GroupApi {
       final memberships = jsonDecode(response.body)['memberships'];
 
       final groups = memberships.map((json) => json['group']).toList();
-      print(groups);
 
       groups.retainWhere((json) => json != null);
 

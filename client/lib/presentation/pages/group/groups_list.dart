@@ -1,6 +1,6 @@
 import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
-import 'package:client/presentation/pages/group/widgets/create_group_page.dart';
+import 'package:client/presentation/pages/group/group_create.dart';
 import 'package:client/presentation/pages/group/widgets/joined_groups_card.dart';
 import 'package:client/presentation/pages/group/widgets/trending_groups_card.dart';
 import 'package:flutter/material.dart';
@@ -83,9 +83,8 @@ class _GroupsPageState extends State<GroupsPage> {
           scrollDirection: Axis.vertical,
           children: state.joinedGroups
               .map((group) => JoinedClubCard(
-                  title: group.name,
-                  imageUrl: group.imageUrl,
-                  description: group.description))
+                    group: group,
+                  ))
               .toList(),
         );
       }

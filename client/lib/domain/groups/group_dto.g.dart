@@ -11,6 +11,13 @@ _$_GroupDto _$$_GroupDtoFromJson(Map<String, dynamic> json) => _$_GroupDto(
       name: json['name'] as String,
       description: json['description'] as String,
       imageUrl: json['imageUrl'] as String,
+      creator: UserDto.fromJson(json['creator'] as Map<String, dynamic>),
+      members: (json['members'] as List<dynamic>)
+          .map((e) => UserDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      roles: (json['roles'] as List<dynamic>)
+          .map((e) => RoleDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$_GroupDtoToJson(_$_GroupDto instance) =>
@@ -19,4 +26,7 @@ Map<String, dynamic> _$$_GroupDtoToJson(_$_GroupDto instance) =>
       'name': instance.name,
       'description': instance.description,
       'imageUrl': instance.imageUrl,
+      'creator': instance.creator,
+      'members': instance.members,
+      'roles': instance.roles,
     };

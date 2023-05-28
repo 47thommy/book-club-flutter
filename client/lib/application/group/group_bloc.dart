@@ -33,6 +33,22 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     });
 
     //
+    // Load group detail
+    on<LoadGroupDetail>((event, emit) async {
+      emit(GroupsLoading());
+
+      final token = await userRepository.getToken();
+
+      final result = await groupRepository.getGroup(event.groupId, token);
+
+      if (result.hasError) {
+        emit(GroupOperationFailure(result.failure!));
+      } else {
+        emit(GroupDetailLoaded(result.value!));
+      }
+    });
+
+    //
     // Group create
     on<GroupCreate>((event, emit) async {
       final token = await userRepository.getToken();

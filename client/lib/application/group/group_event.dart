@@ -14,15 +14,15 @@ class LoadGroups extends GroupEvent {
 }
 
 class LoadGroupDetail extends GroupEvent {
-  final int group;
+  final int groupId;
 
-  const LoadGroupDetail(this.group);
-
-  @override
-  List<Object?> get props => [group];
+  const LoadGroupDetail(this.groupId);
 
   @override
-  String toString() => 'Group load { group: $group }';
+  List<Object?> get props => [groupId];
+
+  @override
+  String toString() => 'Group load { group: $groupId }';
 }
 
 class GroupCreate extends GroupEvent {

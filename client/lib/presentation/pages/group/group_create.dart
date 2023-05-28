@@ -1,6 +1,7 @@
 import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/domain/groups/group_dto.dart';
+import 'package:client/domain/user/user_dto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
@@ -51,7 +52,10 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
         id: -1,
         name: groupNameController.text,
         description: groupDescriptionController.text,
-        imageUrl: imageUrl);
+        imageUrl: imageUrl,
+        creator: UserDto.empty,
+        members: [],
+        roles: []);
 
     groupBloc.add(GroupCreate(newGroup));
 

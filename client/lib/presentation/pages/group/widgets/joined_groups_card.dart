@@ -1,17 +1,16 @@
+import 'package:client/domain/groups/group_dto.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
+import 'package:client/presentation/pages/group/group_create.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class JoinedClubCard extends StatelessWidget {
-  final String title;
-  final String imageUrl;
-  final String description;
+  final GroupDto group;
 
   const JoinedClubCard({
     Key? key,
-    required this.title,
-    required this.imageUrl,
-    required this.description,
+    required this.group,
   }) : super(key: key);
 
   @override
@@ -19,7 +18,10 @@ class JoinedClubCard extends StatelessWidget {
     final fileRepository = context.read<FileRepository>();
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        context.pushNamed(GroupDetailPage.routeName,
+            pathParameters: {'gid': group.id.toString()});
+      },
       child: Container(
         width: 100,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -32,7 +34,7 @@ class JoinedClubCard extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
-                    fileRepository.getFullUrl(imageUrl),
+                    fileRepository.getFullUrl(group.imageUrl),
                     fit: BoxFit.fill,
                     errorBuilder: (context, exception, stackTrace) {
                       return Image.asset('assets/group_default.png');
@@ -57,14 +59,14 @@ class JoinedClubCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    title,
+                    group.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4.0),
                   Text(
-                    description,
+                    group.description,
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 12.0,

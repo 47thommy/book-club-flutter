@@ -24,6 +24,9 @@ mixin _$GroupDto {
   String get name => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
+  UserDto get creator => throw _privateConstructorUsedError;
+  List<UserDto> get members => throw _privateConstructorUsedError;
+  List<RoleDto> get roles => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +39,16 @@ abstract class $GroupDtoCopyWith<$Res> {
   factory $GroupDtoCopyWith(GroupDto value, $Res Function(GroupDto) then) =
       _$GroupDtoCopyWithImpl<$Res, GroupDto>;
   @useResult
-  $Res call({int id, String name, String description, String imageUrl});
+  $Res call(
+      {int id,
+      String name,
+      String description,
+      String imageUrl,
+      UserDto creator,
+      List<UserDto> members,
+      List<RoleDto> roles});
+
+  $UserDtoCopyWith<$Res> get creator;
 }
 
 /// @nodoc
@@ -56,6 +68,9 @@ class _$GroupDtoCopyWithImpl<$Res, $Val extends GroupDto>
     Object? name = null,
     Object? description = null,
     Object? imageUrl = null,
+    Object? creator = null,
+    Object? members = null,
+    Object? roles = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -74,7 +89,27 @@ class _$GroupDtoCopyWithImpl<$Res, $Val extends GroupDto>
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      creator: null == creator
+          ? _value.creator
+          : creator // ignore: cast_nullable_to_non_nullable
+              as UserDto,
+      members: null == members
+          ? _value.members
+          : members // ignore: cast_nullable_to_non_nullable
+              as List<UserDto>,
+      roles: null == roles
+          ? _value.roles
+          : roles // ignore: cast_nullable_to_non_nullable
+              as List<RoleDto>,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $UserDtoCopyWith<$Res> get creator {
+    return $UserDtoCopyWith<$Res>(_value.creator, (value) {
+      return _then(_value.copyWith(creator: value) as $Val);
+    });
   }
 }
 
@@ -85,7 +120,17 @@ abstract class _$$_GroupDtoCopyWith<$Res> implements $GroupDtoCopyWith<$Res> {
       __$$_GroupDtoCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String name, String description, String imageUrl});
+  $Res call(
+      {int id,
+      String name,
+      String description,
+      String imageUrl,
+      UserDto creator,
+      List<UserDto> members,
+      List<RoleDto> roles});
+
+  @override
+  $UserDtoCopyWith<$Res> get creator;
 }
 
 /// @nodoc
@@ -103,6 +148,9 @@ class __$$_GroupDtoCopyWithImpl<$Res>
     Object? name = null,
     Object? description = null,
     Object? imageUrl = null,
+    Object? creator = null,
+    Object? members = null,
+    Object? roles = null,
   }) {
     return _then(_$_GroupDto(
       id: null == id
@@ -121,6 +169,18 @@ class __$$_GroupDtoCopyWithImpl<$Res>
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      creator: null == creator
+          ? _value.creator
+          : creator // ignore: cast_nullable_to_non_nullable
+              as UserDto,
+      members: null == members
+          ? _value._members
+          : members // ignore: cast_nullable_to_non_nullable
+              as List<UserDto>,
+      roles: null == roles
+          ? _value._roles
+          : roles // ignore: cast_nullable_to_non_nullable
+              as List<RoleDto>,
     ));
   }
 }
@@ -132,8 +192,13 @@ class _$_GroupDto extends _GroupDto {
       {required this.id,
       required this.name,
       required this.description,
-      required this.imageUrl})
-      : super._();
+      required this.imageUrl,
+      required this.creator,
+      required final List<UserDto> members,
+      required final List<RoleDto> roles})
+      : _members = members,
+        _roles = roles,
+        super._();
 
   factory _$_GroupDto.fromJson(Map<String, dynamic> json) =>
       _$$_GroupDtoFromJson(json);
@@ -146,10 +211,27 @@ class _$_GroupDto extends _GroupDto {
   final String description;
   @override
   final String imageUrl;
+  @override
+  final UserDto creator;
+  final List<UserDto> _members;
+  @override
+  List<UserDto> get members {
+    if (_members is EqualUnmodifiableListView) return _members;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_members);
+  }
+
+  final List<RoleDto> _roles;
+  @override
+  List<RoleDto> get roles {
+    if (_roles is EqualUnmodifiableListView) return _roles;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_roles);
+  }
 
   @override
   String toString() {
-    return 'GroupDto(id: $id, name: $name, description: $description, imageUrl: $imageUrl)';
+    return 'GroupDto(id: $id, name: $name, description: $description, imageUrl: $imageUrl, creator: $creator, members: $members, roles: $roles)';
   }
 
   @override
@@ -162,12 +244,23 @@ class _$_GroupDto extends _GroupDto {
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.imageUrl, imageUrl) ||
-                other.imageUrl == imageUrl));
+                other.imageUrl == imageUrl) &&
+            (identical(other.creator, creator) || other.creator == creator) &&
+            const DeepCollectionEquality().equals(other._members, _members) &&
+            const DeepCollectionEquality().equals(other._roles, _roles));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, description, imageUrl);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      name,
+      description,
+      imageUrl,
+      creator,
+      const DeepCollectionEquality().hash(_members),
+      const DeepCollectionEquality().hash(_roles));
 
   @JsonKey(ignore: true)
   @override
@@ -188,7 +281,10 @@ abstract class _GroupDto extends GroupDto {
       {required final int id,
       required final String name,
       required final String description,
-      required final String imageUrl}) = _$_GroupDto;
+      required final String imageUrl,
+      required final UserDto creator,
+      required final List<UserDto> members,
+      required final List<RoleDto> roles}) = _$_GroupDto;
   const _GroupDto._() : super._();
 
   factory _GroupDto.fromJson(Map<String, dynamic> json) = _$_GroupDto.fromJson;
@@ -201,6 +297,12 @@ abstract class _GroupDto extends GroupDto {
   String get description;
   @override
   String get imageUrl;
+  @override
+  UserDto get creator;
+  @override
+  List<UserDto> get members;
+  @override
+  List<RoleDto> get roles;
   @override
   @JsonKey(ignore: true)
   _$$_GroupDtoCopyWith<_$_GroupDto> get copyWith =>

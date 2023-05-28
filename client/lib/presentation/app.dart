@@ -126,8 +126,8 @@ class _HomeState extends State<Home> {
       //   return context.goNamed(GroupDetailPage.routeName);
       case 3:
         return context.go("/");
-      default:
-        return context.goNamed("sample");
+      // default:
+      // return context.go()");
     }
   }
 }
