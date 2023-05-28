@@ -17,11 +17,11 @@ final GoRouter router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
             path: '/${GroupsScreen.routeName}',
             builder: (context, state) => const GroupsScreen()),
         GoRoute(
-            name: GroupDetailScreen.routeName,
-            path: '/${GroupDetailScreen.routeName}/:gid',
+            name: GroupDetailPage.routeName,
+            path: '/${GroupDetailPage.routeName}/:gid',
             builder: (context, state) {
               final groupId = int.parse(state.pathParameters['gid']!);
-              return GroupDetailScreen(gid: groupId);
+              return GroupDetailPage(gid: groupId);
             }),
       ]),
 ]);

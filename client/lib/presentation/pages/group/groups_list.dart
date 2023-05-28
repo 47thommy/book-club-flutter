@@ -1,5 +1,8 @@
+import 'package:client/application/auth/auth.dart';
 import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
+import 'package:client/infrastructure/auth/exceptions.dart';
+import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_create.dart';
 import 'package:client/presentation/pages/group/widgets/joined_groups_card.dart';
 import 'package:client/presentation/pages/group/widgets/trending_groups_card.dart';
@@ -42,17 +45,17 @@ class _GroupsPageState extends State<GroupsPage> {
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           children: state.trendingGroups
-              .map((group) => TrendingClubCard(
-                  title: group.name,
-                  imageUrl: group.imageUrl,
-                  description: group.description))
+              .map((group) => TrendingClubCard(group: group))
               .toList(),
         );
       }
 
       // Show error incase of failure
       else if (state is GroupOperationFailure) {
-        return ErrorWidget(state.error.message);
+        if (state.error is AuthenticationFailure) {
+          context.read<AuthenticationBloc>().add(AppStarted());
+        }
+        return ErrorWidget(state.error.toString());
       }
 
       return const Center(
@@ -91,7 +94,7 @@ class _GroupsPageState extends State<GroupsPage> {
 
       // Show error incase of failure
       else if (state is GroupOperationFailure) {
-        return ErrorWidget(state.error.message);
+        return Text(state.error.toString());
       }
 
       return const LinearProgressIndicator();
@@ -142,7 +145,7 @@ class _GroupsPageState extends State<GroupsPage> {
             SizedBox(height: 200, child: trendingClubsBuilder(context)),
             const Padding(
               padding:
-                  EdgeInsets.only(top: 16.0, right: 16, left: 16, bottom: 16),
+                  EdgeInsets.only(top: 6.0, right: 16, left: 16, bottom: 12.0),
               child: Text(
                 'Joined Clubs',
                 style: TextStyle(
@@ -165,22 +168,16 @@ class _GroupsPageState extends State<GroupsPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(">>");
-    print(context.read<FileBloc>());
     return BlocListener<GroupBloc, GroupState>(
         listener: (context, state) {
           if (state is GroupCreated) {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Group created.",
-                    style: TextStyle(color: Colors.green))));
+            showSuccess(context, "Group created.");
+
             setState(() {
               _selectedIndex = 0;
             });
           } else if (state is GroupOperationFailure) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(state.error.message,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.error))));
+            showFailure(context, state.error.toString());
           }
         },
         child: Scaffold(
@@ -188,13 +185,13 @@ class _GroupsPageState extends State<GroupsPage> {
             index: _selectedIndex,
             children: [
               buildBody(context),
-              const GroupDetailPage(),
+              const GroupCreatePage(),
             ],
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               if (_selectedIndex == 1) {
-                // createGroup();
+                BlocProvider.of<GroupBloc>(context).add(LoadGroups());
               }
               setState(() {
                 _selectedIndex += 1;
