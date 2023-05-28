@@ -1,4 +1,4 @@
-import 'package:client/domain/groups/group_dto.dart';
+import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class GroupEvent extends Equatable {
@@ -47,4 +47,28 @@ class GroupDelete extends GroupEvent {
 
   @override
   String toString() => 'Group delete { group_id: $id }';
+}
+
+class GroupJoin extends GroupEvent {
+  final GroupDto group;
+
+  const GroupJoin(this.group);
+
+  @override
+  List<Object?> get props => [group];
+
+  @override
+  String toString() => 'Group join { group: $group }';
+}
+
+class GroupLeave extends GroupEvent {
+  final GroupDto group;
+
+  const GroupLeave(this.group);
+
+  @override
+  List<Object?> get props => [group];
+
+  @override
+  String toString() => 'Group leave { group: $group }';
 }

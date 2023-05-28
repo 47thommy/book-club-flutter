@@ -1,4 +1,4 @@
-import 'package:client/domain/auth/dto/login_form_dto.dart';
+import 'package:client/infrastructure/auth/dto/dto.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:client/application/login/login_bloc.dart';
 import 'package:client/application/login/login_event.dart';

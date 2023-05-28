@@ -1,4 +1,4 @@
-import 'package:client/domain/groups/group_dto.dart';
+import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/utils/failure.dart';
 import 'package:equatable/equatable.dart';
 
@@ -24,6 +24,24 @@ class GroupCreated extends GroupState {
   final GroupDto group;
 
   const GroupCreated(this.group);
+
+  @override
+  List<Object?> get props => [group];
+}
+
+class GroupJoined extends GroupState {
+  final GroupDto group;
+
+  const GroupJoined(this.group);
+
+  @override
+  List<Object?> get props => [group];
+}
+
+class GroupLeaved extends GroupState {
+  final GroupDto group;
+
+  const GroupLeaved(this.group);
 
   @override
   List<Object?> get props => [group];
