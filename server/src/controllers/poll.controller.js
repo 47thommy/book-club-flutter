@@ -86,15 +86,12 @@ const createVote = async (req, res) => {
       req.user
     );
 
-    console.log(newVote, 44);
-
     if (newVote) {
       return res.status(StatusCodes.CREATED).json(newVote);
     }
 
     res.status(StatusCodes.BAD_REQUEST).json();
   } catch (err) {
-    console.log(err);
     res.status(StatusCodes.BAD_REQUEST).json();
   }
 };

@@ -75,8 +75,6 @@ const updateVote = async (voteId, choice, user) => {
 
   vote.choice = choice;
 
-  console.log(vote);
-
   await database.getRepository(Vote).save(vote);
 
   return vote;

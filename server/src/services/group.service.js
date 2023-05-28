@@ -1,16 +1,23 @@
 const { Like } = require("typeorm");
 const { Group, Role, Membership, User } = require("../models/");
 const database = require("../configs/db.config");
-const userService = require("./user.service");
 const roleService = require("./role.service");
 const permissionService = require("./permissions.service");
 const { Permissions } = permissionService;
 
 const getAllGroups = async () => {
-  return await database.getRepository(Group).find({
+  const groups = await database.getRepository(Group).find({
     include: { all: true },
     relations: { members: true, roles: true, creator: true },
   });
+
+  for (let group of groups) {
+    for (let member of group.members) {
+      member.role = await roleService.getRoleById(member.role.id);
+    }
+  }
+
+  return groups;
 };
 
 const getGroupsByName = async (name, exact = false) => {
@@ -29,6 +36,10 @@ const getGroupsByName = async (name, exact = false) => {
       relations: { members: true, creator: true, roles: true },
     });
 
+    for (let member of group.members) {
+      member.role = await roleService.getRoleById(member.role.id);
+    }
+
     return group;
   }
 };
@@ -41,11 +52,15 @@ const getGroupById = async (id) => {
     relations: { members: true, creator: true, roles: true },
   });
 
+  for (let member of group.members) {
+    member.role = await roleService.getRoleById(member.role.id);
+  }
+
   return group;
 };
 
 const createGroup = async (groupName, creator, description, imageUrl) => {
-  const group = database.getRepository(Group).create({
+  let group = database.getRepository(Group).create({
     name: groupName,
     description,
     imageUrl,
@@ -64,7 +79,9 @@ const createGroup = async (groupName, creator, description, imageUrl) => {
 
   await roleService.createRole(roleService.ORGANIZER, creator, newGroup);
 
-  return await addMember(creator.id, creatorRole.id, newGroup.id, creator);
+  group = await addMember(creator.id, creatorRole.id, newGroup.id, creator);
+  
+  return await getGroupById(group.id);
 };
 
 const deleteGroup = async (groupId, user) => {
@@ -83,11 +100,12 @@ const deleteGroup = async (groupId, user) => {
   }
 
   await database.getRepository(Group).remove(group);
-  console.log(group);
+
   return group;
 };
 
 const addMember = async (memberId, roleId, groupId, actionIssuer) => {
+  const userService = require("./user.service");
   const newMember = await userService.getUserById(memberId);
   let memberRole = await roleService.getRoleById(roleId);
   const group = await getGroupById(groupId);
@@ -160,6 +178,7 @@ const removeAllMembers = async (groupId, actionIssuer) => {
 // check membership
 
 const isMember = async (groupId, memberId) => {
+  const userService = require("./user.service");
   const group = await getGroupById(groupId);
   const user = await userService.getUserById(memberId);
 
@@ -170,8 +189,6 @@ const isMember = async (groupId, memberId) => {
   const [membership] = user.memberships.filter(
     (membership) => membership.group.id === group.id
   );
-
-  console.log(membership, 666);
 
   if (!membership) {
     return false;
@@ -186,6 +203,7 @@ const joinGroup = async (groupId, userId) => {
   if (!group) {
     throw new Error("Group not found");
   }
+  const userService = require("./user.service");
   const user = await userService.getUserById(userId);
 
   if (!user) {
@@ -203,6 +221,7 @@ const leaveGroup = async (groupId, userId) => {
   if (!group) {
     throw new Error("Group not found");
   }
+  const userService = require("./user.service");
   const user = await userService.getUserById(userId);
 
   const [membership] = user.memberships.filter(
