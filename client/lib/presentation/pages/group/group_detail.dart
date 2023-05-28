@@ -180,7 +180,10 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                     return [
                       const PopupMenuItem(
                         value: 'leave_group',
-                        child: Text('Leave Group'),
+                        child: Row(children: [
+                          Icon(Icons.heart_broken),
+                          Text('Leave Group')
+                        ]),
                       ),
                     ];
                   },
