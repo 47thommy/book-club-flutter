@@ -1,13 +1,19 @@
 import 'package:client/application/group/group.dart';
-import 'package:client/domain/auth/user_role.dart';
+import 'package:client/domain/group/group.dart';
+import 'package:client/domain/user/user.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
+import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
+import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../domain/groups/group_dto.dart';
+import 'package:client/infrastructure/group/dto/group_dto.dart';
+import 'package:client/infrastructure/group/dto/group_mapper.dart';
+import 'package:client/infrastructure/user/dto/dto.dart';
+import 'package:client/domain/role/user_permission_validator.dart';
 
-class GroupDetailScreen extends StatefulWidget {
+class GroupDetailPage extends StatefulWidget {
   static const routeName = 'group-detail';
 
   final int gid;
@@ -17,13 +23,13 @@ class GroupDetailScreen extends StatefulWidget {
   // final List<RoleDto> memberRoles = ['a', 'b'];
   final bool isJoined = true;
 
-  const GroupDetailScreen({super.key, required this.gid});
+  const GroupDetailPage({super.key, required this.gid});
 
   @override
-  State<GroupDetailScreen> createState() => _GroupDetailScreen();
+  State<GroupDetailPage> createState() => _GroupDetailScreen();
 }
 
-class _GroupDetailScreen extends State<GroupDetailScreen>
+class _GroupDetailScreen extends State<GroupDetailPage>
     with TickerProviderStateMixin {
   bool isClicked = false;
   late AnimationController buttonController;
@@ -67,7 +73,7 @@ class _GroupDetailScreen extends State<GroupDetailScreen>
           MaterialPageRoute(
             builder: (context) {
               // TODO: PollForm();
-              return Text('Poll form');
+              return const Text('Poll form');
             },
           ),
         );
@@ -78,7 +84,7 @@ class _GroupDetailScreen extends State<GroupDetailScreen>
           context,
           MaterialPageRoute(builder: (context) {
             // TODO: ReadingListForm()
-            return Text('reading form');
+            return const Text('reading form');
           }),
         );
         break;
@@ -92,42 +98,98 @@ class _GroupDetailScreen extends State<GroupDetailScreen>
     toggleMenus();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider<GroupBloc>(create: (context) {
-      return GroupBloc(
-          // repos
-          userRepository: context.read<UserRepository>(),
-          groupRepository: context.read<GroupRepository>())
-        ..add(LoadGroupDetail(widget.gid));
-    }, child: BlocBuilder<GroupBloc, GroupState>(
-        // builder
-        builder: (context, state) {
-      if (state is GroupDetailLoaded) {
-        return buildBody(state.group);
-      }
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
-    }));
+  Widget inviteOrJoinButton(BuildContext context, User user, Group group) {
+    final groupBloc = context.read<GroupBloc>();
+
+    if (!user.isMember(group)) {
+      return ElevatedButton(
+        onPressed: () {
+          groupBloc.add(GroupJoin(group.toGroupDto()));
+        },
+        child: const Text('Join'),
+      );
+    }
+
+    if (user.hasInvitePermission(group)) {
+      return ElevatedButton(
+        onPressed: () {
+          // groupBloc.add(GroupJoin(group.toGroupDto()));
+        },
+        child: const Text('Invite Members'),
+      );
+    }
+
+    return const Text('');
   }
 
-  Widget buildBody(GroupDto group) {
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider<GroupBloc>(
+        create: (context) {
+          return GroupBloc(
+              // repos
+              userRepository: context.read<UserRepository>(),
+              groupRepository: context.read<GroupRepository>())
+            ..add(LoadGroupDetail(widget.gid));
+        },
+        child: BlocConsumer<GroupBloc, GroupState>(
+            //
+            // Listner
+            listener: (context, state) {
+          // on group join or leave failure
+          if (state is GroupOperationFailure) {
+            showFailure(context, state.error.toString());
+          }
+
+          // on group join
+          else if (state is GroupJoined) {
+            showSuccess(context, 'Welcome to ${state.group.name}');
+          }
+
+          // on group leave
+          else if (state is GroupLeaved) {
+            showSuccess(context, 'You have left ${state.group.name}');
+          }
+        },
+            //
+            // builder
+            builder: (context, state) {
+          if (state is GroupDetailLoaded) {
+            return buildBody(context, state.group);
+          }
+
+          return const Scaffold(
+              body: Center(child: CircularProgressIndicator()));
+        }));
+  }
+
+  Widget buildBody(BuildContext context, GroupDto group) {
+    final fileRepository = context.read<FileRepository>();
+    final user = context.read<UserRepository>().getLoggedInUserSync();
+    final groupBloc = context.read<GroupBloc>();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(group.name),
-        actions: widget.isJoined
+        actions: user.isMember(group.toGroup())
             ? [
+                if (user.hasGroupEditPermission(group.toGroup()))
+                  GestureDetector(onTap: () {}, child: const Icon(Icons.edit)),
                 PopupMenuButton(
                   itemBuilder: (BuildContext context) {
                     return [
                       const PopupMenuItem(
                         value: 'leave_group',
-                        child: Text('Leave Group'),
+                        child: Row(children: [
+                          Icon(Icons.heart_broken),
+                          Text('Leave Group')
+                        ]),
                       ),
                     ];
                   },
                   onSelected: (value) {
                     if (value == 'leave_group') {
-                      // // TODO:  leave group
+                      groupBloc.add(GroupLeave(group));
                     }
                   },
                 ),
@@ -135,117 +197,143 @@ class _GroupDetailScreen extends State<GroupDetailScreen>
             : null,
       ),
       body: Stack(
+        fit: StackFit.expand,
         children: [
           SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(8.0),
-                    child: Image.asset(
-                      group.imageUrl,
-                      width: MediaQuery.of(context).size.width,
-                      height: 200,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  Text(
-                    group.name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Text(
-                    'Number of Members: ${group.members.length}',
-                    style: const TextStyle(
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (widget.isJoined) {
-                        // // TODO:  join
-                      } else {
-                        // // TODO:  invite
-                      }
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.network(
+                    fileRepository.getFullUrl(group.imageUrl),
+                    width: MediaQuery.of(context).size.width,
+                    height: 200,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, exception, stackTrace) {
+                      return Image.asset(
+                        'assets/group_default.png',
+                        width: MediaQuery.of(context).size.width,
+                        height: 200,
+                        fit: BoxFit.fitHeight,
+                      );
                     },
-                    child: Text(
-                      widget.isJoined ? 'Invite Members' : 'Join Club',
-                    ),
-                  ),
-                  const SizedBox(height: 16.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Members',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
-                        ),
-                      ),
-                      if (widget.isJoined)
-                        TextButton(
-                          onPressed: () {
-                            // Handle button click
-                            // // TODO:  polls
-                          },
-                          child: const Text('Polls'),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 8.0),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: group.members.length,
-                    itemBuilder: (context, index) {
-                      final String memberRole =
-                          index == 0 ? "creator" : "member";
-                      return ListTile(
-                        leading: const CircleAvatar(
-                          child: Icon(Icons.person),
-                        ),
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Member ${index + 1}'),
-                            Text(
-                              memberRole,
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14.0,
-                              ),
-                            ),
-                          ],
-                        ),
-                        subtitle: const Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text("531"),
-                            SizedBox(width: 4.0),
-                            Icon(
-                              Icons.menu_book_outlined,
-                              color: Colors.grey,
-                            ),
-                          ],
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null,
                         ),
                       );
                     },
                   ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // Group name / member count
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                group.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22.0,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                group.members.length > 1
+                                    ? '${group.members.length} Members'
+                                    : '${group.members.length} Member',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                          inviteOrJoinButton(context, user, group.toGroup()),
+                        ],
+                      ),
+                      const SizedBox(height: 16.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Members',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                          if (widget.isJoined)
+                            TextButton(
+                              onPressed: () {
+                                // Handle button click
+                                // // TODO:  polls
+                              },
+                              child: const Text('Polls'),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 8.0),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        // physics: const NeverScrollableScrollPhysics(),
+                        itemCount: group.members.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: const CircleAvatar(
+                              child: Icon(Icons.person),
+                            ),
+                            title: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                    '${group.members[index].firstName} ${group.members[index].lastName}'),
+                                Text(
+                                  group.members[index].role.name,
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14.0,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: const Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  Icons.book_outlined,
+                                  color: Colors.grey,
+                                  size: 14,
+                                ),
+                                SizedBox(width: 7.0),
+                                Text(''),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           if (isClicked)
             Positioned(
-              bottom: 110.0,
+              bottom: 80.0,
               right: 16.0,
               child: Wrap(
                 direction: Axis.vertical,
@@ -259,14 +347,14 @@ class _GroupDetailScreen extends State<GroupDetailScreen>
                     value: 'create_poll',
                   ),
                   buildOptions(
-                    icon: Icons.menu_book_outlined,
-                    label: 'Create a Reading List',
-                    value: 'create_reading_list',
-                  ),
-                  buildOptions(
                     icon: Icons.calendar_today,
                     label: 'Schedule a Meeting',
                     value: 'schedule_meeting',
+                  ),
+                  buildOptions(
+                    icon: Icons.menu_book_outlined,
+                    label: 'Create a Reading List',
+                    value: 'create_reading_list',
                   ),
                 ],
               ),

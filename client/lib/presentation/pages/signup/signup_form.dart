@@ -1,9 +1,7 @@
 import 'package:client/application/auth/auth_bloc.dart';
 import 'package:client/application/auth/auth_event.dart';
 import 'package:client/application/signup/signup.dart';
-import 'package:client/application/signup/signup_bloc.dart';
-import 'package:client/application/signup/signup_event.dart';
-import 'package:client/domain/auth/dto/registration_form_dto.dart';
+import 'package:client/infrastructure/auth/dto/dto.dart';
 import 'package:client/domain/core/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,7 +78,7 @@ class _SignupFormState extends State<SignupForm> {
                             var result = validateEmail(value!);
 
                             if (result != null) {
-                              return result.failure!.message;
+                              return result.failure!.toString();
                             }
                             return null;
                           },
@@ -95,7 +93,7 @@ class _SignupFormState extends State<SignupForm> {
                             var result = validatePassword(value!);
 
                             if (result != null) {
-                              return result.failure!.message;
+                              return result.failure!.toString();
                             }
                             return null;
                           },

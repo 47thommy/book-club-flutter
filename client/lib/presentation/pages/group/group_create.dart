@@ -1,22 +1,23 @@
 import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
-import 'package:client/domain/groups/group_dto.dart';
-import 'package:client/domain/user/user_dto.dart';
+import 'package:client/infrastructure/group/dto/group_dto.dart';
+import 'package:client/infrastructure/user/dto/dto.dart';
+import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
-class GroupDetailPage extends StatefulWidget {
+class GroupCreatePage extends StatefulWidget {
   static const routeName = 'group-detail';
 
-  const GroupDetailPage({super.key});
+  const GroupCreatePage({super.key});
 
   @override
-  State<GroupDetailPage> createState() => _GroupDetailPageState();
+  State<GroupCreatePage> createState() => _GroupCreatePageState();
 }
 
-class _GroupDetailPageState extends State<GroupDetailPage> {
+class _GroupCreatePageState extends State<GroupCreatePage> {
   XFile? pickedImage;
 
   final groupNameController = TextEditingController();
@@ -80,10 +81,7 @@ class _GroupDetailPageState extends State<GroupDetailPage> {
 
             // upload failure
             else if (state is FileOperationFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(state.error.message,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.error))));
+              showFailure(context, state.error.toString());
             }
           },
 

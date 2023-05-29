@@ -1,5 +1,5 @@
 import 'package:client/application/login/login.dart';
-import 'package:client/domain/auth/dto/login_form_dto.dart';
+import 'package:client/infrastructure/auth/dto/dto.dart';
 import 'package:client/domain/core/validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -70,7 +70,7 @@ class _LoginFormState extends State<LoginForm> {
                               var result = validateEmail(value!);
 
                               if (result != null) {
-                                return result.failure!.message;
+                                return result.failure!.toString();
                               }
                               return null;
                             },
@@ -84,7 +84,7 @@ class _LoginFormState extends State<LoginForm> {
                               var result = validatePassword(value!);
 
                               if (result != null) {
-                                return result.failure!.message;
+                                return result.failure!.toString();
                               }
                               return null;
                             },

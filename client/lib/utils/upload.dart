@@ -19,8 +19,6 @@ Future uploadData() async {
   var request = http.MultipartRequest(
       'POST', Uri.parse("http://192.168.173.163:3000/uploads"));
 
-  print("<<<<<!!!");
-
   var image = await http.MultipartFile.fromPath(
     'image',
     (await getImageFileFromAssets("books.png")).path,

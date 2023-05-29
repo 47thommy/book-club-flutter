@@ -1,3 +1,4 @@
+import 'package:client/infrastructure/role/role_dto.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_dto.freezed.dart';
@@ -12,6 +13,7 @@ class UserDto with _$UserDto {
     required String email,
     @JsonKey(name: 'first_name') required String firstName,
     @JsonKey(name: 'last_name') required String lastName,
+    @Default(RoleDto.empty) RoleDto role,
   }) = _UserDto;
 
   static const empty = UserDto(id: -1, email: "", firstName: "", lastName: "");

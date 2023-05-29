@@ -61,5 +61,37 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
         emit(GroupCreated(result.value!));
       }
     });
+
+    //
+    // Join group
+    on<GroupJoin>((event, emit) async {
+      final token = await userRepository.getToken();
+
+      final result = await groupRepository.joinGroup(event.group, token);
+
+      if (result.hasError) {
+        emit(GroupOperationFailure(result.failure!));
+      } else {
+        emit(GroupJoined(result.value!));
+      }
+
+      add(LoadGroupDetail(event.group.id));
+    });
+
+    //
+    // Leave group
+    on<GroupLeave>((event, emit) async {
+      final token = await userRepository.getToken();
+
+      final result = await groupRepository.leaveGroup(event.group, token);
+
+      if (result.hasError) {
+        emit(GroupOperationFailure(result.failure!));
+      } else {
+        emit(GroupLeaved(result.value!));
+      }
+
+      add(LoadGroupDetail(event.group.id));
+    });
   }
 }

@@ -1,17 +1,22 @@
 import 'dart:async';
 
+import 'package:client/domain/user/user.dart';
+
 import 'package:client/infrastructure/auth/data_providers/auth_api.dart';
 import 'package:client/infrastructure/auth/data_providers/auth_local.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
-import 'package:client/domain/auth/dto/login_form_dto.dart';
-import 'package:client/domain/auth/dto/registration_form_dto.dart';
-import 'package:client/domain/user/user_dto.dart';
+
+import 'package:client/infrastructure/auth/dto/dto.dart';
+import 'package:client/infrastructure/user/dto/dto.dart';
+import 'package:client/infrastructure/user/dto/user_mapper.dart';
+
 import 'package:client/utils/either.dart';
 import 'package:client/utils/failure.dart';
 
 class UserRepository {
   final CacheClient _cache;
   final AuthApi _authApi;
+  User _loggedInUser = User.empty;
 
   UserRepository({CacheClient? cache, AuthApi? api})
       : _cache = cache ?? CacheClient(),
@@ -54,18 +59,28 @@ class UserRepository {
       final result = await _getUserByToken(token);
 
       // authenticaion failure
-      if (result.hasError) return UserDto.empty;
+      if (result.hasError) {
+        _loggedInUser = User.empty;
+        return UserDto.empty;
+      }
 
+      _loggedInUser = result.value!.toUser();
       return result.value!;
     }
     // network error: return cached user
     on TimeoutException catch (_) {
       try {
-        return await _cache.loadUser();
+        final userDto = await _cache.loadUser();
+        _loggedInUser = userDto.toUser();
+        return userDto;
       } catch (_) {
         return UserDto.empty;
       }
     }
+  }
+
+  User getLoggedInUserSync() {
+    return _loggedInUser;
   }
 
   // throws timeout exception (for internal use only)

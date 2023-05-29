@@ -10,7 +10,8 @@ const Permissions = {
   MODIFY_READING_LIST: 6,
   ADD_MEMBER: 7,
   REMOVE_MEMBER: 8,
-  DELETE_GROUP: 9,
+  MODIFY_GROUP: 9,
+  DELETE_GROUP: 10,
 };
 
 const permissions = [
@@ -22,6 +23,7 @@ const permissions = [
   { id: Permissions.MODIFY_READING_LIST, name: "Modify reading list" },
   { id: Permissions.ADD_MEMBER, name: "Add member" },
   { id: Permissions.REMOVE_MEMBER, name: "Remove member" },
+  { id: Permissions.MODIFY_GROUP, name: "Modify group" },
   { id: Permissions.DELETE_GROUP, name: "Delete group" },
 ];
 

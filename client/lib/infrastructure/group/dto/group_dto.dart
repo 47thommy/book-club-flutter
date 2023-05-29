@@ -1,5 +1,5 @@
-import 'package:client/domain/auth/user_role.dart';
-import 'package:client/domain/user/user_dto.dart';
+import 'package:client/infrastructure/role/role_dto.dart';
+import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'group_dto.freezed.dart';
@@ -23,8 +23,10 @@ class GroupDto with _$GroupDto {
 }
 
 GroupDto _customGroupDtoFromJson(Map<String, dynamic> json) {
-  json['members'] =
-      json['members'].map((membership) => membership['user']).toList();
+  json['members'] = json['members'].map((membership) {
+    membership['user']['role'] = membership['role'];
+    return membership['user'];
+  }).toList();
 
   return _$GroupDtoFromJson(json);
 }

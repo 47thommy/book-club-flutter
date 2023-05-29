@@ -1,4 +1,5 @@
-import 'package:client/domain/groups/group_dto.dart';
+import 'package:client/infrastructure/auth/exceptions.dart';
+import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/common/exception.dart';
 import 'package:client/infrastructure/group/data_providers/group_api.dart';
 import 'package:client/infrastructure/group/data_providers/group_local.dart';
@@ -19,6 +20,8 @@ class GroupRepository {
       return Either(value: group);
     } on BCHttpException catch (error) {
       return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error.message));
     } catch (error) {
       return Either(failure: Failure(error.toString()));
     }
@@ -29,6 +32,8 @@ class GroupRepository {
       final groups = await _groupApi.getGroups(token);
       return Either(value: groups);
     } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
       return Either(failure: Failure(error.message));
     } catch (error) {
       return Either(failure: Failure(error.toString()));
@@ -41,6 +46,8 @@ class GroupRepository {
       return Either(value: groups);
     } on BCHttpException catch (error) {
       return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error.message));
     } catch (error) {
       return Either(failure: Failure(error.toString()));
     }
@@ -51,6 +58,34 @@ class GroupRepository {
       final grp = await _groupApi.createGroup(group: group, token: token);
       return Either(value: grp);
     } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error.message));
+    } catch (error) {
+      return Either(failure: Failure(error.toString()));
+    }
+  }
+
+  Future<Either<GroupDto>> joinGroup(GroupDto group, String token) async {
+    try {
+      await _groupApi.join(group: group, token: token);
+      return Either(value: group);
+    } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error.message));
+    } catch (error) {
+      return Either(failure: Failure(error.toString()));
+    }
+  }
+
+  Future<Either<GroupDto>> leaveGroup(GroupDto group, String token) async {
+    try {
+      await _groupApi.leave(group: group, token: token);
+      return Either(value: group);
+    } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
       return Either(failure: Failure(error.message));
     } catch (error) {
       return Either(failure: Failure(error.toString()));

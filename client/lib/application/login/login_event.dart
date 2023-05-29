@@ -1,4 +1,4 @@
-import 'package:client/domain/auth/dto/login_form_dto.dart';
+import 'package:client/infrastructure/auth/dto/dto.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class LoginEvent extends Equatable {

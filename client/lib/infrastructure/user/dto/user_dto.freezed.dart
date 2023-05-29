@@ -26,6 +26,7 @@ mixin _$UserDto {
   String get firstName => throw _privateConstructorUsedError;
   @JsonKey(name: 'last_name')
   String get lastName => throw _privateConstructorUsedError;
+  RoleDto get role => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +42,10 @@ abstract class $UserDtoCopyWith<$Res> {
       {int id,
       String email,
       @JsonKey(name: 'first_name') String firstName,
-      @JsonKey(name: 'last_name') String lastName});
+      @JsonKey(name: 'last_name') String lastName,
+      RoleDto role});
+
+  $RoleDtoCopyWith<$Res> get role;
 }
 
 /// @nodoc
@@ -61,6 +65,7 @@ class _$UserDtoCopyWithImpl<$Res, $Val extends UserDto>
     Object? email = null,
     Object? firstName = null,
     Object? lastName = null,
+    Object? role = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -79,7 +84,19 @@ class _$UserDtoCopyWithImpl<$Res, $Val extends UserDto>
           ? _value.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
               as String,
+      role: null == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as RoleDto,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $RoleDtoCopyWith<$Res> get role {
+    return $RoleDtoCopyWith<$Res>(_value.role, (value) {
+      return _then(_value.copyWith(role: value) as $Val);
+    });
   }
 }
 
@@ -94,7 +111,11 @@ abstract class _$$_UserDtoCopyWith<$Res> implements $UserDtoCopyWith<$Res> {
       {int id,
       String email,
       @JsonKey(name: 'first_name') String firstName,
-      @JsonKey(name: 'last_name') String lastName});
+      @JsonKey(name: 'last_name') String lastName,
+      RoleDto role});
+
+  @override
+  $RoleDtoCopyWith<$Res> get role;
 }
 
 /// @nodoc
@@ -111,6 +132,7 @@ class __$$_UserDtoCopyWithImpl<$Res>
     Object? email = null,
     Object? firstName = null,
     Object? lastName = null,
+    Object? role = null,
   }) {
     return _then(_$_UserDto(
       id: null == id
@@ -129,6 +151,10 @@ class __$$_UserDtoCopyWithImpl<$Res>
           ? _value.lastName
           : lastName // ignore: cast_nullable_to_non_nullable
               as String,
+      role: null == role
+          ? _value.role
+          : role // ignore: cast_nullable_to_non_nullable
+              as RoleDto,
     ));
   }
 }
@@ -140,7 +166,8 @@ class _$_UserDto extends _UserDto {
       {required this.id,
       required this.email,
       @JsonKey(name: 'first_name') required this.firstName,
-      @JsonKey(name: 'last_name') required this.lastName})
+      @JsonKey(name: 'last_name') required this.lastName,
+      this.role = RoleDto.empty})
       : super._();
 
   factory _$_UserDto.fromJson(Map<String, dynamic> json) =>
@@ -156,10 +183,13 @@ class _$_UserDto extends _UserDto {
   @override
   @JsonKey(name: 'last_name')
   final String lastName;
+  @override
+  @JsonKey()
+  final RoleDto role;
 
   @override
   String toString() {
-    return 'UserDto(id: $id, email: $email, firstName: $firstName, lastName: $lastName)';
+    return 'UserDto(id: $id, email: $email, firstName: $firstName, lastName: $lastName, role: $role)';
   }
 
   @override
@@ -172,12 +202,14 @@ class _$_UserDto extends _UserDto {
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
-                other.lastName == lastName));
+                other.lastName == lastName) &&
+            (identical(other.role, role) || other.role == role));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, email, firstName, lastName);
+  int get hashCode =>
+      Object.hash(runtimeType, id, email, firstName, lastName, role);
 
   @JsonKey(ignore: true)
   @override
@@ -198,7 +230,8 @@ abstract class _UserDto extends UserDto {
       {required final int id,
       required final String email,
       @JsonKey(name: 'first_name') required final String firstName,
-      @JsonKey(name: 'last_name') required final String lastName}) = _$_UserDto;
+      @JsonKey(name: 'last_name') required final String lastName,
+      final RoleDto role}) = _$_UserDto;
   const _UserDto._() : super._();
 
   factory _UserDto.fromJson(Map<String, dynamic> json) = _$_UserDto.fromJson;
@@ -213,6 +246,8 @@ abstract class _UserDto extends UserDto {
   @override
   @JsonKey(name: 'last_name')
   String get lastName;
+  @override
+  RoleDto get role;
   @override
   @JsonKey(ignore: true)
   _$$_UserDtoCopyWith<_$_UserDto> get copyWith =>

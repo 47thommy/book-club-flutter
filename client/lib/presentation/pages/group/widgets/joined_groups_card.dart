@@ -1,4 +1,4 @@
-import 'package:client/domain/groups/group_dto.dart';
+import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/presentation/pages/group/group_create.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class JoinedClubCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        context.pushNamed(GroupDetailPage.routeName,
+        context.pushNamed(GroupCreatePage.routeName,
             pathParameters: {'gid': group.id.toString()});
       },
       child: Container(
@@ -30,6 +30,7 @@ class JoinedClubCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
+                height: 70,
                 width: 70,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),

@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'user_role.dart';
+part of 'permission_dto.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,32 +14,34 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-RoleDto _$RoleDtoFromJson(Map<String, dynamic> json) {
-  return _RoleDto.fromJson(json);
+PermissionDto _$PermissionDtoFromJson(Map<String, dynamic> json) {
+  return _PermissionDto.fromJson(json);
 }
 
 /// @nodoc
-mixin _$RoleDto {
+mixin _$PermissionDto {
   int get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $RoleDtoCopyWith<RoleDto> get copyWith => throw _privateConstructorUsedError;
+  $PermissionDtoCopyWith<PermissionDto> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $RoleDtoCopyWith<$Res> {
-  factory $RoleDtoCopyWith(RoleDto value, $Res Function(RoleDto) then) =
-      _$RoleDtoCopyWithImpl<$Res, RoleDto>;
+abstract class $PermissionDtoCopyWith<$Res> {
+  factory $PermissionDtoCopyWith(
+          PermissionDto value, $Res Function(PermissionDto) then) =
+      _$PermissionDtoCopyWithImpl<$Res, PermissionDto>;
   @useResult
   $Res call({int id, String name});
 }
 
 /// @nodoc
-class _$RoleDtoCopyWithImpl<$Res, $Val extends RoleDto>
-    implements $RoleDtoCopyWith<$Res> {
-  _$RoleDtoCopyWithImpl(this._value, this._then);
+class _$PermissionDtoCopyWithImpl<$Res, $Val extends PermissionDto>
+    implements $PermissionDtoCopyWith<$Res> {
+  _$PermissionDtoCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -66,20 +68,22 @@ class _$RoleDtoCopyWithImpl<$Res, $Val extends RoleDto>
 }
 
 /// @nodoc
-abstract class _$$_RoleDtoCopyWith<$Res> implements $RoleDtoCopyWith<$Res> {
-  factory _$$_RoleDtoCopyWith(
-          _$_RoleDto value, $Res Function(_$_RoleDto) then) =
-      __$$_RoleDtoCopyWithImpl<$Res>;
+abstract class _$$_PermissionDtoCopyWith<$Res>
+    implements $PermissionDtoCopyWith<$Res> {
+  factory _$$_PermissionDtoCopyWith(
+          _$_PermissionDto value, $Res Function(_$_PermissionDto) then) =
+      __$$_PermissionDtoCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int id, String name});
 }
 
 /// @nodoc
-class __$$_RoleDtoCopyWithImpl<$Res>
-    extends _$RoleDtoCopyWithImpl<$Res, _$_RoleDto>
-    implements _$$_RoleDtoCopyWith<$Res> {
-  __$$_RoleDtoCopyWithImpl(_$_RoleDto _value, $Res Function(_$_RoleDto) _then)
+class __$$_PermissionDtoCopyWithImpl<$Res>
+    extends _$PermissionDtoCopyWithImpl<$Res, _$_PermissionDto>
+    implements _$$_PermissionDtoCopyWith<$Res> {
+  __$$_PermissionDtoCopyWithImpl(
+      _$_PermissionDto _value, $Res Function(_$_PermissionDto) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -88,7 +92,7 @@ class __$$_RoleDtoCopyWithImpl<$Res>
     Object? id = null,
     Object? name = null,
   }) {
-    return _then(_$_RoleDto(
+    return _then(_$_PermissionDto(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -103,11 +107,11 @@ class __$$_RoleDtoCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RoleDto extends _RoleDto {
-  const _$_RoleDto({required this.id, required this.name}) : super._();
+class _$_PermissionDto extends _PermissionDto {
+  const _$_PermissionDto({required this.id, required this.name}) : super._();
 
-  factory _$_RoleDto.fromJson(Map<String, dynamic> json) =>
-      _$$_RoleDtoFromJson(json);
+  factory _$_PermissionDto.fromJson(Map<String, dynamic> json) =>
+      _$$_PermissionDtoFromJson(json);
 
   @override
   final int id;
@@ -116,14 +120,14 @@ class _$_RoleDto extends _RoleDto {
 
   @override
   String toString() {
-    return 'RoleDto(id: $id, name: $name)';
+    return 'PermissionDto(id: $id, name: $name)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RoleDto &&
+            other is _$_PermissionDto &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name));
   }
@@ -135,23 +139,24 @@ class _$_RoleDto extends _RoleDto {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RoleDtoCopyWith<_$_RoleDto> get copyWith =>
-      __$$_RoleDtoCopyWithImpl<_$_RoleDto>(this, _$identity);
+  _$$_PermissionDtoCopyWith<_$_PermissionDto> get copyWith =>
+      __$$_PermissionDtoCopyWithImpl<_$_PermissionDto>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RoleDtoToJson(
+    return _$$_PermissionDtoToJson(
       this,
     );
   }
 }
 
-abstract class _RoleDto extends RoleDto {
-  const factory _RoleDto({required final int id, required final String name}) =
-      _$_RoleDto;
-  const _RoleDto._() : super._();
+abstract class _PermissionDto extends PermissionDto {
+  const factory _PermissionDto(
+      {required final int id, required final String name}) = _$_PermissionDto;
+  const _PermissionDto._() : super._();
 
-  factory _RoleDto.fromJson(Map<String, dynamic> json) = _$_RoleDto.fromJson;
+  factory _PermissionDto.fromJson(Map<String, dynamic> json) =
+      _$_PermissionDto.fromJson;
 
   @override
   int get id;
@@ -159,6 +164,6 @@ abstract class _RoleDto extends RoleDto {
   String get name;
   @override
   @JsonKey(ignore: true)
-  _$$_RoleDtoCopyWith<_$_RoleDto> get copyWith =>
+  _$$_PermissionDtoCopyWith<_$_PermissionDto> get copyWith =>
       throw _privateConstructorUsedError;
 }

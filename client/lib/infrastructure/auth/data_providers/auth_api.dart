@@ -1,9 +1,8 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:client/domain/auth/dto/login_form_dto.dart';
+import 'package:client/infrastructure/auth/dto/dto.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
-import 'package:client/domain/auth/dto/registration_form_dto.dart';
-import 'package:client/domain/user/user_dto.dart';
+import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:client/common/constants.dart' as consts;
 import 'package:http/http.dart' as http;
 
