@@ -1,3 +1,4 @@
+import 'package:client/infrastructure/meeting/dto/meeting_dto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MeetingChacheClient {
