@@ -19,11 +19,12 @@ class LoadFile extends FileEvent {
 
 class UploadFile extends FileEvent {
   final File file;
+  final String reason;
 
-  const UploadFile(this.file);
+  const UploadFile({required this.file, required this.reason});
 
   @override
-  List<Object?> get props => [file];
+  List<Object?> get props => [file, reason];
 
   @override
   String toString() => 'Upload file { email: ${file.path} }';

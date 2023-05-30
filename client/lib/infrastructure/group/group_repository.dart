@@ -5,6 +5,7 @@ import 'package:client/infrastructure/group/data_providers/group_api.dart';
 import 'package:client/infrastructure/group/data_providers/group_local.dart';
 import 'package:client/utils/either.dart';
 import 'package:client/utils/failure.dart';
+import 'dart:developer';
 
 class GroupRepository {
   final GroupCacheClient _cache;
@@ -56,6 +57,20 @@ class GroupRepository {
   Future<Either<GroupDto>> createGroup(GroupDto group, String token) async {
     try {
       final grp = await _groupApi.createGroup(group: group, token: token);
+      return Either(value: grp);
+    } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error.message));
+    } catch (error) {
+      return Either(failure: Failure(error.toString()));
+    }
+  }
+
+  Future<Either<GroupDto>> updateGroup(GroupDto group, String token) async {
+    try {
+      final grp = await _groupApi.updateGroup(group: group, token: token);
+
       return Either(value: grp);
     } on BCHttpException catch (error) {
       return Either(failure: Failure(error.message));

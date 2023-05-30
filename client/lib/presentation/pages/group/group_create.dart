@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'dart:developer';
 
 class GroupCreatePage extends StatefulWidget {
-  static const routeName = 'group-detail';
+  static const routeName = 'group-create';
 
   const GroupCreatePage({super.key});
 
@@ -43,7 +44,8 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
 
   void uploadImage() {
     final fileBloc = context.read<FileBloc>();
-    fileBloc.add(UploadFile(File(pickedImage!.path)));
+    fileBloc
+        .add(UploadFile(file: File(pickedImage!.path), reason: 'Group Create'));
   }
 
   void createGroup(imageUrl) {
@@ -75,7 +77,7 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
               // listener
               listener: (context, state) {
             // group image upload successfull, now create the group
-            if (state is FileUploaded) {
+            if (state is FileUploaded && state.reason == 'Group Create') {
               createGroup(state.url);
             }
 

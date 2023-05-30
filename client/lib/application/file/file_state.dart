@@ -28,11 +28,12 @@ class FileUploading extends FileState {}
 
 class FileUploaded extends FileState {
   final String url;
+  final String reason;
 
-  const FileUploaded(this.url);
+  const FileUploaded({required this.url, required this.reason});
 
   @override
-  List<Object?> get props => [url];
+  List<Object?> get props => [url, reason];
 }
 
 class FileOperationFailure extends FileState {

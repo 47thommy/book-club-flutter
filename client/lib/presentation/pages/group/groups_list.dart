@@ -1,5 +1,4 @@
 import 'package:client/application/auth/auth.dart';
-import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
@@ -97,7 +96,7 @@ class _GroupsPageState extends State<GroupsPage> {
         return Text(state.error.toString());
       }
 
-      return const LinearProgressIndicator();
+      return const Center(child: CircularProgressIndicator());
     });
   }
 

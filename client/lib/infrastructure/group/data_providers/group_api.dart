@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/common/constants.dart' as consts;
+import 'dart:developer';
 
 class GroupApi {
   late http.Client _client;
@@ -97,6 +98,27 @@ class GroupApi {
         body: jsonEncode(group.toJson()));
 
     if (response.statusCode == HttpStatus.created) {
+      final json = jsonDecode(response.body);
+
+      return GroupDto.fromJson(json);
+    } else if (response.statusCode == HttpStatus.unauthorized) {
+      throw AuthenticationFailure.sessionExpired();
+    }
+    throw const BCHttpException();
+  }
+
+  Future<GroupDto> updateGroup(
+      {required GroupDto group, required String token}) async {
+    final groupUri = Uri.parse('$baseUrl/${group.id}');
+
+    final http.Response response = await _client.patch(groupUri,
+        headers: <String, String>{
+          "Content-Type": "application/json",
+          'token': token
+        },
+        body: jsonEncode(group.toJson()));
+
+    if (response.statusCode == HttpStatus.ok) {
       final json = jsonDecode(response.body);
 
       return GroupDto.fromJson(json);
