@@ -37,6 +37,18 @@ class GroupCreate extends GroupEvent {
   String toString() => 'Group create { group: $group }';
 }
 
+class GroupUpdate extends GroupEvent {
+  final GroupDto group;
+
+  const GroupUpdate(this.group);
+
+  @override
+  List<Object?> get props => [group];
+
+  @override
+  String toString() => 'Group update { group: $group }';
+}
+
 class GroupDelete extends GroupEvent {
   final int id;
 

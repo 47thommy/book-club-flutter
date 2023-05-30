@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:client/application/group/group.dart';
 import 'package:client/domain/group/group.dart';
 import 'package:client/domain/user/user.dart';
@@ -5,6 +6,8 @@ import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
+import 'package:client/presentation/pages/group/group_settings.dart';
+import 'package:client/presentation/pages/group/groups_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,6 +15,7 @@ import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/group/dto/group_mapper.dart';
 import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:client/domain/role/user_permission_validator.dart';
+import 'package:go_router/go_router.dart';
 
 class GroupDetailPage extends StatefulWidget {
   static const routeName = 'group-detail';
@@ -124,14 +128,11 @@ class _GroupDetailScreen extends State<GroupDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<GroupBloc>(
-        create: (context) {
-          return GroupBloc(
-              // repos
-              userRepository: context.read<UserRepository>(),
-              groupRepository: context.read<GroupRepository>())
-            ..add(LoadGroupDetail(widget.gid));
-        },
+    return BlocProvider(
+        create: (context) => GroupBloc(
+            groupRepository: RepositoryProvider.of<GroupRepository>(context),
+            userRepository: RepositoryProvider.of<UserRepository>(context))
+          ..add(LoadGroupDetail(widget.gid)),
         child: BlocConsumer<GroupBloc, GroupState>(
             //
             // Listner
@@ -150,14 +151,22 @@ class _GroupDetailScreen extends State<GroupDetailPage>
           else if (state is GroupLeaved) {
             showSuccess(context, 'You have left ${state.group.name}');
           }
+
+          // on group edit
+          else if (state is GroupUpdated) {
+            showSuccess(context, 'Group updated.');
+          }
         },
             //
             // builder
             builder: (context, state) {
           if (state is GroupDetailLoaded) {
+            log('ok;');
             return buildBody(context, state.group);
           }
 
+          log(state.runtimeType.toString());
+          // log(state.toString());
           return const Scaffold(
               body: Center(child: CircularProgressIndicator()));
         }));
@@ -174,7 +183,17 @@ class _GroupDetailScreen extends State<GroupDetailPage>
         actions: user.isMember(group.toGroup())
             ? [
                 if (user.hasGroupEditPermission(group.toGroup()))
-                  GestureDetector(onTap: () {}, child: const Icon(Icons.edit)),
+                  GestureDetector(
+                      onTap: () {
+                        context.pushNamed(GroupEditPage.routeName,
+                            pathParameters: {
+                              'gid': widget.gid.toString()
+                            }).then((value) => context
+                            .read<GroupBloc>()
+                            .add(LoadGroupDetail(widget.gid)));
+                      },
+                      child: const Padding(
+                          padding: EdgeInsets.all(5), child: Icon(Icons.edit))),
                 PopupMenuButton(
                   itemBuilder: (BuildContext context) {
                     return [

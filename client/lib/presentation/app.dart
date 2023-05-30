@@ -1,5 +1,4 @@
 import 'package:client/application/auth/auth.dart';
-import 'package:client/application/file/file_bloc.dart';
 import 'package:client/application/login/login.dart';
 import 'package:client/application/signup/signup.dart';
 import 'package:client/presentation/pages/group/group.dart';
@@ -116,7 +115,6 @@ class _HomeState extends State<Home> {
   }
 
   void onTap(int value) {
-    print(value);
     switch (value) {
       case 0:
         return context.goNamed(GroupsScreen.routeName);

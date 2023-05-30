@@ -17,7 +17,7 @@ class FileBloc extends Bloc<FileEvent, FileState> {
       if (result.hasError) {
         emit(FileOperationFailure(result.failure!));
       } else {
-        emit(FileUploaded(result.value!));
+        emit(FileUploaded(url: result.value!, reason: event.reason));
       }
     });
   }

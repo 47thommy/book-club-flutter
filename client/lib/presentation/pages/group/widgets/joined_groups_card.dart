@@ -1,6 +1,7 @@
+import 'package:client/application/group/group.dart';
 import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
-import 'package:client/presentation/pages/group/group_create.dart';
+import 'package:client/presentation/pages/group/group.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -18,10 +19,15 @@ class JoinedClubCard extends StatelessWidget {
     final fileRepository = context.read<FileRepository>();
 
     return GestureDetector(
+      //
+      // Navigate to details page
       onTap: () {
-        context.pushNamed(GroupCreatePage.routeName,
-            pathParameters: {'gid': group.id.toString()});
+        context.pushNamed(GroupDetailPage.routeName, pathParameters: {
+          'gid': group.id.toString()
+        }).then((value) => context.read<GroupBloc>().add(LoadGroups()));
       },
+
+      // Card
       child: Container(
         width: 100,
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),

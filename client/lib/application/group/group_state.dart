@@ -29,6 +29,15 @@ class GroupCreated extends GroupState {
   List<Object?> get props => [group];
 }
 
+class GroupUpdated extends GroupState {
+  final GroupDto group;
+
+  const GroupUpdated(this.group);
+
+  @override
+  List<Object?> get props => [group];
+}
+
 class GroupJoined extends GroupState {
   final GroupDto group;
 

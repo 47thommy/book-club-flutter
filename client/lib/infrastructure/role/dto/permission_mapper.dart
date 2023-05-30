@@ -1,5 +1,5 @@
 import 'package:client/domain/role/permission.dart';
-import 'package:client/infrastructure/role/permission_dto.dart';
+import 'package:client/infrastructure/role/dto/permission_dto.dart';
 
 extension PermissionMapper on Permission {
   PermissionDto toPermissionDto() {

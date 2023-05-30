@@ -19,6 +19,20 @@ class Permission extends Equatable {
   static const modifyGroup = Permission(id: 9, name: 'Modify group');
   static const deleteGroup = Permission(id: 10, name: 'Delete group');
 
+  // for convenience
+  static const all = [
+    createPoll,
+    modifyPoll,
+    createMeeting,
+    modifyMeeting,
+    createReadingList,
+    modifyReadingList,
+    addMember,
+    removeMember,
+    modifyGroup,
+    deleteGroup
+  ];
+
   @override
   List<Object?> get props => [id, name];
 }

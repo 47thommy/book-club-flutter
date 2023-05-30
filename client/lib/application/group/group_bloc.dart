@@ -1,6 +1,7 @@
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:developer';
 
 import 'group_event.dart';
 import 'group_state.dart';
@@ -40,7 +41,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       final token = await userRepository.getToken();
 
       final result = await groupRepository.getGroup(event.groupId, token);
-
+      log('load called');
       if (result.hasError) {
         emit(GroupOperationFailure(result.failure!));
       } else {
@@ -52,13 +53,29 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     // Group create
     on<GroupCreate>((event, emit) async {
       final token = await userRepository.getToken();
-
+      log('nooo');
+      log(event.runtimeType.toString());
       final result = await groupRepository.createGroup(event.group, token);
 
       if (result.hasError) {
         emit(GroupOperationFailure(result.failure!));
       } else {
         emit(GroupCreated(result.value!));
+      }
+    });
+
+    //
+    // Group update
+    on<GroupUpdate>((event, emit) async {
+      final token = await userRepository.getToken();
+      log('ok');
+      log(event.runtimeType.toString());
+      final result = await groupRepository.updateGroup(event.group, token);
+
+      if (result.hasError) {
+        emit(GroupOperationFailure(result.failure!));
+      } else {
+        emit(GroupUpdated(result.value!));
       }
     });
 
