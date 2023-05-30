@@ -1,4 +1,5 @@
 import 'package:client/application/file/file_bloc.dart';
+import 'package:client/application/group/group.dart';
 import 'package:client/block_observer.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
@@ -38,6 +39,16 @@ void main() async {
                           create: (context) => FileBloc(
                               fileRepository:
                                   RepositoryProvider.of<FileRepository>(
+                                      context))),
+
+                      // Group provider
+                      BlocProvider(
+                          create: (context) => GroupBloc(
+                              groupRepository:
+                                  RepositoryProvider.of<GroupRepository>(
+                                      context),
+                              userRepository:
+                                  RepositoryProvider.of<UserRepository>(
                                       context))),
                     ],
 

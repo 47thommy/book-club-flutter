@@ -1,4 +1,4 @@
-import 'package:client/infrastructure/role/role_dto.dart';
+import 'package:client/infrastructure/role/dto/role_dto.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'user_dto.freezed.dart';
