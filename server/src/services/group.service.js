@@ -80,8 +80,28 @@ const createGroup = async (groupName, creator, description, imageUrl) => {
   await roleService.createRole(roleService.ORGANIZER, creator, newGroup);
 
   group = await addMember(creator.id, creatorRole.id, newGroup.id, creator);
-  
+
   return await getGroupById(group.id);
+};
+
+const updateGroup = async (
+  groupId,
+  groupName,
+  description,
+  imageUrl,
+  actionIssuer
+) => {
+  const group = await getGroupById(groupId);
+
+  await permissionService.isAuthorized(actionIssuer, group, [
+    Permissions.MODIFY_GROUP,
+  ]);
+
+  group.name = groupName;
+  group.description = description;
+  group.imageUrl = imageUrl;
+
+  return await database.getRepository(Group).save(group);
 };
 
 const deleteGroup = async (groupId, user) => {
@@ -230,7 +250,7 @@ const leaveGroup = async (groupId, userId) => {
   if (!membership) throw Error("Unauthorized");
 
   const groupCreator = await userService.getUserById(group.creator.id);
-  removeMember(userId, groupId, groupCreator);
+  await removeMember(userId, groupId, groupCreator);
 };
 // remove a member
 module.exports = {
@@ -238,6 +258,7 @@ module.exports = {
   getGroupById,
   getGroupsByName,
   createGroup,
+  updateGroup,
   deleteGroup,
   addMember,
   joinGroup,

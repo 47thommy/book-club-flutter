@@ -52,6 +52,33 @@ const createGroup = async (req, res) => {
   }
 };
 
+const updateGroup = async (req, res) => {
+  const result = validationResult(req);
+
+  if (!result.isEmpty()) {
+    res.status(StatusCodes.BAD_REQUEST).json({ errors: result.array() });
+    return;
+  }
+
+  try {
+    const updatedGroup = await groupService.updateGroup(
+      req.params.id,
+      req.body.name,
+      req.body.description,
+      req.body.imageUrl,
+      req.user
+    );
+
+    if (updatedGroup) {
+      return res.status(StatusCodes.OK).json(updatedGroup);
+    }
+
+    res.status(StatusCodes.BAD_REQUEST).json();
+  } catch (err) {
+    res.status(StatusCodes.BAD_REQUEST).json();
+  }
+};
+
 const deleteGroup = async (req, res) => {
   const group = await groupService.getGroupById(req.params.id);
 
@@ -154,6 +181,7 @@ const removeMember = async (req, res) => {
 
 module.exports = {
   createGroup,
+  updateGroup,
   deleteGroup,
   getGroup,
   addMember,

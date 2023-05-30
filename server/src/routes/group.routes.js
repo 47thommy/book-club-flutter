@@ -21,7 +21,9 @@ router.post(
   groupController.createGroup
 );
 
-// router.patch("/:id", loginRequired, groupController.updateGroup);
+// update group
+router.patch("/:id", loginRequired, groupController.updateGroup);
+
 // delete group
 router.delete(
   "/:id",
