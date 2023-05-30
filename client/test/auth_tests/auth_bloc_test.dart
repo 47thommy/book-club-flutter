@@ -1,7 +1,8 @@
 import 'package:client/application/auth/auth_bloc.dart';
 import 'package:client/application/auth/auth_event.dart';
 import 'package:client/application/auth/auth_state.dart';
-import 'package:client/domain/user/user_dto.dart';
+import 'package:client/infrastructure/user/dto/user_dto.dart';
+
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
