@@ -19,13 +19,14 @@ class MeetingApi {
     _client = client ?? http.Client();
   }
 
-  Future<MeetingDto> getMeeting(int id) async {
+  Future<MeetingDto> getMeeting(int id, String token) async {
     final meetingUri = Uri.parse('baseUri?id=$id');
 
     final http.Response response = await _client.get(
       meetingUri,
       headers: <String, String>{
         "Content-Type": "application/json",
+        'token': token
       },
     );
 
@@ -83,7 +84,7 @@ class MeetingApi {
     throw const BCHttpException();
   }
 
-  Future<void> deleteMeeting(
+  Future<MeetingDto> deleteMeeting(
       {required MeetingDto meeting, required String token}) async {
     final meetingUri = Uri.parse('$baseUrl/${meeting.id}');
     final http.Response response = await _client.delete(meetingUri,
@@ -92,8 +93,10 @@ class MeetingApi {
           'token': token
         },
         body: jsonEncode(meeting.toJson()));
-
-    if (response.statusCode == HttpStatus.notFound) {
+    if (response.statusCode == HttpStatus.ok) {
+      final json = jsonDecode(response.body);
+      return MeetingDto.fromJson(json);
+    } else if (response.statusCode == HttpStatus.notFound) {
       throw BCHttpException.notFound();
     } else if (response.statusCode == HttpStatus.forbidden) {
       throw BCHttpException.unauthorized();
