@@ -24,6 +24,8 @@ void main() {
           email: "test@gmail.com",
           firstName: "john",
           lastName: "doe",
+          bio: 'testbio',
+          username: 'john',
         ),
         members: [],
         roles: [],

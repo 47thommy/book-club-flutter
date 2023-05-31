@@ -44,7 +44,9 @@ void main() {
             id: 1,
             email: 'test@example.com',
             firstName: 'John',
-            lastName: 'Doe');
+            lastName: 'Doe',
+            bio: 'test bio',
+            username: 'john');
         const token = 'abc123';
 
         final expectedStates = [

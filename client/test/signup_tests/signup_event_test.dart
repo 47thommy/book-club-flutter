@@ -10,6 +10,7 @@ void main() {
         password: 'password123',
         firstName: 'john',
         lastName: 'doe',
+        username: 'john',
       );
       const event = SignupRequested(form);
       expect(event.props, [form]);
@@ -21,6 +22,7 @@ void main() {
         password: 'password123',
         firstName: 'john',
         lastName: 'doe',
+        username: 'john',
       );
       const event = SignupRequested(form);
       expect(
