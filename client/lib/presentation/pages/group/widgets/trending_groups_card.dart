@@ -5,6 +5,7 @@ import 'package:client/presentation/pages/group/group_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class TrendingClubCard extends StatelessWidget {
   final GroupDto group;
@@ -39,23 +40,14 @@ class TrendingClubCard extends StatelessWidget {
                 child: SizedBox(
                   height: 100,
                   width: 100,
-                  child: Image.network(
-                    fileRepository.getFullUrl(group.imageUrl),
+                  child: CachedNetworkImage(
+                    imageUrl: fileRepository.getFullUrl(group.imageUrl),
                     fit: BoxFit.fill,
-                    errorBuilder: (context, exception, stackTrace) {
+                    errorWidget: (context, exception, stackTrace) {
                       return Image.asset('assets/group_default.png');
                     },
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
+                    placeholder: (context, url) {
+                      return Image.asset('assets/group_default.png');
                     },
                   ),
                 )),

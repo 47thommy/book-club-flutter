@@ -12,4 +12,9 @@ class AuthenticationFailure implements Exception {
   factory AuthenticationFailure.invalidCredentials() =>
       const AuthenticationFailure(
           'An account with provided credentials does not exists.');
+
+  @override
+  String toString() {
+    return message;
+  }
 }

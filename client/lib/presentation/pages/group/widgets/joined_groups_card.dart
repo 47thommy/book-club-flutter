@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
@@ -40,23 +41,14 @@ class JoinedClubCard extends StatelessWidget {
                 width: 70,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    fileRepository.getFullUrl(group.imageUrl),
+                  child: CachedNetworkImage(
+                    imageUrl: fileRepository.getFullUrl(group.imageUrl),
                     fit: BoxFit.fill,
-                    errorBuilder: (context, exception, stackTrace) {
+                    errorWidget: (context, exception, stackTrace) {
                       return Image.asset('assets/group_default.png');
                     },
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
-                      );
+                    placeholder: (context, url) {
+                      return Image.asset('assets/group_default.png');
                     },
                   ),
                 )),

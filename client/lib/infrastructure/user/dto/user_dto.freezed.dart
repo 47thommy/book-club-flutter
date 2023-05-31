@@ -24,6 +24,7 @@ mixin _$UserDto {
   String get email => throw _privateConstructorUsedError;
   String get username => throw _privateConstructorUsedError;
   String get bio => throw _privateConstructorUsedError;
+  String get imageUrl => throw _privateConstructorUsedError;
   @JsonKey(name: 'first_name')
   String get firstName => throw _privateConstructorUsedError;
   @JsonKey(name: 'last_name')
@@ -45,6 +46,7 @@ abstract class $UserDtoCopyWith<$Res> {
       String email,
       String username,
       String bio,
+      String imageUrl,
       @JsonKey(name: 'first_name') String firstName,
       @JsonKey(name: 'last_name') String lastName,
       RoleDto role});
@@ -69,6 +71,7 @@ class _$UserDtoCopyWithImpl<$Res, $Val extends UserDto>
     Object? email = null,
     Object? username = null,
     Object? bio = null,
+    Object? imageUrl = null,
     Object? firstName = null,
     Object? lastName = null,
     Object? role = null,
@@ -89,6 +92,10 @@ class _$UserDtoCopyWithImpl<$Res, $Val extends UserDto>
       bio: null == bio
           ? _value.bio
           : bio // ignore: cast_nullable_to_non_nullable
+              as String,
+      imageUrl: null == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
       firstName: null == firstName
           ? _value.firstName
@@ -126,6 +133,7 @@ abstract class _$$_UserDtoCopyWith<$Res> implements $UserDtoCopyWith<$Res> {
       String email,
       String username,
       String bio,
+      String imageUrl,
       @JsonKey(name: 'first_name') String firstName,
       @JsonKey(name: 'last_name') String lastName,
       RoleDto role});
@@ -148,6 +156,7 @@ class __$$_UserDtoCopyWithImpl<$Res>
     Object? email = null,
     Object? username = null,
     Object? bio = null,
+    Object? imageUrl = null,
     Object? firstName = null,
     Object? lastName = null,
     Object? role = null,
@@ -168,6 +177,10 @@ class __$$_UserDtoCopyWithImpl<$Res>
       bio: null == bio
           ? _value.bio
           : bio // ignore: cast_nullable_to_non_nullable
+              as String,
+      imageUrl: null == imageUrl
+          ? _value.imageUrl
+          : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
       firstName: null == firstName
           ? _value.firstName
@@ -193,6 +206,7 @@ class _$_UserDto extends _UserDto {
       required this.email,
       required this.username,
       required this.bio,
+      required this.imageUrl,
       @JsonKey(name: 'first_name') required this.firstName,
       @JsonKey(name: 'last_name') required this.lastName,
       this.role = RoleDto.empty})
@@ -210,6 +224,8 @@ class _$_UserDto extends _UserDto {
   @override
   final String bio;
   @override
+  final String imageUrl;
+  @override
   @JsonKey(name: 'first_name')
   final String firstName;
   @override
@@ -221,7 +237,7 @@ class _$_UserDto extends _UserDto {
 
   @override
   String toString() {
-    return 'UserDto(id: $id, email: $email, username: $username, bio: $bio, firstName: $firstName, lastName: $lastName, role: $role)';
+    return 'UserDto(id: $id, email: $email, username: $username, bio: $bio, imageUrl: $imageUrl, firstName: $firstName, lastName: $lastName, role: $role)';
   }
 
   @override
@@ -234,6 +250,8 @@ class _$_UserDto extends _UserDto {
             (identical(other.username, username) ||
                 other.username == username) &&
             (identical(other.bio, bio) || other.bio == bio) &&
+            (identical(other.imageUrl, imageUrl) ||
+                other.imageUrl == imageUrl) &&
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
@@ -243,8 +261,8 @@ class _$_UserDto extends _UserDto {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType, id, email, username, bio, firstName, lastName, role);
+  int get hashCode => Object.hash(runtimeType, id, email, username, bio,
+      imageUrl, firstName, lastName, role);
 
   @JsonKey(ignore: true)
   @override
@@ -266,6 +284,7 @@ abstract class _UserDto extends UserDto {
       required final String email,
       required final String username,
       required final String bio,
+      required final String imageUrl,
       @JsonKey(name: 'first_name') required final String firstName,
       @JsonKey(name: 'last_name') required final String lastName,
       final RoleDto role}) = _$_UserDto;
@@ -281,6 +300,8 @@ abstract class _UserDto extends UserDto {
   String get username;
   @override
   String get bio;
+  @override
+  String get imageUrl;
   @override
   @JsonKey(name: 'first_name')
   String get firstName;

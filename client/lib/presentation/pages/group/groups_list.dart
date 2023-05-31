@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:client/application/auth/auth.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
@@ -7,6 +9,7 @@ import 'package:client/presentation/pages/group/widgets/joined_groups_card.dart'
 import 'package:client/presentation/pages/group/widgets/trending_groups_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class GroupsPage extends StatefulWidget {
   const GroupsPage({super.key});
@@ -23,6 +26,14 @@ class _GroupsPageState extends State<GroupsPage> {
     return BlocConsumer<GroupBloc, GroupState>(listener: (context, state) {
       if (state is GroupCreated) {
         context.read<GroupBloc>().add(LoadGroups());
+      }
+
+      //
+      else if (state is GroupOperationFailure) {
+        if (state.error.failure is AuthenticationFailure) {
+          context.read<AuthenticationBloc>().add(AppStarted());
+          context.go('/');
+        }
       }
     }, builder: (context, state) {
       // Show loading progress while loading groups
@@ -50,12 +61,9 @@ class _GroupsPageState extends State<GroupsPage> {
       }
 
       // Show error incase of failure
-      else if (state is GroupOperationFailure) {
-        if (state.error is AuthenticationFailure) {
-          context.read<AuthenticationBloc>().add(AppStarted());
-        }
-        return ErrorWidget(state.error.toString());
-      }
+      // else if (state is GroupOperationFailure) {
+      //   return ErrorWidget(state.error.toString());
+      // }
 
       return const Center(
         child: CircularProgressIndicator(),

@@ -24,8 +24,11 @@ class GroupDto with _$GroupDto {
 
 GroupDto _customGroupDtoFromJson(Map<String, dynamic> json) {
   json['members'] = json['members'].map((membership) {
-    membership['user']['role'] = membership['role'];
-    return membership['user'];
+    if (membership.containsKey('user')) {
+      membership['user']['role'] = membership['role'];
+      return membership['user'];
+    }
+    return membership;
   }).toList();
 
   return _$GroupDtoFromJson(json);

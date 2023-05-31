@@ -1,5 +1,4 @@
 import 'package:client/domain/role/role_repository_interface.dart';
-import 'package:client/infrastructure/role/role.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

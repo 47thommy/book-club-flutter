@@ -39,7 +39,7 @@ Either<String>? validateUsername(String username) {
 
   if (username.isEmpty) {
     return Either(failure: const Failure("please enter a username"));
-  } else if (validCharacters.hasMatch(username)) {
+  } else if (!validCharacters.hasMatch(username)) {
     return Either(
         failure:
             const Failure("please use only letters or numbers for username"));
@@ -49,8 +49,8 @@ Either<String>? validateUsername(String username) {
 }
 
 Either<String>? validateConfirmPassword(
-    String newPassword, String oldPassword) {
-  if (newPassword != oldPassword) {
+    String password, String confirmPassword) {
+  if (password != confirmPassword) {
     return Either(failure: const Failure("Passwords don't match"));
   } else {
     return null;

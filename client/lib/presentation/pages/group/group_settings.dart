@@ -1,8 +1,10 @@
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/domain/role/role.dart';
 import 'package:client/domain/role/user_permission_validator.dart';
+import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/group/dto/group_mapper.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
@@ -152,7 +154,7 @@ class _GroupEditPageState extends State<GroupEditPage> {
                       children: [
                         //
                         // Group image picker
-                        _buildProfileImage(),
+                        _buildProfileImage(state.group),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Padding(
@@ -257,15 +259,27 @@ class _GroupEditPageState extends State<GroupEditPage> {
         }));
   }
 
-  Widget _buildProfileImage() {
+  Widget _buildProfileImage(GroupDto group) {
     return Stack(
       alignment: Alignment.center,
       children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundImage: pickedImage != null
-              ? FileImage(File(pickedImage!.path)) as ImageProvider<Object>?
-              : null,
+        CachedNetworkImage(
+          fit: BoxFit.contain,
+          imageUrl: context.read<FileRepository>().getFullUrl(group.imageUrl),
+          errorWidget: (context, url, error) => CircleAvatar(
+            radius: 40,
+            backgroundImage: pickedImage != null
+                ? FileImage(File(pickedImage!.path)) as ImageProvider<Object>?
+                : null,
+          ),
+          imageBuilder: (context, imageProvider) {
+            return CircleAvatar(
+              radius: 40,
+              backgroundImage: pickedImage != null
+                  ? FileImage(File(pickedImage!.path)) as ImageProvider<Object>?
+                  : imageProvider,
+            );
+          },
         ),
         Positioned(
           child: IconButton(

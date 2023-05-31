@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:client/common/constants.dart';
 import 'package:client/domain/role/role.dart';
 import 'package:client/domain/role/role_form.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
@@ -29,7 +30,7 @@ class RoleApi {
         "Content-Type": "application/json",
         'token': token
       },
-    );
+    ).timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
       final json = jsonDecode(response.body);
@@ -46,13 +47,15 @@ class RoleApi {
   Future<Role> createRole(int groupId, RoleForm role, String token) async {
     final url = Uri.parse('$baseUrl/$groupId/role');
 
-    final http.Response response = await _client.post(url,
-        headers: <String, String>{
-          "Content-Type": "application/json",
-          'token': token
-        },
-        body:
-            jsonEncode({'name': role.name, 'permissions': role.permissionIds}));
+    final http.Response response = await _client
+        .post(url,
+            headers: <String, String>{
+              "Content-Type": "application/json",
+              'token': token
+            },
+            body: jsonEncode(
+                {'name': role.name, 'permissions': role.permissionIds}))
+        .timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.created) {
       final json = jsonDecode(response.body);
@@ -94,7 +97,7 @@ class RoleApi {
         "Content-Type": "application/json",
         'token': token
       },
-    );
+    ).timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) return;
 
