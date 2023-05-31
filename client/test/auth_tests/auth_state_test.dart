@@ -12,7 +12,12 @@ void main() {
 
     test('Authenticated should have correct props', () {
       const user = UserDto(
-          id: 1, email: 'test@example.com', firstName: 'John', lastName: 'Doe');
+          id: 1,
+          email: 'test@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          bio: 'testbio',
+          username: 'john');
       const state = Authenticated(user);
 
       expect(state.props, equals([user]));
