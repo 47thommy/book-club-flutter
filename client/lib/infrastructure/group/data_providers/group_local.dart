@@ -8,6 +8,8 @@ class GroupCacheClient {
   static const _tokenKey = 'token';
   static const _firstNameKey = 'firstName';
   static const _lastNameKey = 'lastName';
+  static const _usernameKey = 'username';
+  static const _bioKey = 'bioKey';
   static const _idKey = 'id';
 
   Future<void> save(UserDto user, String token) async {
@@ -15,6 +17,8 @@ class GroupCacheClient {
     await _storage.write(key: _emailKey, value: user.email);
     await _storage.write(key: _firstNameKey, value: user.firstName);
     await _storage.write(key: _lastNameKey, value: user.lastName);
+    await _storage.write(key: _usernameKey, value: user.username);
+    await _storage.write(key: _bioKey, value: user.bio);
     await _storage.write(key: _tokenKey, value: token);
   }
 
@@ -22,9 +26,16 @@ class GroupCacheClient {
     var id = await _storage.read(key: _idKey);
     var email = await _storage.read(key: _emailKey);
     var firstName = await _storage.read(key: _firstNameKey);
-    var lastName = await _storage.read(key: _firstNameKey);
+    var lastName = await _storage.read(key: _lastNameKey);
+    var username = await _storage.read(key: _usernameKey);
+    var bio = await _storage.read(key: _bioKey);
 
-    if (id == null || email == null || firstName == null || lastName == null) {
+    if (id == null ||
+        email == null ||
+        firstName == null ||
+        lastName == null ||
+        username == null ||
+        bio == null) {
       throw Exception("No user");
     }
 
@@ -32,7 +43,9 @@ class GroupCacheClient {
         id: int.parse(id),
         email: email,
         firstName: firstName,
-        lastName: lastName);
+        lastName: lastName,
+        username: username,
+        bio: bio);
   }
 
   Future<String?> getToken() async {

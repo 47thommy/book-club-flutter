@@ -24,6 +24,7 @@ class AuthApi {
 
     if (response.statusCode == HttpStatus.created) {
       final data = jsonDecode(response.body);
+
       return UserDto.fromJson(data);
     } else if (response.statusCode == HttpStatus.conflict) {
       throw AuthenticationFailure.emailConflict();
@@ -50,10 +51,12 @@ class AuthApi {
     throw AuthenticationFailure.invalidCredentials();
   }
 
-  Future<UserDto> getUser(String token, {int? id, String? email}) async {
+  Future<UserDto> getUser(String token,
+      {int? id, String? email, String? username}) async {
     var url = Uri.parse('${consts.apiUrl}/user/');
 
-    url = url.replace(queryParameters: {"id": id, "email": email});
+    url = url.replace(
+        queryParameters: {"id": id, "email": email, "username": username});
 
     final response = await _client.get(url, headers: {
       "Content-Type": "application/json",

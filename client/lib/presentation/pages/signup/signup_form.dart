@@ -17,6 +17,7 @@ class _SignupFormState extends State<SignupForm> {
   final _formKey = GlobalKey<FormState>();
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
+  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -71,6 +72,17 @@ class _SignupFormState extends State<SignupForm> {
                           },
                         ),
                         TextFormField(
+                          controller: usernameController,
+                          decoration:
+                              const InputDecoration(labelText: 'Username'),
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter username';
+                            }
+                            return null;
+                          },
+                        ),
+                        TextFormField(
                           controller: emailController,
                           decoration:
                               const InputDecoration(labelText: 'Email Address'),
@@ -115,7 +127,8 @@ class _SignupFormState extends State<SignupForm> {
                                       firstName: firstNameController.text,
                                       lastName: lastNameController.text,
                                       email: emailController.text,
-                                      password: passwordController.text);
+                                      password: passwordController.text,
+                                      username: usernameController.text);
 
                                   signupBloc.add(SignupRequested(form));
                                 }

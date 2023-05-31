@@ -22,6 +22,8 @@ UserDto _$UserDtoFromJson(Map<String, dynamic> json) {
 mixin _$UserDto {
   int get id => throw _privateConstructorUsedError;
   String get email => throw _privateConstructorUsedError;
+  String get username => throw _privateConstructorUsedError;
+  String get bio => throw _privateConstructorUsedError;
   @JsonKey(name: 'first_name')
   String get firstName => throw _privateConstructorUsedError;
   @JsonKey(name: 'last_name')
@@ -41,6 +43,8 @@ abstract class $UserDtoCopyWith<$Res> {
   $Res call(
       {int id,
       String email,
+      String username,
+      String bio,
       @JsonKey(name: 'first_name') String firstName,
       @JsonKey(name: 'last_name') String lastName,
       RoleDto role});
@@ -63,6 +67,8 @@ class _$UserDtoCopyWithImpl<$Res, $Val extends UserDto>
   $Res call({
     Object? id = null,
     Object? email = null,
+    Object? username = null,
+    Object? bio = null,
     Object? firstName = null,
     Object? lastName = null,
     Object? role = null,
@@ -75,6 +81,14 @@ class _$UserDtoCopyWithImpl<$Res, $Val extends UserDto>
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      bio: null == bio
+          ? _value.bio
+          : bio // ignore: cast_nullable_to_non_nullable
               as String,
       firstName: null == firstName
           ? _value.firstName
@@ -110,6 +124,8 @@ abstract class _$$_UserDtoCopyWith<$Res> implements $UserDtoCopyWith<$Res> {
   $Res call(
       {int id,
       String email,
+      String username,
+      String bio,
       @JsonKey(name: 'first_name') String firstName,
       @JsonKey(name: 'last_name') String lastName,
       RoleDto role});
@@ -130,6 +146,8 @@ class __$$_UserDtoCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? email = null,
+    Object? username = null,
+    Object? bio = null,
     Object? firstName = null,
     Object? lastName = null,
     Object? role = null,
@@ -142,6 +160,14 @@ class __$$_UserDtoCopyWithImpl<$Res>
       email: null == email
           ? _value.email
           : email // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
+              as String,
+      bio: null == bio
+          ? _value.bio
+          : bio // ignore: cast_nullable_to_non_nullable
               as String,
       firstName: null == firstName
           ? _value.firstName
@@ -165,6 +191,8 @@ class _$_UserDto extends _UserDto {
   const _$_UserDto(
       {required this.id,
       required this.email,
+      required this.username,
+      required this.bio,
       @JsonKey(name: 'first_name') required this.firstName,
       @JsonKey(name: 'last_name') required this.lastName,
       this.role = RoleDto.empty})
@@ -178,6 +206,10 @@ class _$_UserDto extends _UserDto {
   @override
   final String email;
   @override
+  final String username;
+  @override
+  final String bio;
+  @override
   @JsonKey(name: 'first_name')
   final String firstName;
   @override
@@ -189,7 +221,7 @@ class _$_UserDto extends _UserDto {
 
   @override
   String toString() {
-    return 'UserDto(id: $id, email: $email, firstName: $firstName, lastName: $lastName, role: $role)';
+    return 'UserDto(id: $id, email: $email, username: $username, bio: $bio, firstName: $firstName, lastName: $lastName, role: $role)';
   }
 
   @override
@@ -199,6 +231,9 @@ class _$_UserDto extends _UserDto {
             other is _$_UserDto &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.email, email) || other.email == email) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
+            (identical(other.bio, bio) || other.bio == bio) &&
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
@@ -208,8 +243,8 @@ class _$_UserDto extends _UserDto {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, email, firstName, lastName, role);
+  int get hashCode => Object.hash(
+      runtimeType, id, email, username, bio, firstName, lastName, role);
 
   @JsonKey(ignore: true)
   @override
@@ -229,6 +264,8 @@ abstract class _UserDto extends UserDto {
   const factory _UserDto(
       {required final int id,
       required final String email,
+      required final String username,
+      required final String bio,
       @JsonKey(name: 'first_name') required final String firstName,
       @JsonKey(name: 'last_name') required final String lastName,
       final RoleDto role}) = _$_UserDto;
@@ -240,6 +277,10 @@ abstract class _UserDto extends UserDto {
   int get id;
   @override
   String get email;
+  @override
+  String get username;
+  @override
+  String get bio;
   @override
   @JsonKey(name: 'first_name')
   String get firstName;

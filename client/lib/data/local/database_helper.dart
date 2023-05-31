@@ -29,8 +29,30 @@ class DatabaseHelper {
         image_url TEXT PRIMARY KEY,
         data BLOB
       )''');
+
+    // groups cache
+    await db.execute('''CREATE TABLE $grouptable (
+        id INT PRIMARY KEY,
+        name TEXT,
+        description TEXT
+      )''');
+
+    // Reading list cache
+    await db.execute('''
+      CREATE TABLE $readinglist (
+        id INT PRIMARY KEY        
+      )''');
+
+    // Schedule cache
+    await db.execute('''
+      CREATE TABLE $schedule (
+        id INT PRIMARY KEY        
+      )''');
   }
 
   // Table names
   static const filetable = 'images';
+  static const grouptable = 'group';
+  static const schedule = 'schedule';
+  static const readinglist = 'readinglist';
 }

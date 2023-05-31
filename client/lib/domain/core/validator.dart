@@ -34,6 +34,20 @@ Either<String>? validatePassword(String password) {
   }
 }
 
+Either<String>? validateUsername(String username) {
+  final validCharacters = RegExp(r'^[a-zA-Z0-9]+$');
+
+  if (username.isEmpty) {
+    return Either(failure: const Failure("please enter a username"));
+  } else if (validCharacters.hasMatch(username)) {
+    return Either(
+        failure:
+            const Failure("please use only letters or numbers for username"));
+  } else {
+    return null;
+  }
+}
+
 Either<String>? validateConfirmPassword(
     String newPassword, String oldPassword) {
   if (newPassword != oldPassword) {
@@ -47,6 +61,13 @@ Either<String>? validateStringLength(String input, String name, int length) {
   if (input.length < length) {
     return Either(
         failure: Failure("$name must be aleast $length characters long"));
+  }
+  return null;
+}
+
+Either<String>? validateNotEmpty(String input, String name) {
+  if (input.isEmpty) {
+    return Either(failure: Failure("$name must not be empty"));
   }
   return null;
 }

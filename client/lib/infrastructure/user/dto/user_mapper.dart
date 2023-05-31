@@ -7,23 +7,25 @@ import 'user_dto.dart';
 extension UserMapper on User {
   UserDto toUserDto() {
     return UserDto(
-      id: id,
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      role: role.toRoleDto(),
-    );
+        id: id,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        role: role.toRoleDto(),
+        username: username,
+        bio: bio);
   }
 }
 
 extension UserDtoMapper on UserDto {
   User toUser() {
     return User(
-      id: id,
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      role: role.toRole(),
-    );
+        id: id,
+        email: email,
+        firstName: firstName,
+        lastName: lastName,
+        role: role.toRole(),
+        username: username,
+        bio: bio);
   }
 }

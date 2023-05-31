@@ -11,12 +11,15 @@ class UserDto with _$UserDto {
   const factory UserDto({
     required int id,
     required String email,
+    required String username,
+    required String bio,
     @JsonKey(name: 'first_name') required String firstName,
     @JsonKey(name: 'last_name') required String lastName,
     @Default(RoleDto.empty) RoleDto role,
   }) = _UserDto;
 
-  static const empty = UserDto(id: -1, email: "", firstName: "", lastName: "");
+  static const empty = UserDto(
+      id: -1, email: "", firstName: "", lastName: "", username: "", bio: "");
   bool get isEmpty => this == UserDto.empty;
 
   factory UserDto.fromJson(Map<String, dynamic> json) =>

@@ -22,6 +22,7 @@ RegisterFormDto _$RegisterFormDtoFromJson(Map<String, dynamic> json) {
 mixin _$RegisterFormDto {
   String get email => throw _privateConstructorUsedError;
   String get password => throw _privateConstructorUsedError;
+  String get username => throw _privateConstructorUsedError;
   @JsonKey(name: 'first_name')
   String get firstName => throw _privateConstructorUsedError;
   @JsonKey(name: 'last_name')
@@ -42,6 +43,7 @@ abstract class $RegisterFormDtoCopyWith<$Res> {
   $Res call(
       {String email,
       String password,
+      String username,
       @JsonKey(name: 'first_name') String firstName,
       @JsonKey(name: 'last_name') String lastName});
 }
@@ -61,6 +63,7 @@ class _$RegisterFormDtoCopyWithImpl<$Res, $Val extends RegisterFormDto>
   $Res call({
     Object? email = null,
     Object? password = null,
+    Object? username = null,
     Object? firstName = null,
     Object? lastName = null,
   }) {
@@ -72,6 +75,10 @@ class _$RegisterFormDtoCopyWithImpl<$Res, $Val extends RegisterFormDto>
       password: null == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
               as String,
       firstName: null == firstName
           ? _value.firstName
@@ -96,6 +103,7 @@ abstract class _$$_RegisterFormDtoCopyWith<$Res>
   $Res call(
       {String email,
       String password,
+      String username,
       @JsonKey(name: 'first_name') String firstName,
       @JsonKey(name: 'last_name') String lastName});
 }
@@ -113,6 +121,7 @@ class __$$_RegisterFormDtoCopyWithImpl<$Res>
   $Res call({
     Object? email = null,
     Object? password = null,
+    Object? username = null,
     Object? firstName = null,
     Object? lastName = null,
   }) {
@@ -124,6 +133,10 @@ class __$$_RegisterFormDtoCopyWithImpl<$Res>
       password: null == password
           ? _value.password
           : password // ignore: cast_nullable_to_non_nullable
+              as String,
+      username: null == username
+          ? _value.username
+          : username // ignore: cast_nullable_to_non_nullable
               as String,
       firstName: null == firstName
           ? _value.firstName
@@ -143,6 +156,7 @@ class _$_RegisterFormDto implements _RegisterFormDto {
   const _$_RegisterFormDto(
       {required this.email,
       required this.password,
+      required this.username,
       @JsonKey(name: 'first_name') required this.firstName,
       @JsonKey(name: 'last_name') required this.lastName});
 
@@ -154,6 +168,8 @@ class _$_RegisterFormDto implements _RegisterFormDto {
   @override
   final String password;
   @override
+  final String username;
+  @override
   @JsonKey(name: 'first_name')
   final String firstName;
   @override
@@ -162,7 +178,7 @@ class _$_RegisterFormDto implements _RegisterFormDto {
 
   @override
   String toString() {
-    return 'RegisterFormDto(email: $email, password: $password, firstName: $firstName, lastName: $lastName)';
+    return 'RegisterFormDto(email: $email, password: $password, username: $username, firstName: $firstName, lastName: $lastName)';
   }
 
   @override
@@ -173,6 +189,8 @@ class _$_RegisterFormDto implements _RegisterFormDto {
             (identical(other.email, email) || other.email == email) &&
             (identical(other.password, password) ||
                 other.password == password) &&
+            (identical(other.username, username) ||
+                other.username == username) &&
             (identical(other.firstName, firstName) ||
                 other.firstName == firstName) &&
             (identical(other.lastName, lastName) ||
@@ -182,7 +200,7 @@ class _$_RegisterFormDto implements _RegisterFormDto {
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, email, password, firstName, lastName);
+      Object.hash(runtimeType, email, password, username, firstName, lastName);
 
   @JsonKey(ignore: true)
   @override
@@ -202,6 +220,7 @@ abstract class _RegisterFormDto implements RegisterFormDto {
   const factory _RegisterFormDto(
           {required final String email,
           required final String password,
+          required final String username,
           @JsonKey(name: 'first_name') required final String firstName,
           @JsonKey(name: 'last_name') required final String lastName}) =
       _$_RegisterFormDto;
@@ -213,6 +232,8 @@ abstract class _RegisterFormDto implements RegisterFormDto {
   String get email;
   @override
   String get password;
+  @override
+  String get username;
   @override
   @JsonKey(name: 'first_name')
   String get firstName;

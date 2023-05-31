@@ -3,6 +3,7 @@ import 'package:client/application/group/group.dart';
 import 'package:client/block_observer.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
+import 'package:client/infrastructure/role/role_repository.dart';
 import 'package:client/presentation/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +22,7 @@ void main() async {
                 RepositoryProvider(create: (_) => GroupRepository()),
                 RepositoryProvider(create: (_) => UserRepository()),
                 RepositoryProvider(create: (_) => FileRepository()),
+                RepositoryProvider(create: (_) => RoleRepository()),
               ],
 
                   // Bloc providers

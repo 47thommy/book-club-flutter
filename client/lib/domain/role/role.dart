@@ -7,6 +7,9 @@ class Role extends Equatable {
   final List<Permission> permissions;
 
   static const empty = Role(id: -1, name: '', permissions: []);
+  static const owner = 'Owner';
+  static const member = 'Reader';
+  static const defaults = [owner, member];
 
   const Role({required this.id, required this.name, required this.permissions});
 
