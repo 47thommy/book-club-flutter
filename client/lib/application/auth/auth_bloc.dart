@@ -31,7 +31,11 @@ class AuthenticationBloc
     on<UserLoggedIn>((event, emit) async {
       emit(AuthenticationLoading());
 
+      // save to local storage
       await userRepository.save(event.user, event.token);
+
+      // So that next time getLoggedInUserSync is called user will be available
+      add(AppStarted());
 
       emit(Authenticated(event.user));
     });
