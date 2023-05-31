@@ -14,6 +14,15 @@ const User = new UserSchema({
       type: "varchar",
     },
 
+    username: {
+      type: "varchar",
+    },
+
+    bio: {
+      type: "varchar",
+      default: ""
+    },
+
     password: {
       type: "varchar",
       select: false,

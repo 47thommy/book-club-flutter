@@ -4,7 +4,11 @@ const {
   verifyCredentials,
   generateToken,
 } = require("../services/auth.service");
-const { getUserByEmail, createUser } = require("../services/user.service");
+const {
+  getUserByEmail,
+  createUser,
+  getUserByUsername,
+} = require("../services/user.service");
 
 const register = async (req, res) => {
   const result = validationResult(req);
@@ -15,19 +19,33 @@ const register = async (req, res) => {
   }
 
   try {
-    const { email, password, first_name, middle_name, last_name } = req.body;
+    const {
+      email,
+      password,
+      first_name,
+      middle_name,
+      last_name,
+      username,
+      bio,
+    } = req.body;
 
     if (await getUserByEmail(email)) {
       res
         .status(StatusCodes.CONFLICT)
         .json("User with provided email already exists.");
+    } else if (await getUserByUsername(username)) {
+      res
+        .status(StatusCodes.CONFLICT)
+        .json("User with provided username already exists.");
     } else {
       const newUser = await createUser(
         email,
         password,
         first_name,
         middle_name,
-        last_name
+        last_name,
+        username,
+        bio
       );
 
       if (newUser) {

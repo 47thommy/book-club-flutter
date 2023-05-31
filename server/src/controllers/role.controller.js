@@ -29,7 +29,7 @@ const createRole = async (req, res) => {
     );
 
     if (newRole) {
-      return res.status(StatusCodes.CREATED).json();
+      return res.status(StatusCodes.CREATED).json(newRole);
     }
   } catch (err) {
     switch (err.message) {
@@ -46,20 +46,48 @@ const createRole = async (req, res) => {
           .status(StatusCodes.CONFLICT)
           .json("User is already a member.");
       default:
-        return res.status(StatusCodes.BAD_REQUEST).json();
+        return res.status(StatusCodes.CONFLICT).json(err.message);
     }
   }
   res.status(StatusCodes.BAD_REQUEST).json();
 };
 
 const getGroupRoles = async (req, res) => {
-  if (req.params.groupId) {
-  }
+  const group = await groupService.getGroupById(req.params.groupId);
+
+  if (group) return res.json(group.roles);
+
+  res.status(StatusCodes.NOT_FOUND).json();
 };
 
 const getRole = async (req, res) => {};
-const updateRole = async (req, res) => {};
-const deleteRole = async (req, res) => {};
+const updateRole = async (req, res) => {
+  try {
+    const role = await roleService.updateRole(
+      req.params.roleId,
+      req.body.name,
+      req.body.permissions,
+      req.user
+    );
+    if (role) {
+      return res.status(StatusCodes.OK).json(role);
+    }
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json(error);
+  }
+  return res.status(StatusCodes.BAD_REQUEST).json(error);
+};
+const deleteRole = async (req, res) => {
+  try {
+    const role = await roleService.deleteRole(req.params.roleId, req.user);
+    if (role) {
+      return res.status(StatusCodes.OK).json();
+    }
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json(error);
+  }
+  return res.status(StatusCodes.BAD_REQUEST).json(error);
+};
 
 module.exports = {
   createRole,
