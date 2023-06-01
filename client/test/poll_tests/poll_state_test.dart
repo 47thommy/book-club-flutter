@@ -25,5 +25,17 @@ void main() {
 
       expect(state.props, [pollId]);
     });
+
+    test('PollOperationFailure should  override props and toString()', () {
+      const error = Failure('Something went wrong');
+      const state = PollOperationFailure(error);
+
+      expect(state.props, [error]);
+
+      expect(
+        state.toString(),
+        'PollOperationFailure { error: $error }',
+      );
+    });
   });
 }
