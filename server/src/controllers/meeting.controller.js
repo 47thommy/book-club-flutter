@@ -79,11 +79,6 @@ const updateMeeting = async (req, res) => {
   if (!meeting) {
     return res.status(StatusCodes.NOT_FOUND).json();
   }
-  // console.log(req.params.id,
-  //     req.body.description,
-  //     req.body.time,
-  //     req.body.location,
-  //     req.user);
 
   const newMeeting = await meetingService.updateMeeting(
     req.params.id,
