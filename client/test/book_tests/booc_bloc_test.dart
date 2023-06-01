@@ -168,7 +168,6 @@ void main() {
     when(mockBookRepository.deleteBook(1, 1, token))
         .thenAnswer((_) => Future.value(Either(value: true)));
 
-    // Create the BookBloc instance
     final bloc = BookBloc(
       bookRepository: mockBookRepository,
       groupRepository: mockGroupRepository,
@@ -182,6 +181,29 @@ void main() {
     expect(
       bloc.stream,
       emitsInOrder([const BookDeleted(1)]),
+    );
+  });
+  test('emits BookOperationFailure when BookDelete fails', () {
+    final token = 'mock_token';
+    final failure = Failure('Failed to delete book');
+
+    when(mockUserRepository.getToken()).thenAnswer((_) => Future.value(token));
+    when(mockBookRepository.deleteBook(1, 2, token))
+        .thenAnswer((_) => Future.value(Either(failure: failure)));
+
+    final bloc = BookBloc(
+      bookRepository: mockBookRepository,
+      groupRepository: mockGroupRepository,
+      userRepository: mockUserRepository,
+    );
+
+    expect(bloc.state, equals(BookInit()));
+
+    bloc.add(BookDelete(1, 2));
+
+    expect(
+      bloc.stream,
+      emitsInOrder([BookOperationFailure(failure)]),
     );
   });
 }
