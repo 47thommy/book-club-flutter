@@ -10,14 +10,23 @@ const {
   Permission,
   Meeting,
   Book,
-  ReadingList,
+  // ReadingList,
 } = require("../models");
-
 
 const database = new typeorm.DataSource({
   type: "sqlite",
   database: "bookclub.sqlite",
-  entities: [User, Group, Membership, Poll, Vote, Role, Permission, Meeting, Book, ReadingList],
+  entities: [
+    User,
+    Group,
+    Membership,
+    Poll,
+    Vote,
+    Role,
+    Permission,
+    Meeting,
+    Book,
+  ],
   synchronize: true,
 });
 
