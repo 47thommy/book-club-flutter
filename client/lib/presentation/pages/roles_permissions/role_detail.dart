@@ -12,12 +12,11 @@ import 'package:client/infrastructure/role/dto/permission_dto.dart';
 import 'package:client/infrastructure/role/dto/role_dto.dart';
 import 'package:client/infrastructure/role/role_repository.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
+import 'package:client/presentation/pages/common/page_mode.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
-enum PageMode { create, edit }
 
 class RoleDetailPage extends StatefulWidget {
   static const routeName = 'role-detail';

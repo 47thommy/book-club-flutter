@@ -1,5 +1,4 @@
 import 'package:client/domain/role/role.dart';
-import 'package:client/domain/role/role_form.dart';
 import 'package:client/utils/failure.dart';
 import 'package:equatable/equatable.dart';
 

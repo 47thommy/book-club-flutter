@@ -51,4 +51,10 @@ extension UserPermission on User {
 
   bool hasPollDeletePermission(Group group) =>
       hasPermission(group, Permission.deletePoll);
+
+  bool hasReadingListCreatePermission(Group group) =>
+      hasPermission(group, Permission.createReadingList);
+
+  bool hasReadingListModifyPermission(Group group) =>
+      hasPermission(group, Permission.modifyReadingList);
 }
