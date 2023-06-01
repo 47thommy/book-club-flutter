@@ -10,4 +10,12 @@ void main() {
       expect(state.props, isEmpty);
     });
   });
+
+  group('LoginLoading', () {
+    test('props is empty', () {
+      final state = LoginLoading();
+
+      expect(state.props, isEmpty);
+    });
+  });
 }
