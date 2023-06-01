@@ -58,7 +58,7 @@ const Group = new GroupSchema({
       eager: true,
     },
 
-    readingList: {
+    books: {
       target: "Book",
       type: "one-to-many",
       inverseSide: "group",

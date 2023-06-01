@@ -25,10 +25,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
         if (result.hasError) {
           emit(LoginFailure(result.failure!));
+        } else {
+          authenticationBloc.add(
+              UserLoggedIn(user: result.value!, token: loginResult.value!));
         }
-
-        authenticationBloc
-            .add(UserLoggedIn(user: result.value!, token: loginResult.value!));
       }
 
       emit(LoginInitial());
