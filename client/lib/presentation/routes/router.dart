@@ -70,19 +70,20 @@ final GoRouter router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
         // Polls list  screen
         GoRoute(
             name: PollsList.routeName,
-            path: '/${PollsList.routeName}',
+            path: '/${PollsList.routeName}/:gid',
             builder: (context, state) {
-              final group = state.extra as GroupDto;
-              return PollsList(group);
+              final groupId = int.parse(state.pathParameters['gid']!);
+              return PollsList(groupId);
             }),
 
         //
         // Poll  screen
         GoRoute(
-            name: PollForm.routeName,
-            path: '/${PollForm.routeName}',
+            name: PollCreateScreen.routeName,
+            path: '/${PollCreateScreen.routeName}/:gid',
             builder: (context, state) {
-              return const PollForm();
+              final groupId = int.parse(state.pathParameters['gid']!);
+              return PollCreateScreen(groupId);
             }),
       ]),
 ]);

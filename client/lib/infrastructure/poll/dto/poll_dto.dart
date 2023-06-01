@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'poll_dto.freezed.dart';
@@ -13,5 +15,11 @@ class PollDto with _$PollDto {
       required List<String> options}) = _PollDto;
 
   factory PollDto.fromJson(Map<String, dynamic> json) =>
-      _$PollDtoFromJson(json);
+      _customPollDtoFromJson(json);
+}
+
+PollDto _customPollDtoFromJson(Map<String, dynamic> json) {
+  json['options'] = jsonDecode(json['options']);
+
+  return _$PollDtoFromJson(json);
 }

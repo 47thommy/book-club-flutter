@@ -2,6 +2,9 @@ import 'dart:developer';
 
 import 'package:client/application/group/group.dart';
 import 'package:client/application/poll/poll.dart';
+import 'package:client/domain/group/group.dart';
+import 'package:client/domain/role/user_permission_validator.dart';
+import 'package:client/infrastructure/group/dto/group_mapper.dart';
 
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/poll/dto/poll_dto.dart';
@@ -18,9 +21,9 @@ import '../../../infrastructure/group/dto/group_dto.dart';
 class PollsList extends StatefulWidget {
   static const routeName = 'polls';
 
-  final GroupDto group;
+  final int groupId;
 
-  const PollsList(this.group, {super.key});
+  const PollsList(this.groupId, {super.key});
 
   @override
   State<PollsList> createState() => _PollsListState();
@@ -40,17 +43,17 @@ class _PollsListState extends State<PollsList> {
         //
         // body
         child: BlocConsumer<PollBloc, PollState>(listener: (context, state) {
-          // on role create
+          // on poll create
           if (state is PollCreated) {
             showSuccess(context, 'Poll created');
-            context.read<GroupBloc>().add(LoadGroupDetail(widget.group.id));
+            context.read<GroupBloc>().add(LoadGroupDetail(widget.groupId));
           }
 
-          // on role create
+          // on poll create
           else if (state is PollDeleted) {
             showSuccess(context, 'Poll deleted');
             context.pop();
-            context.read<GroupBloc>().add(LoadGroupDetail(widget.group.id));
+            context.read<GroupBloc>().add(LoadGroupDetail(widget.groupId));
           }
 
           // on error
@@ -62,52 +65,73 @@ class _PollsListState extends State<PollsList> {
             //
             // widget
             builder: (context, state) {
-          return Scaffold(
-              appBar: AppBar(title: const Text('Poll')),
-              body: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                      children: widget.group.polls
-                          .map((poll) => _buildPoll(context, poll))
-                          .toList())));
+          return BlocProvider(
+              create: (context) => GroupBloc(
+                  userRepository: context.read<UserRepository>(),
+                  groupRepository: context.read<GroupRepository>())
+                ..add(LoadGroupDetail(widget.groupId)),
+
+              //
+              //
+              child: Scaffold(
+                  appBar: AppBar(title: const Text('Poll')),
+                  body: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: BlocBuilder<GroupBloc, GroupState>(
+                          builder: (context, state) {
+                        //
+                        //
+                        if (state is GroupDetailLoaded) {
+                          return SingleChildScrollView(
+                              child: Column(
+                                  children: state.group.polls
+                                      .map((poll) => _buildPoll(
+                                          context, poll, state.group))
+                                      .toList()));
+                        }
+
+                        return const Center(child: CircularProgressIndicator());
+                      }))));
         }));
   }
 
-  Widget _buildPoll(BuildContext context, PollDto poll) {
+  Widget _buildPoll(BuildContext context, PollDto poll, GroupDto group) {
     return GestureDetector(
         onTapDown: (details) => _storePosition(details),
         onLongPress: () {
-          _showPopupMenu(context);
+          _showPopupMenu(context, group.toGroup());
         },
-        child: FlutterPolls(
-          pollId: poll.id.toString(),
-          // hasVoted: hasVoted.value,
-          // userVotedOptionId: userVotedOptionId.value,
-          onVoted: (PollOption pollOption, int newTotalVotes) async {
-            await Future.delayed(const Duration(seconds: 1));
+        child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: FlutterPolls(
+              pollId: poll.id.toString(),
+              // hasVoted: hasVoted.value,
+              // userVotedOptionId: userVotedOptionId.value,
+              onVoted: (PollOption pollOption, int newTotalVotes) async {
+                await Future.delayed(const Duration(seconds: 1));
 
-            /// If HTTP status is success, return true else false
-            return true;
-          },
+                /// If HTTP status is success, return true else false
+                return true;
+              },
 
-          // pollEnded: days < 0,
-          pollTitle: Align(
-            alignment: Alignment.center,
-            child: Text(
-              poll.question,
-              style: const TextStyle(
+              // pollEnded: days < 0,
+              pollTitle: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  poll.question,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              pollOptions: _getPollOptions(context, poll),
+
+              votedPercentageTextStyle: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
               ),
-            ),
-          ),
-          pollOptions: _getPollOptions(context, poll),
-
-          votedPercentageTextStyle: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
-        ));
+            )));
   }
 
   List<PollOption> _getPollOptions(BuildContext context, PollDto poll) {
@@ -133,7 +157,9 @@ class _PollsListState extends State<PollsList> {
     return options;
   }
 
-  Future<void> _showPopupMenu(BuildContext context) async {
+  Future<void> _showPopupMenu(BuildContext context, Group group) async {
+    final user = context.read<UserRepository>().getLoggedInUserSync();
+
     final RenderBox overlay =
         Overlay.of(context).context.findRenderObject() as RenderBox;
 
@@ -147,6 +173,10 @@ class _PollsListState extends State<PollsList> {
         const PopupMenuItem(
           child: Text("Retract vote"),
         ),
+        if (user.hasPollDeletePermission(group))
+          const PopupMenuItem(
+            child: Text("Delete poll"),
+          ),
       ],
       elevation: 8.0,
     );

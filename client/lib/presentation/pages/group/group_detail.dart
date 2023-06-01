@@ -75,7 +75,9 @@ class _GroupDetailScreen extends State<GroupDetailPage>
   void handleOptionSelected(String option) {
     switch (option) {
       case 'create_poll':
-        context.pushNamed(PollForm.routeName).then((value) =>
+        context.pushNamed(PollCreateScreen.routeName, pathParameters: {
+          'gid': widget.gid.toString(),
+        }).then((value) =>
             context.read<GroupBloc>().add(LoadGroupDetail(widget.gid)));
         break;
 
@@ -297,7 +299,9 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                             TextButton(
                               onPressed: () {
                                 context.pushNamed(PollsList.routeName,
-                                    extra: group);
+                                    pathParameters: {
+                                      'gid': group.id.toString()
+                                    });
                               },
                               child: const Text('Polls'),
                             ),
@@ -358,11 +362,12 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                 runSpacing: 8.0,
                 crossAxisAlignment: WrapCrossAlignment.end,
                 children: [
-                  buildOptions(
-                    icon: Icons.poll,
-                    label: 'Create Poll',
-                    value: 'create_poll',
-                  ),
+                  if (user.hasPollCreatePermission(group.toGroup()))
+                    buildOptions(
+                      icon: Icons.poll,
+                      label: 'Create Poll',
+                      value: 'create_poll',
+                    ),
                   buildOptions(
                     icon: Icons.calendar_today,
                     label: 'Schedule a Meeting',

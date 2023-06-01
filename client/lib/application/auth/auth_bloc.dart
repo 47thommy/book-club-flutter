@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -47,8 +49,6 @@ class AuthenticationBloc
       await userRepository.delete();
 
       emit(Unauthenticated());
-
-      
     });
 
     // Login page requested

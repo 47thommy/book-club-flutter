@@ -25,6 +25,8 @@ class PollBloc extends Bloc<PollEvent, PollState> {
       final result =
           await pollRepository.createPoll(event.poll, event.groupId, token);
 
+      log(result.toString());
+
       if (result.hasError) {
         emit(PollOperationFailure(result.failure!));
       } else {

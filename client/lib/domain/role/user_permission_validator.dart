@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:client/domain/role/permission.dart';
 import 'package:client/domain/role/role.dart';
 import 'package:client/domain/group/group.dart';
@@ -20,7 +22,12 @@ extension UserPermission on User {
   bool hasPermission(Group group, Permission permission) {
     final userRole = getUserRole(group);
 
+    log(userRole.toString());
+    log(permission.toString());
+
     for (var userPermission in userRole.permissions) {
+      log('--- ${userPermission.toString()}');
+
       if (userPermission == permission) {
         return true;
       }
@@ -46,4 +53,7 @@ extension UserPermission on User {
 
   bool hasPollCreatePermission(Group group) =>
       hasPermission(group, Permission.createPoll);
+
+  bool hasPollDeletePermission(Group group) =>
+      hasPermission(group, Permission.modifyPoll);
 }

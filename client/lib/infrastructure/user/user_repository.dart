@@ -79,7 +79,10 @@ class UserRepository {
     final token = await getToken();
 
     try {
+      log(token);
       final result = await _getUserByToken(token);
+
+      log(result.toString());
 
       // authenticaion failure
       if (result.hasError) {
@@ -95,8 +98,10 @@ class UserRepository {
       try {
         final userDto = await _cache.loadUser();
         _loggedInUser = userDto.toUser();
+        log('.........!. $userDto');
         return userDto;
-      } catch (_) {
+      } catch (error) {
+        log(error.toString());
         return UserDto.empty;
       }
     }
@@ -131,6 +136,8 @@ class UserRepository {
   }
 
   Future<void> save(UserDto user, String token) async {
+    log(user.toString());
+    
     await _cache.save(user, token);
   }
 

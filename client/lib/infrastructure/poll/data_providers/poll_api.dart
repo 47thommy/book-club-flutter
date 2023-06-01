@@ -54,8 +54,11 @@ class PollApi {
               "Content-Type": "application/json",
               'token': token
             },
-            body: jsonEncode(
-                {'question': poll.question, 'options': poll.options}))
+            body: jsonEncode({
+              'question': poll.question,
+              'options': poll.options,
+              'groupId': groupId
+            }))
         .timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.created) {

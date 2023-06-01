@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -10,7 +12,7 @@ class CacheClient {
   static const _lastNameKey = 'lastName';
   static const _usernameKey = 'username';
   static const _bioKey = 'bio';
-  static const _imageUrlKey = 'iamgeUrl';
+  static const _imageUrlKey = 'imageUrl';
   static const _idKey = 'id';
 
   Future<void> save(UserDto user, String token) async {
@@ -22,6 +24,7 @@ class CacheClient {
     await _storage.write(key: _bioKey, value: user.bio);
     await _storage.write(key: _imageUrlKey, value: user.imageUrl);
     await _storage.write(key: _tokenKey, value: token);
+    log('....................saved');
   }
 
   Future<UserDto> loadUser() async {
