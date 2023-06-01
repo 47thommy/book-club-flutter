@@ -18,5 +18,12 @@ void main() {
 
       expect(state.props, [poll]);
     });
+
+    test('PollDeleted should  override props', () {
+      const pollId = 1;
+      const state = PollDeleted(pollId);
+
+      expect(state.props, [pollId]);
+    });
   });
 }
