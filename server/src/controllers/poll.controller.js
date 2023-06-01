@@ -50,22 +50,23 @@ const getPoll = async (req, res) => {
 
 const deletePoll = async (req, res) => {
   const poll = await pollService.getPollById(req.params.id);
+  const group = await groupService.getGroupById(req.body.groupId);
 
-  if (!poll) {
+  if (!poll || !group) {
     return res.status(StatusCodes.NOT_FOUND).json();
   }
 
   try {
-    if (poll.creator.id == req.user.id) {
-      const deletedPoll = await pollService.deletePoll(req.params.id, req.user);
+    const deletedPoll = await pollService.deletePoll(
+      req.params.id,
+      req.user,
+      group
+    );
 
-      if (deletedPoll) {
-        return res.status(StatusCodes.OK).json();
-      }
-      res.status(StatusCodes.BAD_REQUEST).json();
-    } else {
-      res.status(StatusCodes.FORBIDDEN).json();
+    if (deletedPoll) {
+      return res.status(StatusCodes.OK).json();
     }
+    res.status(StatusCodes.BAD_REQUEST).json();
   } catch {
     res.status(StatusCodes.BAD_REQUEST).json();
   }
