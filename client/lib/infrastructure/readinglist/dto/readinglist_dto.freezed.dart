@@ -14,27 +14,27 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-ReadingListDto _$ReadinglistDtoFromJson(Map<String, dynamic> json) {
+ReadingListDto _$ReadingListDtoFromJson(Map<String, dynamic> json) {
   return _ReadinglistDto.fromJson(json);
 }
 
 /// @nodoc
-mixin _$ReadinglistDto {
+mixin _$ReadingListDto {
   int get id => throw _privateConstructorUsedError;
   BookDto get book => throw _privateConstructorUsedError;
   GroupDto get group => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ReadinglistDtoCopyWith<ReadingListDto> get copyWith =>
+  $ReadingListDtoCopyWith<ReadingListDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ReadinglistDtoCopyWith<$Res> {
-  factory $ReadinglistDtoCopyWith(
+abstract class $ReadingListDtoCopyWith<$Res> {
+  factory $ReadingListDtoCopyWith(
           ReadingListDto value, $Res Function(ReadingListDto) then) =
-      _$ReadinglistDtoCopyWithImpl<$Res, ReadingListDto>;
+      _$ReadingListDtoCopyWithImpl<$Res, ReadingListDto>;
   @useResult
   $Res call({int id, BookDto book, GroupDto group});
 
@@ -43,9 +43,9 @@ abstract class $ReadinglistDtoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ReadinglistDtoCopyWithImpl<$Res, $Val extends ReadingListDto>
-    implements $ReadinglistDtoCopyWith<$Res> {
-  _$ReadinglistDtoCopyWithImpl(this._value, this._then);
+class _$ReadingListDtoCopyWithImpl<$Res, $Val extends ReadingListDto>
+    implements $ReadingListDtoCopyWith<$Res> {
+  _$ReadingListDtoCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -94,7 +94,7 @@ class _$ReadinglistDtoCopyWithImpl<$Res, $Val extends ReadingListDto>
 
 /// @nodoc
 abstract class _$$_ReadinglistDtoCopyWith<$Res>
-    implements $ReadinglistDtoCopyWith<$Res> {
+    implements $ReadingListDtoCopyWith<$Res> {
   factory _$$_ReadinglistDtoCopyWith(
           _$_ReadinglistDto value, $Res Function(_$_ReadinglistDto) then) =
       __$$_ReadinglistDtoCopyWithImpl<$Res>;
@@ -110,7 +110,7 @@ abstract class _$$_ReadinglistDtoCopyWith<$Res>
 
 /// @nodoc
 class __$$_ReadinglistDtoCopyWithImpl<$Res>
-    extends _$ReadinglistDtoCopyWithImpl<$Res, _$_ReadinglistDto>
+    extends _$ReadingListDtoCopyWithImpl<$Res, _$_ReadinglistDto>
     implements _$$_ReadinglistDtoCopyWith<$Res> {
   __$$_ReadinglistDtoCopyWithImpl(
       _$_ReadinglistDto _value, $Res Function(_$_ReadinglistDto) _then)
@@ -159,7 +159,7 @@ class _$_ReadinglistDto extends _ReadinglistDto {
 
   @override
   String toString() {
-    return 'ReadinglistDto(id: $id, book: $book, group: $group)';
+    return 'ReadingListDto(id: $id, book: $book, group: $group)';
   }
 
   @override
