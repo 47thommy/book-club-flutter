@@ -12,17 +12,26 @@ const ReadingList = new ReadingListSchema({
     },
 
     relations: {
-       createdGroups: {
+       group: {
             target: "Group",
             type: "one-to-one",
             inverseSide: "group"
 
        },
 
-       books: {
+       book: {
         target: "Book",
         type: "one-to-many",
         inverseSide: "book",
        },
+
+       creator: {
+        target: "User",
+        type: "many-to-one",
+        inverseSide: true,
+       },
+       
     },
 });
+
+module.exports = { ReadingList };
