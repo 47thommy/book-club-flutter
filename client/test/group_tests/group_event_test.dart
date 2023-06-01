@@ -26,6 +26,7 @@ void main() {
           lastName: "doe",
           bio: 'testbio',
           username: 'john',
+          imageUrl: 'imageUri',
         ),
         members: [],
         roles: [],
