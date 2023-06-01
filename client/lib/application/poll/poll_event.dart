@@ -28,7 +28,7 @@ class PollDelete extends PollEvent {
   const PollDelete(this.pollId, this.groupId);
 
   @override
-  List<Object?> get props => [pollId, groupId];
+  List<Object?> get props => [pollId];
 
   @override
   String toString() => 'poll delete { poll_id: $pollId }';

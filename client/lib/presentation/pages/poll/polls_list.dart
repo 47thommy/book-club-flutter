@@ -99,7 +99,7 @@ class _PollsListState extends State<PollsList> {
     return GestureDetector(
         onTapDown: (details) => _storePosition(details),
         onLongPress: () {
-          _showPopupMenu(context, group.toGroup());
+          _showPopupMenu(context, group.toGroup(), poll);
         },
         child: Padding(
             padding: const EdgeInsets.all(15),
@@ -157,7 +157,8 @@ class _PollsListState extends State<PollsList> {
     return options;
   }
 
-  Future<void> _showPopupMenu(BuildContext context, Group group) async {
+  Future<void> _showPopupMenu(
+      BuildContext context, Group group, PollDto poll) async {
     final user = context.read<UserRepository>().getLoggedInUserSync();
 
     final RenderBox overlay =
@@ -170,12 +171,16 @@ class _PollsListState extends State<PollsList> {
           Offset.zero & overlay.size // Bigger rect, the entire screen
           ),
       items: [
-        const PopupMenuItem(
-          child: Text("Retract vote"),
+        PopupMenuItem(
+          onTap: () {},
+          child: const Text("Retract vote"),
         ),
         if (user.hasPollDeletePermission(group))
-          const PopupMenuItem(
-            child: Text("Delete poll"),
+          PopupMenuItem(
+            onTap: () {
+              context.read<PollBloc>().add(PollDelete(poll.id, group.id));
+            },
+            child: const Text("Delete poll"),
           ),
       ],
       elevation: 8.0,

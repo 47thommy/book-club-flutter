@@ -22,12 +22,7 @@ extension UserPermission on User {
   bool hasPermission(Group group, Permission permission) {
     final userRole = getUserRole(group);
 
-    log(userRole.toString());
-    log(permission.toString());
-
     for (var userPermission in userRole.permissions) {
-      log('--- ${userPermission.toString()}');
-
       if (userPermission == permission) {
         return true;
       }
@@ -55,5 +50,5 @@ extension UserPermission on User {
       hasPermission(group, Permission.createPoll);
 
   bool hasPollDeletePermission(Group group) =>
-      hasPermission(group, Permission.modifyPoll);
+      hasPermission(group, Permission.deletePoll);
 }

@@ -36,8 +36,14 @@ const createPoll = async (pollName, creator, question, options, group) => {
   return newPoll;
 };
 
-const deletePoll = async (id, user) => {
+const deletePoll = async (id, user, group) => {
   await permissionService.isAuthorized(user, group, [Permissions.DELETE_POLL]);
+
+  const isPollInGroup = group.polls.filter((poll) => poll.id == id);
+
+  if (!isPollInGroup) {
+    throw { error: "Poll is not in group" };
+  }
 
   const poll = await getPollById(id);
 

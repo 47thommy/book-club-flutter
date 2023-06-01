@@ -25,8 +25,6 @@ class PollBloc extends Bloc<PollEvent, PollState> {
       final result =
           await pollRepository.createPoll(event.poll, event.groupId, token);
 
-      log(result.toString());
-
       if (result.hasError) {
         emit(PollOperationFailure(result.failure!));
       } else {
@@ -39,7 +37,8 @@ class PollBloc extends Bloc<PollEvent, PollState> {
     on<PollDelete>((event, emit) async {
       final token = await userRepository.getToken();
 
-      final result = await pollRepository.deletePoll(event.pollId, token);
+      final result =
+          await pollRepository.deletePoll(event.pollId, event.groupId, token);
 
       if (result.hasError) {
         emit(PollOperationFailure(result.failure!));

@@ -30,9 +30,9 @@ class PollRepository implements IPollRepository {
   }
 
   @override
-  Future<Either<bool>> deletePoll(int pollId, String token) async {
+  Future<Either<bool>> deletePoll(int pollId, int groupId, String token) async {
     try {
-      await _pollApi.deletePoll(pollId, token);
+      await _pollApi.deletePoll(pollId, groupId, token);
       return Either(value: true);
     } on BCHttpException catch (error) {
       return Either(failure: Failure(error.message));

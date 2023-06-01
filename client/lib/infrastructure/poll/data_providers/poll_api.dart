@@ -71,16 +71,17 @@ class PollApi {
     throw const BCHttpException();
   }
 
-  Future<void> deletePoll(int pollId, String token) async {
+  Future<void> deletePoll(int pollId, int groupId, String token) async {
     final url = Uri.parse('$baseUrl/$pollId');
 
-    final http.Response response = await _client.delete(
-      url,
-      headers: <String, String>{
-        "Content-Type": "application/json",
-        'token': token
-      },
-    ).timeout(connectionTimeoutLimit);
+    final http.Response response = await _client
+        .delete(url,
+            headers: <String, String>{
+              "Content-Type": "application/json",
+              'token': token
+            },
+            body: jsonEncode({'groupId': groupId}))
+        .timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) return;
 
