@@ -18,4 +18,13 @@ void main() {
       expect(state.props, isEmpty);
     });
   });
+
+  group('LoginFailure', () {
+    test('props contains error', () {
+      const error = Failure('Something went wrong');
+      const state = LoginFailure(error);
+
+      expect(state.props, [error]);
+    });
+  });
 }
