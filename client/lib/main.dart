@@ -56,6 +56,7 @@ void main() async {
 
                     // App
                     child: MaterialApp.router(
+                      debugShowCheckedModeBanner: false,
                       theme: ThemeData(),
                       darkTheme: ThemeData.dark(),
                       themeMode: ThemeMode.system,
