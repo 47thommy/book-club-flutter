@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const { validationResult } = require("express-validator");
 
 const pollService = require("../services/poll.service");
+const groupService = require("../services/group.service");
 
 const createPoll = async (req, res) => {
   const result = validationResult(req);
@@ -14,7 +15,7 @@ const createPoll = async (req, res) => {
   }
 
   try {
-    const group = await pollService.getPollById(req.body.groupId);
+    const group = await groupService.getGroupById(req.body.groupId);
 
     if (!group) {
       return res.status(StatusCodes.NOT_FOUND).json();

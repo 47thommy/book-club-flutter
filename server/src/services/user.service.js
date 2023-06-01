@@ -92,7 +92,7 @@ const createUser = async (
   bio
 ) => {
   const passwordHash = bcrypt.hashSync(password);
-  console.log("newUser");
+
   const newUser = database.getRepository(User).create({
     email,
     password: passwordHash,
@@ -103,7 +103,6 @@ const createUser = async (
     bio,
   });
 
-  console.log(newUser);
   const user = await database.getRepository(User).save(newUser);
   return user;
 };

@@ -72,7 +72,6 @@ const updateUser = async (req, res) => {
 
     res.status(StatusCodes.OK).json(updatedUser);
   } catch (error) {
-    console.log(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ success: false, message: "Server Error" });
