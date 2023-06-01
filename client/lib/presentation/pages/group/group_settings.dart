@@ -1,12 +1,19 @@
 import 'dart:developer';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:client/application/file/file.dart';
 import 'package:client/application/group/group.dart';
+import 'package:client/domain/role/role.dart';
+import 'package:client/domain/role/user_permission_validator.dart';
+import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/group/dto/group_dto.dart';
+import 'package:client/infrastructure/group/dto/group_mapper.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
+import 'package:client/infrastructure/role/dto/role_dto.dart';
 import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_detail.dart';
+import 'package:client/presentation/roles_permissions/role_detail.dart';
 import 'package:client/presentation/roles_permissions/widgets/role_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -147,7 +154,7 @@ class _GroupEditPageState extends State<GroupEditPage> {
                       children: [
                         //
                         // Group image picker
-                        _buildProfileImage(),
+                        _buildProfileImage(state.group),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Padding(
@@ -180,42 +187,70 @@ class _GroupEditPageState extends State<GroupEditPage> {
                     ),
 
                     //
-                    // Group roles
-                    const SizedBox(height: 30),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Roles',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.add),
-                          )
-                        ]),
+                    // Group roles [Only visible for group creator]
+                    // ----------------------------------------------------------------------------------------
+                    // <GroupOwnerOnly> [START]
+                    // ----------------------------------------------------------------------------------------
+                    if (context
+                            .read<UserRepository>()
+                            .getLoggedInUserSync()
+                            .id ==
+                        state.group.creator.id) ...[
+                      const SizedBox(height: 30),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              'Roles',
+                              style: TextStyle(
+                                  fontSize: 20, fontWeight: FontWeight.bold),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                context
+                                    .pushNamed(RoleDetailPage.routeName,
+                                        queryParameters: {'create': 'true'},
+                                        pathParameters: {
+                                          'gid': widget.gid.toString(),
+                                        },
+                                        extra: RoleDto.empty)
+                                    .then((value) => context
+                                        .read<GroupBloc>()
+                                        .add(LoadGroupDetail(widget.gid)));
+                              },
+                              icon: const Icon(Icons.add),
+                            )
+                          ]),
 
-                    // Roles list
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: state.group.roles.length,
-                      itemBuilder: (context, index) {
-                        return RoleCard(state.group.roles[index]);
-                      },
-                    ),
+                      // Roles list
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: state.group.roles.length,
+                        itemBuilder: (context, index) {
+                          return RoleCard(
+                              state.group.roles[index], state.group.id);
+                        },
+                      ),
+                    ],
+                    // ----------------------------------------------------------------------------------------
+                    // <GroupOwnerOnly> [END]
+                    // ----------------------------------------------------------------------------------------
 
+//
                     //
-                    // Delete and leave
-
-                    MaterialButton(
-                        onPressed: () {},
-                        color: Theme.of(context).colorScheme.error,
-                        child: const Text(
-                          'Delete and leave group',
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold),
-                        )),
+                    // Delete and leave button
+                    if (context
+                        .read<UserRepository>()
+                        .getLoggedInUserSync()
+                        .hasGroupDeletePermission(state.group.toGroup()))
+                      MaterialButton(
+                          onPressed: () {},
+                          color: Theme.of(context).colorScheme.error,
+                          child: const Text(
+                            'Delete and leave group',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
+                          )),
                   ],
                 ));
           }
@@ -224,15 +259,27 @@ class _GroupEditPageState extends State<GroupEditPage> {
         }));
   }
 
-  Widget _buildProfileImage() {
+  Widget _buildProfileImage(GroupDto group) {
     return Stack(
       alignment: Alignment.center,
       children: [
-        CircleAvatar(
-          radius: 40,
-          backgroundImage: pickedImage != null
-              ? FileImage(File(pickedImage!.path)) as ImageProvider<Object>?
-              : null,
+        CachedNetworkImage(
+          fit: BoxFit.contain,
+          imageUrl: context.read<FileRepository>().getFullUrl(group.imageUrl),
+          errorWidget: (context, url, error) => CircleAvatar(
+            radius: 40,
+            backgroundImage: pickedImage != null
+                ? FileImage(File(pickedImage!.path)) as ImageProvider<Object>?
+                : null,
+          ),
+          imageBuilder: (context, imageProvider) {
+            return CircleAvatar(
+              radius: 40,
+              backgroundImage: pickedImage != null
+                  ? FileImage(File(pickedImage!.path)) as ImageProvider<Object>?
+                  : imageProvider,
+            );
+          },
         ),
         Positioned(
           child: IconButton(

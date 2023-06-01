@@ -5,6 +5,12 @@ import 'package:client/common/constants.dart' as consts;
 class DatabaseHelper {
   final int version = 1;
 
+  // Table names
+  static const fileTable = 'images';
+  static const groupTable = 'grouptable';
+  static const scheduleTable = 'schedule';
+  static const readinglistTable = 'readinglist';
+
   static final DatabaseHelper instance = DatabaseHelper._private();
 
   DatabaseHelper._private();
@@ -22,15 +28,39 @@ class DatabaseHelper {
     return await openDatabase(path, onCreate: _onCreate, version: version);
   }
 
-  Future _onCreate(Database db, int version) async {
+  Future<void> _onCreate(Database db, int version) async {
     // image cache
     await db.execute('''
-      CREATE TABLE $filetable (
+      CREATE TABLE $fileTable (
         image_url TEXT PRIMARY KEY,
         data BLOB
       )''');
+
+    // groups cache
+    await db.execute('''
+      CREATE TABLE $groupTable (
+        id INTEGER PRIMARY KEY,
+        detail TEXT,  
+        joined INTEGER              
+      )''');
+
+    // Reading list cache
+    await db.execute('''
+      CREATE TABLE $readinglistTable (
+        id INTEGER PRIMARY KEY                
+      )''');
+
+    // Schedule cache
+    await db.execute('''
+      CREATE TABLE $scheduleTable (
+        id INTEGER PRIMARY KEY        
+      )''');
   }
 
-  // Table names
-  static const filetable = 'images';
+  Future<void> dropDatabase() async {
+    var path = join(await getDatabasesPath(), consts.databaseName);
+    await _database?.close();
+    _database = null;
+    deleteDatabase(path);
+  }
 }

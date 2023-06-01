@@ -41,7 +41,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       final token = await userRepository.getToken();
 
       final result = await groupRepository.getGroup(event.groupId, token);
-      log('load called');
+
       if (result.hasError) {
         emit(GroupOperationFailure(result.failure!));
       } else {
@@ -53,8 +53,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     // Group create
     on<GroupCreate>((event, emit) async {
       final token = await userRepository.getToken();
-      log('nooo');
-      log(event.runtimeType.toString());
+
       final result = await groupRepository.createGroup(event.group, token);
 
       if (result.hasError) {
@@ -68,8 +67,7 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
     // Group update
     on<GroupUpdate>((event, emit) async {
       final token = await userRepository.getToken();
-      log('ok');
-      log(event.runtimeType.toString());
+
       final result = await groupRepository.updateGroup(event.group, token);
 
       if (result.hasError) {

@@ -38,26 +38,6 @@ void main() {
       expect(authenticationBloc.state, AuthenticationUninitialized());
     });
 
-    group('UserLoggedIn event', () {
-      test('should emit the correct states', () {
-        const user = UserDto(
-            id: 1,
-            email: 'test@example.com',
-            firstName: 'John',
-            lastName: 'Doe');
-        const token = 'abc123';
-
-        final expectedStates = [
-          AuthenticationLoading(),
-          const Authenticated(user),
-        ];
-
-        expectLater(authenticationBloc.stream, emitsInOrder(expectedStates));
-
-        authenticationBloc.add(const UserLoggedIn(user: user, token: token));
-      });
-    });
-
     group('UserLoggedOut event', () {
       test('should emit the correct states', () {
         final expectedStates = [

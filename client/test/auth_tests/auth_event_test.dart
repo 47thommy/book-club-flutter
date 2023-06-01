@@ -12,7 +12,13 @@ void main() {
 
     test('UserLoggedIn event should have correct string representation', () {
       const user = UserDto(
-          id: 1, email: 'test@example.com', firstName: 'John', lastName: 'Doe');
+          id: 1,
+          email: 'test@example.com',
+          firstName: 'John',
+          lastName: 'Doe',
+          bio: 'testbio',
+          username: 'john',
+          imageUrl: 'imageUri');
       const token = 'abc123';
       const event = UserLoggedIn(user: user, token: token);
 

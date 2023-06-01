@@ -1,4 +1,5 @@
-import 'package:client/infrastructure/role/dto/role_dto.dart';
+import 'package:client/domain/role/role.dart';
+import 'package:client/domain/role/role_form.dart';
 import 'package:client/utils/failure.dart';
 import 'package:equatable/equatable.dart';
 
@@ -12,7 +13,7 @@ abstract class RoleState extends Equatable {
 class RoleInit extends RoleState {}
 
 class RoleCreated extends RoleState {
-  final RoleDto role;
+  final Role role;
   final int groupId;
 
   const RoleCreated(this.role, this.groupId);
@@ -22,12 +23,21 @@ class RoleCreated extends RoleState {
 }
 
 class RoleUpdated extends RoleState {
-  final RoleDto role;
+  final Role role;
 
   const RoleUpdated(this.role);
 
   @override
   List<Object?> get props => [role];
+}
+
+class RoleDeleted extends RoleState {
+  final int roleId;
+
+  const RoleDeleted(this.roleId);
+
+  @override
+  List<Object?> get props => [roleId];
 }
 
 class RoleOperationFailure extends RoleState {

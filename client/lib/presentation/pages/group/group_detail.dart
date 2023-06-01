@@ -8,6 +8,7 @@ import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_settings.dart';
 import 'package:client/presentation/pages/group/groups_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -161,12 +162,9 @@ class _GroupDetailScreen extends State<GroupDetailPage>
             // builder
             builder: (context, state) {
           if (state is GroupDetailLoaded) {
-            log('ok;');
             return buildBody(context, state.group);
           }
 
-          log(state.runtimeType.toString());
-          // log(state.toString());
           return const Scaffold(
               body: Center(child: CircularProgressIndicator()));
         }));
@@ -175,6 +173,7 @@ class _GroupDetailScreen extends State<GroupDetailPage>
   Widget buildBody(BuildContext context, GroupDto group) {
     final fileRepository = context.read<FileRepository>();
     final user = context.read<UserRepository>().getLoggedInUserSync();
+
     final groupBloc = context.read<GroupBloc>();
 
     return Scaffold(
@@ -182,6 +181,8 @@ class _GroupDetailScreen extends State<GroupDetailPage>
         title: Text(group.name),
         actions: user.isMember(group.toGroup())
             ? [
+                //
+                // Edit button
                 if (user.hasGroupEditPermission(group.toGroup()))
                   GestureDetector(
                       onTap: () {
@@ -193,25 +194,31 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                             .add(LoadGroupDetail(widget.gid)));
                       },
                       child: const Padding(
-                          padding: EdgeInsets.all(5), child: Icon(Icons.edit))),
-                PopupMenuButton(
-                  itemBuilder: (BuildContext context) {
-                    return [
-                      const PopupMenuItem(
-                        value: 'leave_group',
-                        child: Row(children: [
-                          Icon(Icons.heart_broken),
-                          Text('Leave Group')
-                        ]),
-                      ),
-                    ];
-                  },
-                  onSelected: (value) {
-                    if (value == 'leave_group') {
-                      groupBloc.add(GroupLeave(group));
-                    }
-                  },
-                ),
+                          padding: EdgeInsets.all(10),
+                          //
+                          child: Icon(Icons.edit))),
+
+                //
+                // for non creators show leave button
+                if (group.creator.id != user.id)
+                  PopupMenuButton(
+                    itemBuilder: (BuildContext context) {
+                      return [
+                        const PopupMenuItem(
+                          value: 'leave_group',
+                          child: Row(children: [
+                            Icon(Icons.heart_broken),
+                            Text('Leave Group')
+                          ]),
+                        ),
+                      ];
+                    },
+                    onSelected: (value) {
+                      if (value == 'leave_group') {
+                        groupBloc.add(GroupLeave(group));
+                      }
+                    },
+                  ),
               ]
             : null,
       ),
@@ -224,12 +231,12 @@ class _GroupDetailScreen extends State<GroupDetailPage>
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    fileRepository.getFullUrl(group.imageUrl),
+                  child: CachedNetworkImage(
+                    imageUrl: fileRepository.getFullUrl(group.imageUrl),
                     width: MediaQuery.of(context).size.width,
                     height: 200,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, exception, stackTrace) {
+                    errorWidget: (contmainext, exception, stackTrace) {
                       return Image.asset(
                         'assets/group_default.png',
                         width: MediaQuery.of(context).size.width,
@@ -237,16 +244,12 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                         fit: BoxFit.fitHeight,
                       );
                     },
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
+                    placeholder: (context, url) {
+                      return Image.asset(
+                        'assets/group_default.png',
+                        width: MediaQuery.of(context).size.width,
+                        height: 200,
+                        fit: BoxFit.fitHeight,
                       );
                     },
                   ),

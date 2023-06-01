@@ -6,7 +6,7 @@ import 'package:client/data/local/database_helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 class FileCache {
-  final fileTable = DatabaseHelper.filetable;
+  final fileTable = DatabaseHelper.fileTable;
 
   final _databaseHelper = DatabaseHelper.instance;
   late final Future<Database> database;

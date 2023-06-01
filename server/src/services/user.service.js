@@ -28,6 +28,33 @@ const getUserByEmail = async (email, includePassword = false) => {
   return user;
 };
 
+const getUserByUsername = async (username, includePassword = false) => {
+  if (!username) return null;
+
+  console.log(username);
+
+  // since select is false password hash will not be included here
+  const user = await database.getRepository(User).findOne({
+    where: { username },
+    relations: { memberships: true, createdGroups: true },
+  });
+
+  // include password here if required
+  if (user && includePassword) {
+    user.password = (
+      await database
+        .getRepository(User)
+        .createQueryBuilder("user")
+        .select("user.username")
+        .addSelect("user.password")
+        .where("user.username = :username", { username })
+        .getOne()
+    ).password;
+  }
+
+  return user;
+};
+
 const getUserById = async (id, includePassword = false) => {
   if (!id) return null;
 
@@ -62,19 +89,24 @@ const createUser = async (
   password,
   first_name,
   middle_name,
-  last_name
+  last_name,
+  username,
+  bio
 ) => {
   const passwordHash = bcrypt.hashSync(password);
+  console.log("newUser");
   const newUser = database.getRepository(User).create({
     email,
     password: passwordHash,
     first_name,
     middle_name,
     last_name,
+    username,
+    bio,
   });
 
+  console.log(newUser);
   const user = await database.getRepository(User).save(newUser);
-
   return user;
 };
 
@@ -84,7 +116,9 @@ const updateUser = async (
   password,
   first_name,
   middle_name,
-  last_name
+  last_name,
+  username,
+  bio
 ) => {
   const user = await getUserById(id);
   if (!user) throw new Error("User not found");
@@ -97,6 +131,13 @@ const updateUser = async (
     user.email = email;
   }
 
+  if (username) {
+    const existingUser = await getUserByEmail(username);
+    if (existingUser && existingUser._id != id)
+      throw new Error("Username is already taken");
+    user.username = username;
+  }
+
   if (password) {
     const passwordHash = bcrypt.hashSync(password);
     user.password = passwordHash;
@@ -105,6 +146,8 @@ const updateUser = async (
   if (first_name) user.first_name = first_name;
   if (middle_name) user.middle_name = middle_name;
   if (last_name) user.last_name = last_name;
+  if (username) user.username = username;
+  if (bio) user.bio = bio;
 
   await database.getRepository(User).save(user);
 
@@ -140,6 +183,7 @@ const deleteUser = async (id) => {
 
 module.exports = {
   getUserByEmail,
+  getUserByUsername,
   getUserById,
   createUser,
   updateUser,

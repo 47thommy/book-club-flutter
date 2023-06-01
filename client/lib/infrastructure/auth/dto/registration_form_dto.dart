@@ -8,6 +8,7 @@ class RegisterFormDto with _$RegisterFormDto {
   const factory RegisterFormDto({
     required String email,
     required String password,
+    required String username,
     @JsonKey(name: 'first_name') required String firstName,
     @JsonKey(name: 'last_name') required String lastName,
   }) = _RegisterFormDto;

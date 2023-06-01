@@ -1,47 +1,65 @@
-import 'package:client/infrastructure/user/dto/dto.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:client/data/local/database_helper.dart';
+
+import 'package:client/infrastructure/group/dto/group_dto.dart';
+
+import 'package:client/utils/either.dart';
+import 'package:client/utils/failure.dart';
+import 'package:sqflite/sqflite.dart';
 
 class GroupCacheClient {
-  final _storage = const FlutterSecureStorage();
+  final _storage = DatabaseHelper();
 
-  static const _emailKey = 'email';
-  static const _tokenKey = 'token';
-  static const _firstNameKey = 'firstName';
-  static const _lastNameKey = 'lastName';
-  static const _idKey = 'id';
+  Future<Either<GroupDto>> get(int id) async {
+    final db = await _storage.database;
+    final result = await db
+        .query(DatabaseHelper.groupTable, where: 'id = ?', whereArgs: [id]);
 
-  Future<void> save(UserDto user, String token) async {
-    await _storage.write(key: _idKey, value: user.id.toString());
-    await _storage.write(key: _emailKey, value: user.email);
-    await _storage.write(key: _firstNameKey, value: user.firstName);
-    await _storage.write(key: _lastNameKey, value: user.lastName);
-    await _storage.write(key: _tokenKey, value: token);
+    if (result.isEmpty) return Either(failure: const Failure('Not found'));
+
+    final groupJson = jsonDecode(result[0]['detail'] as String);
+
+    return Either(value: GroupDto.fromJson(groupJson));
   }
 
-  Future<UserDto> loadUser() async {
-    var id = await _storage.read(key: _idKey);
-    var email = await _storage.read(key: _emailKey);
-    var firstName = await _storage.read(key: _firstNameKey);
-    var lastName = await _storage.read(key: _firstNameKey);
+  Future<Either<List<GroupDto>>> getAll() async {
+    final db = await _storage.database;
+    final result = await db.query(DatabaseHelper.groupTable);
 
-    if (id == null || email == null || firstName == null || lastName == null) {
-      throw Exception("No user");
-    }
+    if (result.isEmpty) return Either(failure: const Failure('Not found'));
 
-    return UserDto(
-        id: int.parse(id),
-        email: email,
-        firstName: firstName,
-        lastName: lastName);
+    return Either(
+        value: result.map((row) {
+      final groupJson = jsonDecode(row['detail'] as String);
+      return GroupDto.fromJson(groupJson);
+    }).toList());
   }
 
-  Future<String?> getToken() async {
-    var token = await _storage.read(key: _tokenKey);
+  Future<Either<List<GroupDto>>> getJoined() async {
+    final db = await _storage.database;
+    final result = await db
+        .query(DatabaseHelper.groupTable, where: 'joined = ?', whereArgs: [1]);
 
-    return token;
+    if (result.isEmpty) return Either(failure: const Failure('Not found'));
+
+    return Either(
+        value: result.map((row) {
+      final groupJson = jsonDecode(row['detail'] as String);
+      return GroupDto.fromJson(groupJson);
+    }).toList());
   }
 
-  Future<void> deleteAll() async {
-    await _storage.deleteAll();
+  Future<void> save(GroupDto group, [bool joined = false]) async {
+    final db = await _storage.database;
+
+    final groupEncoded = jsonEncode(group.toJson());
+
+    await db.insert(DatabaseHelper.groupTable,
+        {'id': group.id, 'detail': groupEncoded, 'joined': joined ? 1 : 0},
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
+
+  Future<void> clear() async {}
 }

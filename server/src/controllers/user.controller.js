@@ -20,6 +20,14 @@ const getUser = async (req, res) => {
     } else {
       return res.status(StatusCodes.NOT_FOUND).json();
     }
+  } else if (req.query.username) {
+    const user = await userService.getUserByUsername(req.query.username);
+
+    if (user) {
+      return res.json(user);
+    } else {
+      return res.status(StatusCodes.NOT_FOUND).json();
+    }
   } else {
     const user = await userService.getUserById(req.user.id);
 
@@ -40,7 +48,8 @@ const updateUser = async (req, res) => {
   }
 
   const id = req.params.id;
-  const { email, password, first_name, middle_name, last_name } = req.body;
+  const { email, password, first_name, middle_name, last_name, username, bio } =
+    req.body;
 
   if (req.user.id != id) return res.status(StatusCodes.FORBIDDEN).json();
 
@@ -51,7 +60,9 @@ const updateUser = async (req, res) => {
       password,
       first_name,
       middle_name,
-      last_name
+      last_name,
+      username,
+      bio
     );
 
     res.status(StatusCodes.OK).json({ success: true, user: updatedUser });

@@ -3,6 +3,7 @@ import 'package:client/application/login/login.dart';
 import 'package:client/application/signup/signup.dart';
 import 'package:client/presentation/pages/group/group.dart';
 import 'package:client/presentation/pages/login/login_screen.dart';
+import 'package:client/presentation/pages/profile/profile.dart';
 import 'package:client/presentation/pages/signup/signup_screen.dart';
 import 'package:client/presentation/pages/splash/splash_screen.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
@@ -79,7 +80,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             backgroundColor: Colors.black45,
-            icon: Icon(Icons.meeting_room),
+            icon: Icon(Icons.schedule),
             label: 'Meetings',
           ),
           BottomNavigationBarItem(
@@ -99,18 +100,19 @@ class _HomeState extends State<Home> {
 
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouter.of(context).location;
+
     // if (location.endsWith(HomePage.routeName)) {
     //   return 0;
     // }
     // if (location.endsWith(ReadingListPage.routeName)) {
     //   return 1;
     // }
-    // if (location.endsWith(GroupDetailPage.routeName)) {
-    //   return 2;
-    // }
-    // if (location.endsWith(ProfilePage.routeName)) {
-    //   return 3;
-    // }
+    if (location.endsWith(GroupDetailPage.routeName)) {
+      return 2;
+    }
+    if (location.endsWith(ProfilePage.routeName)) {
+      return 3;
+    }
     return 0;
   }
 
@@ -123,7 +125,7 @@ class _HomeState extends State<Home> {
       // case 2:
       //   return context.goNamed(GroupDetailPage.routeName);
       case 3:
-        return context.go("/");
+        return context.goNamed(ProfilePage.routeName);
       // default:
       // return context.go()");
     }

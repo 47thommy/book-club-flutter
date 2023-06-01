@@ -1,4 +1,4 @@
-const { Role, Group } = require("../models/");
+const { Role, Group, User, Membership } = require("../models/");
 const database = require("../configs/db.config");
 const permissionService = require("./permissions.service");
 
@@ -71,14 +71,16 @@ const createRole = async (roleName, creator, group, permissionIds) => {
   return newRole;
 };
 
-const updateRole = async (roleId, user, newName, permissionIds) => {
+const updateRole = async (roleId, newName, permissionIds, actionIssuer) => {
   const role = await getRoleById(roleId);
 
-  if (!role) throw Error("Role not found.");
+  if (!role) throw { error: "Role not found." };
 
-  if (role.name == CREATOR) throw Error("Creator role can't be edited.");
+  if (role.group.creator.id != actionIssuer.id) throw { error: "Unauthorized" };
 
-  if (newName) {
+  if (role.name == CREATOR) throw { error: "Creator role can't be edited." };
+
+  if (newName && role.name != MEMBER) {
     role.name = newName;
   }
 
@@ -101,14 +103,23 @@ const updateRole = async (roleId, user, newName, permissionIds) => {
   return updatedRole;
 };
 
-const deleteRole = async (id) => {
+const deleteRole = async (id, actionIssuer) => {
   const role = await getRoleById(id);
 
   if (!role) {
-    throw new Error("Role not found.");
+    throw new { error: "Role not found." }();
   }
 
   const group = role.group;
+
+  if (group.creator.id != actionIssuer.id) {
+    throw {
+      error: "Unauthorized",
+    };
+  }
+
+  if (role.name == CREATOR || role.name == MEMBER)
+    throw { error: `${role.name} role can't be deleted.` };
 
   if (group) {
     group.roles = group.roles.filter((role) => role.id !== id);

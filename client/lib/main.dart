@@ -1,8 +1,11 @@
+import 'package:client/application/auth/auth_state.dart';
 import 'package:client/application/file/file_bloc.dart';
 import 'package:client/application/group/group.dart';
+import 'package:client/application/user/user.dart';
 import 'package:client/block_observer.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
+import 'package:client/infrastructure/role/role_repository.dart';
 import 'package:client/presentation/routes/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +24,7 @@ void main() async {
                 RepositoryProvider(create: (_) => GroupRepository()),
                 RepositoryProvider(create: (_) => UserRepository()),
                 RepositoryProvider(create: (_) => FileRepository()),
+                RepositoryProvider(create: (_) => RoleRepository()),
               ],
 
                   // Bloc providers
@@ -50,15 +54,31 @@ void main() async {
                               userRepository:
                                   RepositoryProvider.of<UserRepository>(
                                       context))),
+
+                      // User provider
+                      BlocProvider(
+                          create: (context) => UserBloc(
+                              userRepository:
+                                  RepositoryProvider.of<UserRepository>(
+                                      context))),
                     ],
 
                     // App
-                    child: MaterialApp.router(
-                      theme: ThemeData(),
-                      darkTheme: ThemeData.dark(),
-                      themeMode: ThemeMode.system,
-                      routerConfig: router,
-                    ),
+                    child:
+                        BlocListener<AuthenticationBloc, AuthenticationState>(
+                            listener: (context, state) {
+                              if (state is UserSessionExpired) {
+                                context
+                                    .read<AuthenticationBloc>()
+                                    .add(UserLoggedOut());
+                              }
+                            },
+                            child: MaterialApp.router(
+                              theme: ThemeData(),
+                              darkTheme: ThemeData.dark(),
+                              themeMode: ThemeMode.system,
+                              routerConfig: router,
+                            )),
                   ))),
       blocObserver: SimpleBlocObserver());
 }
