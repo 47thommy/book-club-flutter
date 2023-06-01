@@ -3,7 +3,7 @@ const database = require("../configs/db.config");
 
 const Permissions = {
   CREATE_POLL: 1,
-  MODIFY_POLL: 2,
+  DELETE_POLL: 2,
   CREATE_MEETING: 3,
   MODIFY_MEETING: 4,
   CREATE_READING_LIST: 5,
@@ -16,7 +16,7 @@ const Permissions = {
 
 const permissions = [
   { id: Permissions.CREATE_POLL, name: "Create poll" },
-  { id: Permissions.MODIFY_POLL, name: "Modify poll" },
+  { id: Permissions.DELETE_POLL, name: "Delete poll" },
   { id: Permissions.CREATE_MEETING, name: "Create meeting" },
   { id: Permissions.MODIFY_MEETING, name: "Modify meeting" },
   { id: Permissions.CREATE_READING_LIST, name: "Create reading list" },

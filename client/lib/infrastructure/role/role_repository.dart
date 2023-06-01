@@ -43,8 +43,7 @@ class RoleRepository implements IRoleRepository {
   }
 
   @override
-  Future<Either<bool>> deleteRole(
-      int roleId, int groupId, String token) async {
+  Future<Either<bool>> deleteRole(int roleId, int groupId, String token) async {
     try {
       await _roleApi.deleteRole(groupId, roleId, token);
       return Either(value: true);

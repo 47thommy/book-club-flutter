@@ -31,8 +31,6 @@ const getUserByEmail = async (email, includePassword = false) => {
 const getUserByUsername = async (username, includePassword = false) => {
   if (!username) return null;
 
-  console.log(username);
-
   // since select is false password hash will not be included here
   const user = await database.getRepository(User).findOne({
     where: { username },
@@ -112,29 +110,22 @@ const createUser = async (
 
 const updateUser = async (
   id,
-  email,
   password,
   first_name,
   middle_name,
   last_name,
   username,
-  bio
+  bio,
+  imageUrl
 ) => {
   const user = await getUserById(id);
-  if (!user) throw new Error("User not found");
+  if (!user) throw { error: "User not found" };
   // check if the user deleted his/her account
 
-  if (email) {
-    const existingUser = await getUserByEmail(email);
-    if (existingUser && existingUser._id != id)
-      throw new Error("Email is already taken");
-    user.email = email;
-  }
-
   if (username) {
-    const existingUser = await getUserByEmail(username);
-    if (existingUser && existingUser._id != id)
-      throw new Error("Username is already taken");
+    const existingUser = await getUserByUsername(username);
+    if (existingUser && existingUser.id != id)
+      throw { error: "Username is already taken" };
     user.username = username;
   }
 
@@ -148,17 +139,18 @@ const updateUser = async (
   if (last_name) user.last_name = last_name;
   if (username) user.username = username;
   if (bio) user.bio = bio;
+  if (imageUrl) user.imageUrl = imageUrl;
 
-  await database.getRepository(User).save(user);
+  const updatedUser = await database.getRepository(User).save(user);
 
-  return user;
+  return await getUserById(updatedUser.id);
 };
 
 const deleteUser = async (id) => {
   const user = await getUserById(id);
 
   if (!user) {
-    throw new Error("User not found");
+    throw { error: "User not found" };
   }
 
   if (user.createdGroups.length > 0) {

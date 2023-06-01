@@ -9,6 +9,8 @@ import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_settings.dart';
 import 'package:client/presentation/pages/group/groups_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:client/presentation/pages/poll/poll_form.dart';
+import 'package:client/presentation/pages/poll/polls_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -73,15 +75,8 @@ class _GroupDetailScreen extends State<GroupDetailPage>
   void handleOptionSelected(String option) {
     switch (option) {
       case 'create_poll':
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              // TODO: PollForm();
-              return const Text('Poll form');
-            },
-          ),
-        );
+        context.pushNamed(PollForm.routeName).then((value) =>
+            context.read<GroupBloc>().add(LoadGroupDetail(widget.gid)));
         break;
 
       case 'create_reading_list':
@@ -301,8 +296,8 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                           if (widget.isJoined)
                             TextButton(
                               onPressed: () {
-                                // Handle button click
-                                // // TODO:  polls
+                                context.pushNamed(PollsList.routeName,
+                                    extra: group);
                               },
                               child: const Text('Polls'),
                             ),
@@ -332,16 +327,16 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                                 ),
                               ],
                             ),
-                            subtitle: const Row(
+                            subtitle: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Icon(
-                                  Icons.book_outlined,
+                                const Icon(
+                                  Icons.person,
                                   color: Colors.grey,
                                   size: 14,
                                 ),
-                                SizedBox(width: 7.0),
-                                Text(''),
+                                const SizedBox(width: 7.0),
+                                Text(group.members[index].username),
                               ],
                             ),
                           );

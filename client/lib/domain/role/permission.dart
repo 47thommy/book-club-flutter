@@ -7,7 +7,7 @@ class Permission extends Equatable {
   const Permission({required this.id, required this.name});
 
   static const createPoll = Permission(id: 1, name: 'Create poll');
-  static const modifyPoll = Permission(id: 2, name: 'Modify poll');
+  static const modifyPoll = Permission(id: 2, name: 'Delete poll');
   static const createMeeting = Permission(id: 3, name: 'Create meeting');
   static const modifyMeeting = Permission(id: 4, name: 'Modify meeting');
   static const createReadingList =

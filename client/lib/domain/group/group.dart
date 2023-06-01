@@ -1,3 +1,4 @@
+import 'package:client/domain/poll/poll.dart';
 import 'package:client/domain/role/role.dart';
 import 'package:client/domain/user/user.dart';
 import 'package:equatable/equatable.dart';
@@ -10,6 +11,7 @@ class Group extends Equatable {
   final User creator;
   final List<User> members;
   final List<Role> roles;
+  final List<Poll> polls;
 
   const Group(
       {required this.id,
@@ -18,7 +20,9 @@ class Group extends Equatable {
       required this.imageUrl,
       required this.creator,
       required this.members,
-      required this.roles});
+      required this.roles,
+      required this.polls,
+      });
 
   @override
   List<Object?> get props => [id, name, description, imageUrl, creator, members, roles];

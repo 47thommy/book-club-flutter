@@ -48,6 +48,15 @@ const Group = new GroupSchema({
       onDelete: "CASCADE",
       eager: true,
     },
+
+    polls: {
+      target: "Poll",
+      type: "one-to-many",
+      inverseSide: "group",
+      cascade: true,
+      onDelete: "CASCADE",
+      eager: true,
+    },
   },
 });
 

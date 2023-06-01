@@ -9,7 +9,7 @@ class ProfileForm extends Equatable {
   final String bio;
   final String imageUrl;
 
-  ProfileForm({
+  const ProfileForm({
     required this.email,
     required this.password,
     required this.firstName,
