@@ -1,18 +1,31 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:equatable/equatable.dart';
 
-part 'registration_form_dto.freezed.dart';
-part 'registration_form_dto.g.dart';
+class RegistrationFormDto extends Equatable {
+  final String email;
+  final String password;
+  final String username;
 
-@freezed
-class RegisterFormDto with _$RegisterFormDto {
-  const factory RegisterFormDto({
-    required String email,
-    required String password,
-    required String username,
-    @JsonKey(name: 'first_name') required String firstName,
-    @JsonKey(name: 'last_name') required String lastName,
-  }) = _RegisterFormDto;
+  const RegistrationFormDto({
+    required this.email,
+    required this.password,
+    required this.username,
+  });
 
-  factory RegisterFormDto.fromJson(Map<String, dynamic> json) =>
-      _$RegisterFormDtoFromJson(json);
+  factory RegistrationFormDto.fromJson(Map<String, dynamic> json) {
+    return RegistrationFormDto(
+        email: json['email'],
+        password: json['password'],
+        username: json['username']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return <String, dynamic>{
+      'email': email,
+      'password': password,
+      'username': username
+    };
+  }
+
+  @override
+  List<Object?> get props => [email, password, username];
 }
