@@ -17,7 +17,8 @@ void main() {
           firstName: 'John',
           lastName: 'Doe',
           bio: 'testbio',
-          username: 'john');
+          username: 'john',
+          imageUrl: 'imageUri');
       const token = 'abc123';
       const event = UserLoggedIn(user: user, token: token);
 
