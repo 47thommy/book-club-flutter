@@ -24,7 +24,6 @@ class CacheClient {
     await _storage.write(key: _bioKey, value: user.bio);
     await _storage.write(key: _imageUrlKey, value: user.imageUrl);
     await _storage.write(key: _tokenKey, value: token);
-    log('....................saved');
   }
 
   Future<UserDto> loadUser() async {
