@@ -1,6 +1,8 @@
 const BookSchema = require("typeorm").EntitySchema;
 
 const Book = new BookSchema({
+    name: "Book",
+    
     columns: {
         id: {
             primary: true, 
@@ -20,23 +22,16 @@ const Book = new BookSchema({
             type: "varchar",
         }, 
 
-        pagecount: {
+        pageCount: {
             type: "int",
         },
 
         genre: {
             type: "varchar",
         },
-    },
-
-    relations: {
-        readingList :{
-            target: "ReadingList",
-            type: "many-to-one",
-            joinColumn: true,
-            eager: true,
-        },
-    },
+    }
 
 
 })
+
+module.exports = { Book };
