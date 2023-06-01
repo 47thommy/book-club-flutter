@@ -17,7 +17,8 @@ void main() {
           firstName: 'John',
           lastName: 'Doe',
           bio: 'testbio',
-          username: 'john');
+          username: 'john',
+          imageUrl: 'imageUri');
       const state = Authenticated(user);
 
       expect(state.props, equals([user]));
