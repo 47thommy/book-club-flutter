@@ -27,4 +27,28 @@ void main() {
 
     expect(find.text('An error occurred'), findsOneWidget);
   });
+  testWidgets('showSuccess displays SnackBar with success message',
+      (WidgetTester tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (BuildContext context) {
+              return ElevatedButton(
+                onPressed: () {
+                  showSuccess(context, 'Action completed successfully');
+                },
+                child: const Text('Show Success'),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+
+    await tester.tap(find.text('Show Success'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Action completed successfully'), findsOneWidget);
+  });
 }
