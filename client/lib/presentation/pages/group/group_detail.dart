@@ -7,6 +7,7 @@ import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/books/book_detail.dart';
+import 'package:client/presentation/pages/books/book_list.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_settings.dart';
 import 'package:client/presentation/pages/group/groups_screen.dart';
@@ -206,23 +207,64 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                           child: Icon(Icons.edit))),
 
                 //
-                // for non creators show leave button
-                if (group.creator.id != user.id)
+                // show options if user has joined the group
+                if (widget.isJoined)
                   PopupMenuButton(
                     itemBuilder: (BuildContext context) {
-                      return [
+                      return <PopupMenuItem>[
+                        //
+                        // books button
                         const PopupMenuItem(
-                          value: 'leave_group',
+                          value: 'books',
                           child: Row(children: [
-                            Icon(Icons.heart_broken),
-                            Text('Leave Group')
+                            Icon(Icons.book),
+                            SizedBox(width: 10),
+                            Text('Books'),
                           ]),
                         ),
+
+                        //
+                        // polls button
+                        const PopupMenuItem(
+                          value: 'polls',
+                          child: Row(children: [
+                            Icon(Icons.poll),
+                            SizedBox(width: 10),
+                            Text('Polls'),
+                          ]),
+                        ),
+
+                        // leave button
+                        // for non creators show leave button
+                        if (group.creator.id != user.id)
+                          const PopupMenuItem(
+                            value: 'leave_group',
+                            child: Row(children: [
+                              Icon(Icons.logout),
+                              SizedBox(width: 10),
+                              Text('Leave Group'),
+                            ]),
+                          ),
                       ];
                     },
+
+                    // actions
                     onSelected: (value) {
-                      if (value == 'leave_group') {
-                        groupBloc.add(GroupLeave(group));
+                      switch (value) {
+                        case 'leave_group':
+                          groupBloc.add(GroupLeave(group));
+                          break;
+
+                        case 'polls':
+                          context.pushNamed(PollsList.routeName,
+                              pathParameters: {'gid': group.id.toString()});
+                          break;
+
+                        case 'books':
+                          log('...');
+                          context.pushNamed(ReadingListScreen.routeName,
+                              pathParameters: {'gid': group.id.toString()});
+                          break;
                       }
                     },
                   ),
@@ -294,29 +336,21 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                           inviteOrJoinButton(context, user, group.toGroup()),
                         ],
                       ),
+
+                      // members title
                       const SizedBox(height: 16.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text(
-                            'Members',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18.0,
-                            ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        child: Text(
+                          'Members',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
                           ),
-                          if (widget.isJoined)
-                            TextButton(
-                              onPressed: () {
-                                context.pushNamed(PollsList.routeName,
-                                    pathParameters: {
-                                      'gid': group.id.toString()
-                                    });
-                              },
-                              child: const Text('Polls'),
-                            ),
-                        ],
+                        ),
                       ),
+
+                      // members list
                       const SizedBox(height: 8.0),
                       ListView.builder(
                         shrinkWrap: true,

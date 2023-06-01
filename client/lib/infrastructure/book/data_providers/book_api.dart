@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
 
@@ -15,7 +16,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:client/common/constants.dart' as consts;
 
-class BookApi implements IBookRepository {
+class BookApi {
   late http.Client _client;
 
   final baseUrl = '${consts.apiUrl}/book';
@@ -47,9 +48,8 @@ class BookApi implements IBookRepository {
     throw const BCHttpException();
   }
 
-  @override
-  Future<Either<Book>> createBook(Book book, int groupId, String token) async {
-    final bookUri = Uri.parse(baseUrl);
+  Future<BookDto> createBook(BookDto book, int groupId, String token) async {
+    final bookUri = Uri.parse('$baseUrl/$groupId');
 
     final http.Response response = await _client
         .post(bookUri,
@@ -57,21 +57,20 @@ class BookApi implements IBookRepository {
               "Content-Type": "application/json",
               'token': token,
             },
-            body: jsonEncode(book.toBookDto().toJson()))
+            body: jsonEncode(book.toJson()))
         .timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.created) {
       final json = jsonDecode(response.body);
 
-      return Either(value: BookDto.fromJson(json).toBook());
+      return BookDto.fromJson(json);
     } else if (response.statusCode == HttpStatus.unauthorized) {
       throw AuthenticationFailure.sessionExpired();
     }
     throw const BCHttpException();
   }
 
-  @override
-  Future<Either<Book>> updateBook(Book book, int groupId, String token) async {
+  Future<BookDto> updateBook(BookDto book, int groupId, String token) async {
     final bookUri = Uri.parse('$baseUrl/${book.id}');
 
     final http.Response response = await _client
@@ -80,20 +79,20 @@ class BookApi implements IBookRepository {
               "Content-Type": "application/json",
               'token': token
             },
-            body: jsonEncode(book.toBookDto().toJson()))
+            body: jsonEncode(book.toJson()))
         .timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
       final json = jsonDecode(response.body);
 
-      return Either(value: BookDto.fromJson(json).toBook());
+      return BookDto.fromJson(json);
     } else if (response.statusCode == HttpStatus.unauthorized) {
       throw AuthenticationFailure.sessionExpired();
     }
     throw const BCHttpException();
   }
 
-  Future<Either<bool>> deleteBook(int bookId, int groupId, String token) async {
+  Future<bool> deleteBook(int bookId, int groupId, String token) async {
     final bookuri = Uri.parse('$baseUrl/$bookId');
     final http.Response response = await _client.delete(
       bookuri,
@@ -104,9 +103,7 @@ class BookApi implements IBookRepository {
     ).timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
-      final json = jsonDecode(response.body);
-
-      return Either(value: true);
+      return true;
     } else if (response.statusCode == HttpStatus.unauthorized) {
       throw AuthenticationFailure.sessionExpired();
     } else if (response.statusCode == HttpStatus.notFound) {

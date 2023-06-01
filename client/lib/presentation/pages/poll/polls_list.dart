@@ -49,7 +49,7 @@ class _PollsListState extends State<PollsList> {
             context.read<GroupBloc>().add(LoadGroupDetail(widget.groupId));
           }
 
-          // on poll create
+          // on poll delete
           else if (state is PollDeleted) {
             showSuccess(context, 'Poll deleted');
             context.pop();

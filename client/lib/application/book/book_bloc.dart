@@ -9,14 +9,13 @@ import 'book_state.dart';
 
 class BookBloc extends Bloc<BookEvent, BookState> {
   final IBookRepository bookRepository;
-  final GroupRepository groupRepository;
+
   final UserRepository userRepository;
 
-  BookBloc(
-      {required this.bookRepository,
-      required this.userRepository,
-      required this.groupRepository})
-      : super(BookInit()) {
+  BookBloc({
+    required this.bookRepository,
+    required this.userRepository,
+  }) : super(BookInit()) {
     //
     // Book create
     on<BookCreate>((event, emit) async {
@@ -24,6 +23,8 @@ class BookBloc extends Bloc<BookEvent, BookState> {
 
       final result =
           await bookRepository.createBook(event.book, event.groupId, token);
+
+      // log(result.failure.toString());
 
       if (result.hasError) {
         emit(BookOperationFailure(result.failure!));

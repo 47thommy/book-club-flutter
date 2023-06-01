@@ -24,9 +24,9 @@ class RoleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (context) => RoleBloc(
-            roleRepository: context.read<RoleRepository>(),
-            userRepository: context.read<UserRepository>(),
-            groupRepository: context.read<GroupRepository>()),
+              roleRepository: context.read<RoleRepository>(),
+              userRepository: context.read<UserRepository>(),
+            ),
 
         //
         // consumer
