@@ -21,7 +21,7 @@ class MeetingApi {
   }
 
   Future<MeetingDto> getMeeting(int id, String token) async {
-    final meetingUri = Uri.parse('baseUri?id=$id');
+    final meetingUri = Uri.parse('$baseUrl?id=$id');
 
     final http.Response response = await _client.get(
       meetingUri,
