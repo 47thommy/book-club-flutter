@@ -2,7 +2,8 @@ const { StatusCodes } = require("http-status-codes");
 const { validationResult } = require("express-validator");
 
 const bookService = require("../services/book.service");
-const readingListService = require("../services/readinglist.service");
+const groupService = require("../services/group.service");
+
 
 const createBook = async (req, res) => {
     const result = validationResult(req);
@@ -15,13 +16,19 @@ const createBook = async (req, res) => {
     }
 
     try {
-        
-        const newBook = await bookService.createPoll(
+
+        const group = await groupService.getGroupById(req.body.groupId);
+        if (!group) {
+            return res.status(StatusCodes.NOT_FOUND).json();
+        }
+
+        const newBook = await bookService.createBook(
             req.body.title,
             req.body.author,
             req.body.description,
             req.body.pageCount,
             req.body.genre,
+            group
         );
 
         if (newBook) {
@@ -45,9 +52,9 @@ const getBook = async (req, res) => {
 };
 
 const updateBook = async (req, res) => {
-    const book = await bookService.getBookByID(req.params.id);
 
-    if(!book) {
+    const book = await bookService.getBookByID(req.params.id);
+    if (!book) {
         return res.status(StatusCodes.NOT_FOUND).json();
     }
 
@@ -58,7 +65,6 @@ const updateBook = async (req, res) => {
         req.body.description,
         req.body.pageCount,
         req.body.genre,
-        req.body.readingList
     );
 
     res.status(StatusCodes.OK).json(newBook);
@@ -69,21 +75,18 @@ const updateBook = async (req, res) => {
 const deleteBook = async (req, res) => {
     const book = await bookService.getBookByID(req.params.id);
 
-    if (!book)  {
+    if (!book) {
         return res.status(StatusCodes.NOT_FOUND).json();
     }
-    
-    try {
-        if (book.creator.id == req.user.id) {
-            const deletedBook = await bookService.deleteBook(req.params.id, req.user);
 
-            if (deletedBook) {
-                return res.status(StatusCodes.OK).json();
-            }
-            res.status(StatusCodes.BAD_REQUEST).json();
-        } else {
-            res.status(StatusCodes.FORBIDDEN).json();
+    try {
+        const deletedBook = await bookService.deleteBook(req.params.id);
+
+        if (deletedBook) {
+            return res.status(StatusCodes.OK).json();
         }
+        res.status(StatusCodes.BAD_REQUEST).json();
+
     } catch {
         res.status(StatusCodes.BAD_REQUEST).json();
     }
