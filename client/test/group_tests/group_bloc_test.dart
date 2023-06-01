@@ -1,4 +1,3 @@
-import 'package:client/domain/group/group.dart';
 import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:client/presentation/pages/group/widgets/joined_groups_card.dart';
@@ -13,11 +12,12 @@ import 'package:client/utils/failure.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:test/test.dart';
+import 'group_bloc_test.mocks.dart'; // Import the generated mock classes
 
-class MockGroupRepository extends Mock implements GroupRepository {}
-
-class MockUserRepository extends Mock implements UserRepository {}
-
+@GenerateMocks([
+  GroupRepository,
+  UserRepository,
+])
 void main() {
   late MockGroupRepository groupRepository;
   late MockUserRepository userRepository;
@@ -38,7 +38,7 @@ void main() {
     });
 
     test('LoadGroups event emits GroupsFetchSuccess on success', () async {
-      final trendingGroups = TrendingClubCard(
+      const trendingGroups = TrendingClubCard(
         group: GroupDto(
           id: 1,
           name: "name",
@@ -56,9 +56,10 @@ void main() {
           members: [],
           roles: [],
           polls: [],
+          books: [],
         ),
       );
-      final joinedGroups = JoinedClubCard(
+      const joinedGroups = JoinedClubCard(
         group: GroupDto(
           id: 1,
           name: "name",
@@ -76,6 +77,7 @@ void main() {
           members: [],
           roles: [],
           polls: [],
+          books: [],
         ),
       );
 
@@ -99,7 +101,7 @@ void main() {
     });
 
     test('LoadGroups event emits GroupOperationFailure on error', () async {
-      final failure = Failure('Failed to load groups');
+      const failure = Failure('Failed to load groups');
 
       when(userRepository.getToken()).thenAnswer((_) async => 'token');
       when(groupRepository.getGroups('token'))
@@ -109,15 +111,13 @@ void main() {
 
       final expectedStates = [
         GroupsLoading(),
-        GroupOperationFailure(failure),
+        const GroupOperationFailure(failure),
       ];
 
       expectLater(groupBloc.stream, emitsInOrder(expectedStates));
 
       groupBloc.add(LoadGroups());
     });
-
-    // More tests for other events and scenarios...
 
     tearDown(() {
       groupBloc.close();
