@@ -100,8 +100,6 @@ class _ProfilePageState extends State<ProfilePage> {
         imageUrl: imageUrl ?? user.imageUrl,
       );
 
-      print("################## $form");
-
       context.read<UserBloc>().add(ProfileUpdate(form));
 
       pickedImage = null;

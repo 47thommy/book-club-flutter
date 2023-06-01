@@ -13,8 +13,8 @@ import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_detail.dart';
-import 'package:client/presentation/roles_permissions/role_detail.dart';
-import 'package:client/presentation/roles_permissions/widgets/role_card.dart';
+import 'package:client/presentation/pages/roles_permissions/role_detail.dart';
+import 'package:client/presentation/pages/roles_permissions/widgets/role_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -73,7 +73,8 @@ class _GroupEditPageState extends State<GroupEditPage> {
         imageUrl: imageUrl ?? oldGroup.imageUrl,
         creator: UserDto.empty,
         members: [],
-        roles: []);
+        roles: [],
+        polls: []);
 
     groupBloc.add(GroupUpdate(newGroup));
 

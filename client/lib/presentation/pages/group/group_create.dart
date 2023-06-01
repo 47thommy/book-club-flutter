@@ -58,7 +58,8 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
         imageUrl: imageUrl,
         creator: UserDto.empty,
         members: [],
-        roles: []);
+        roles: [],
+        polls: []);
 
     groupBloc.add(GroupCreate(newGroup));
 
