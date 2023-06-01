@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:client/data/local/database_helper.dart';
+import 'package:client/domain/user/profile_form.dart';
 import 'package:client/domain/user/user.dart';
 
 import 'package:client/infrastructure/auth/data_providers/auth_api.dart';
@@ -8,8 +10,8 @@ import 'package:client/infrastructure/auth/data_providers/auth_local.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
 
 import 'package:client/infrastructure/auth/dto/dto.dart';
+import 'package:client/infrastructure/common/exception.dart';
 import 'package:client/infrastructure/user/dto/dto.dart';
-import 'package:client/infrastructure/user/dto/user_mapper.dart';
 
 import 'package:client/utils/either.dart';
 import 'package:client/utils/failure.dart';
@@ -43,6 +45,26 @@ class UserRepository {
     } on TimeoutException catch (_) {
       return Either(failure: const Failure("Connection timed out"));
     }
+  }
+
+  Future<Either<User>> updateUser(ProfileForm form, String token) async {
+    try {
+      final updatedUser = await _authApi.updateUser(form: form, token: token);
+
+      return Either(value: updatedUser.toUser());
+    } on TimeoutException catch (_) {
+      return Either(failure: const Failure("Connection timed out"));
+    } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error));
+    } catch (error) {
+      return Either(failure: Failure(error.toString()));
+    }
+  }
+
+  Future<Either<User>> deleteUser(int userId, String token) async {
+    throw UnimplementedError();
   }
 
   Future<bool> hasToken() async {
@@ -114,5 +136,6 @@ class UserRepository {
 
   Future<void> delete() async {
     await _cache.deleteAll();
+    DatabaseHelper().dropDatabase();
   }
 }

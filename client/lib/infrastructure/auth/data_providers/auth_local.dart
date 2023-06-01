@@ -10,6 +10,7 @@ class CacheClient {
   static const _lastNameKey = 'lastName';
   static const _usernameKey = 'username';
   static const _bioKey = 'bio';
+  static const _imageUrlKey = 'iamgeUrl';
   static const _idKey = 'id';
 
   Future<void> save(UserDto user, String token) async {
@@ -19,6 +20,7 @@ class CacheClient {
     await _storage.write(key: _lastNameKey, value: user.lastName);
     await _storage.write(key: _usernameKey, value: user.username);
     await _storage.write(key: _bioKey, value: user.bio);
+    await _storage.write(key: _imageUrlKey, value: user.imageUrl);
     await _storage.write(key: _tokenKey, value: token);
   }
 
@@ -29,13 +31,15 @@ class CacheClient {
     var lastName = await _storage.read(key: _lastNameKey);
     var username = await _storage.read(key: _usernameKey);
     var bio = await _storage.read(key: _bioKey);
+    var imageUrl = await _storage.read(key: _imageUrlKey);
 
     if (id == null ||
         email == null ||
         firstName == null ||
         lastName == null ||
         username == null ||
-        bio == null) {
+        bio == null ||
+        imageUrl == null) {
       throw Exception("No user");
     }
 
@@ -45,7 +49,8 @@ class CacheClient {
         firstName: firstName,
         lastName: lastName,
         username: username,
-        bio: bio);
+        bio: bio,
+        imageUrl: imageUrl);
   }
 
   Future<String?> getToken() async {

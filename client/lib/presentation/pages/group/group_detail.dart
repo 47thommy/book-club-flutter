@@ -8,6 +8,7 @@ import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_settings.dart';
 import 'package:client/presentation/pages/group/groups_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -230,12 +231,12 @@ class _GroupDetailScreen extends State<GroupDetailPage>
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    fileRepository.getFullUrl(group.imageUrl),
+                  child: CachedNetworkImage(
+                    imageUrl: fileRepository.getFullUrl(group.imageUrl),
                     width: MediaQuery.of(context).size.width,
                     height: 200,
                     fit: BoxFit.cover,
-                    errorBuilder: (context, exception, stackTrace) {
+                    errorWidget: (contmainext, exception, stackTrace) {
                       return Image.asset(
                         'assets/group_default.png',
                         width: MediaQuery.of(context).size.width,
@@ -243,16 +244,12 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                         fit: BoxFit.fitHeight,
                       );
                     },
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) return child;
-                      return Center(
-                        child: CircularProgressIndicator(
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null,
-                        ),
+                    placeholder: (context, url) {
+                      return Image.asset(
+                        'assets/group_default.png',
+                        width: MediaQuery.of(context).size.width,
+                        height: 200,
+                        fit: BoxFit.fitHeight,
                       );
                     },
                   ),

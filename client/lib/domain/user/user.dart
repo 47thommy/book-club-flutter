@@ -8,6 +8,7 @@ class User extends Equatable {
   final String lastName;
   final String username;
   final String bio;
+  final String imageUrl;
   final Role role;
 
   const User({
@@ -17,6 +18,7 @@ class User extends Equatable {
     required this.lastName,
     required this.username,
     required this.bio,
+    required this.imageUrl,
     required this.role,
   });
 
@@ -27,10 +29,11 @@ class User extends Equatable {
       lastName: "",
       username: "",
       bio: "",
+      imageUrl: "",
       role: Role.empty);
 
   bool get isEmpty => this == User.empty;
 
   @override
-  List<Object?> get props => [id, email, firstName, lastName, role];
+  List<Object?> get props => [id, email, firstName, lastName, username];
 }

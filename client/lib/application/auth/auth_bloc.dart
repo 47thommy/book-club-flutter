@@ -47,6 +47,8 @@ class AuthenticationBloc
       await userRepository.delete();
 
       emit(Unauthenticated());
+
+      
     });
 
     // Login page requested

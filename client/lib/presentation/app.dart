@@ -80,7 +80,7 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             backgroundColor: Colors.black45,
-            icon: Icon(Icons.meeting_room),
+            icon: Icon(Icons.schedule),
             label: 'Meetings',
           ),
           BottomNavigationBarItem(
@@ -100,7 +100,7 @@ class _HomeState extends State<Home> {
 
   int _calculateSelectedIndex(BuildContext context) {
     final location = GoRouter.of(context).location;
-    print(location);
+
     // if (location.endsWith(HomePage.routeName)) {
     //   return 0;
     // }

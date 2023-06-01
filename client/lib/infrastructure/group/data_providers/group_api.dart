@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:client/common/constants.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
 import 'package:client/infrastructure/common/exception.dart';
 import 'package:http/http.dart' as http;
@@ -27,7 +28,7 @@ class GroupApi {
         "Content-Type": "application/json",
         'token': token
       },
-    );
+    ).timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
       final json = jsonDecode(response.body);
@@ -50,7 +51,7 @@ class GroupApi {
         "Content-Type": "application/json",
         'token': token
       },
-    );
+    ).timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
       final data = jsonDecode(response.body);
@@ -67,8 +68,10 @@ class GroupApi {
   Future<List<GroupDto>> getJoinedGroups(String token) async {
     var url = Uri.parse('${consts.apiUrl}/user/');
 
-    final response = await _client.get(url,
-        headers: {"Content-Type": "application/json", "token": token});
+    final response = await _client.get(url, headers: {
+      "Content-Type": "application/json",
+      "token": token
+    }).timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
       final memberships = jsonDecode(response.body)['memberships'];
@@ -90,12 +93,14 @@ class GroupApi {
       {required GroupDto group, required String token}) async {
     final groupUri = Uri.parse(baseUrl);
 
-    final http.Response response = await _client.post(groupUri,
-        headers: <String, String>{
-          "Content-Type": "application/json",
-          'token': token
-        },
-        body: jsonEncode(group.toJson()));
+    final http.Response response = await _client
+        .post(groupUri,
+            headers: <String, String>{
+              "Content-Type": "application/json",
+              'token': token
+            },
+            body: jsonEncode(group.toJson()))
+        .timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.created) {
       final json = jsonDecode(response.body);
@@ -132,12 +137,14 @@ class GroupApi {
       {required GroupDto group, required String token}) async {
     final groupUri = Uri.parse(baseUrl);
 
-    final http.Response response = await _client.post(groupUri,
-        headers: <String, String>{
-          "Content-Type": "application/json",
-          'token': token
-        },
-        body: jsonEncode(group.toJson()));
+    final http.Response response = await _client
+        .post(groupUri,
+            headers: <String, String>{
+              "Content-Type": "application/json",
+              'token': token
+            },
+            body: jsonEncode(group.toJson()))
+        .timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.notFound) {
       throw BCHttpException.notFound();
@@ -181,7 +188,7 @@ class GroupApi {
         "Content-Type": "application/json",
         'token': token
       },
-    );
+    ).timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
       return;

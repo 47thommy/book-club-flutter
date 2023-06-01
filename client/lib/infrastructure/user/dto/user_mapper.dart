@@ -1,4 +1,3 @@
-import 'package:client/domain/group/group.dart';
 import 'package:client/domain/user/user.dart';
 import 'package:client/infrastructure/role/role.dart';
 
@@ -13,7 +12,8 @@ extension UserMapper on User {
         lastName: lastName,
         role: role.toRoleDto(),
         username: username,
-        bio: bio);
+        bio: bio,
+        imageUrl: imageUrl);
   }
 }
 
@@ -26,6 +26,7 @@ extension UserDtoMapper on UserDto {
         lastName: lastName,
         role: role.toRole(),
         username: username,
-        bio: bio);
+        bio: bio,
+        imageUrl: imageUrl);
   }
 }

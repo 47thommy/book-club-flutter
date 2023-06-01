@@ -1,7 +1,11 @@
+import 'dart:developer';
 import 'dart:io';
 import 'dart:convert';
+import 'package:client/common/constants.dart';
+import 'package:client/domain/user/profile_form.dart';
 import 'package:client/infrastructure/auth/dto/dto.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
+import 'package:client/infrastructure/common/exception.dart';
 import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:client/common/constants.dart' as consts;
 import 'package:http/http.dart' as http;
@@ -61,7 +65,7 @@ class AuthApi {
     final response = await _client.get(url, headers: {
       "Content-Type": "application/json",
       "token": token
-    }).timeout(const Duration(seconds: 3));
+    }).timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
       final user = UserDto.fromJson(jsonDecode(response.body));
@@ -70,5 +74,26 @@ class AuthApi {
     }
 
     throw AuthenticationFailure.sessionExpired();
+  }
+
+  Future<UserDto> updateUser(
+      {required ProfileForm form, required String token}) async {
+    final userUrl = Uri.parse('${consts.apiUrl}/user');
+
+    final http.Response response = await _client.patch(userUrl,
+        headers: <String, String>{
+          "Content-Type": "application/json",
+          'token': token
+        },
+        body: jsonEncode(form.toJson()));
+
+    if (response.statusCode == HttpStatus.ok) {
+      final json = jsonDecode(response.body);
+
+      return UserDto.fromJson(json);
+    } else if (response.statusCode == HttpStatus.unauthorized) {
+      throw AuthenticationFailure.sessionExpired();
+    }
+    throw const BCHttpException();
   }
 }

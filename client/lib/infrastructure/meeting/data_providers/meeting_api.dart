@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:client/common/constants.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
 import 'package:client/infrastructure/common/exception.dart';
 import 'package:client/infrastructure/meeting/dto/meeting_dto.dart';
@@ -28,7 +29,7 @@ class MeetingApi {
         "Content-Type": "application/json",
         'token': token
       },
-    );
+    ).timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
       final json = jsonDecode(response.body);
@@ -46,12 +47,14 @@ class MeetingApi {
       {required MeetingDto meeting, required String token}) async {
     final meetingUri = Uri.parse(baseUrl);
 
-    final http.Response response = await _client.post(meetingUri,
-        headers: <String, String>{
-          "Content-Type": "application/json",
-          'token': token
-        },
-        body: jsonEncode(meeting.toJson()));
+    final http.Response response = await _client
+        .post(meetingUri,
+            headers: <String, String>{
+              "Content-Type": "application/json",
+              'token': token
+            },
+            body: jsonEncode(meeting.toJson()))
+        .timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.created) {
       final json = jsonDecode(response.body);
@@ -67,12 +70,14 @@ class MeetingApi {
       {required MeetingDto meeting, required String token}) async {
     final meetingUri = Uri.parse('$baseUrl/${meeting.id}');
 
-    final http.Response response = await _client.put(meetingUri,
-        headers: <String, String>{
-          "Content-Type": "application/json",
-          'token': token
-        },
-        body: jsonEncode(meeting.toJson()));
+    final http.Response response = await _client
+        .put(meetingUri,
+            headers: <String, String>{
+              "Content-Type": "application/json",
+              'token': token
+            },
+            body: jsonEncode(meeting.toJson()))
+        .timeout(connectionTimeoutLimit);
 
     if (response.statusCode == HttpStatus.ok) {
       final json = jsonDecode(response.body);

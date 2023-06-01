@@ -1,5 +1,7 @@
+import 'package:client/application/auth/auth_state.dart';
 import 'package:client/application/file/file_bloc.dart';
 import 'package:client/application/group/group.dart';
+import 'package:client/application/user/user.dart';
 import 'package:client/block_observer.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
@@ -52,16 +54,31 @@ void main() async {
                               userRepository:
                                   RepositoryProvider.of<UserRepository>(
                                       context))),
+
+                      // User provider
+                      BlocProvider(
+                          create: (context) => UserBloc(
+                              userRepository:
+                                  RepositoryProvider.of<UserRepository>(
+                                      context))),
                     ],
 
                     // App
-                    child: MaterialApp.router(
-                      debugShowCheckedModeBanner: false,
-                      theme: ThemeData(),
-                      darkTheme: ThemeData.dark(),
-                      themeMode: ThemeMode.system,
-                      routerConfig: router,
-                    ),
+                    child:
+                        BlocListener<AuthenticationBloc, AuthenticationState>(
+                            listener: (context, state) {
+                              if (state is UserSessionExpired) {
+                                context
+                                    .read<AuthenticationBloc>()
+                                    .add(UserLoggedOut());
+                              }
+                            },
+                            child: MaterialApp.router(
+                              theme: ThemeData(),
+                              darkTheme: ThemeData.dark(),
+                              themeMode: ThemeMode.system,
+                              routerConfig: router,
+                            )),
                   ))),
       blocObserver: SimpleBlocObserver());
 }
