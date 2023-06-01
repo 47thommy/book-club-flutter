@@ -6,13 +6,14 @@ part 'readinglist_dto.freezed.dart';
 part 'readinglist_dto.g.dart';
 
 @freezed
-class ReadinglistDto with _$ReadinglistDto {
-  const ReadinglistDto._();
+class ReadingListDto with _$ReadinglistDto {
+  const ReadingListDto._();
 
-  const factory ReadinglistDto(
+  const factory ReadingListDto(
       {required int id,
       required BookDto book,
       required GroupDto group}) = _ReadinglistDto;
 
-  factory ReadinglistDto.fromJson(Map<String, dynamic> json) => _$ReadinglistDtoFromJson(json);
+  factory ReadingListDto.fromJson(Map<String, dynamic> json) =>
+      _$ReadinglistDtoFromJson(json);
 }
