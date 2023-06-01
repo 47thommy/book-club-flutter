@@ -21,7 +21,7 @@ void main() {
             pageCount: 255,
             title: 'test');
         const groupId = 1;
-        const state = BookCreated(book, groupId);
+        final state = const BookCreated(book, groupId);
 
         expect(state.props, [book]);
       });
@@ -36,7 +36,7 @@ void main() {
             id: 1,
             pageCount: 255,
             title: 'test');
-        const state = BookUpdated(book);
+        final state = const BookUpdated(book);
 
         expect(state.props, [book]);
       });
@@ -45,7 +45,7 @@ void main() {
     group('BookDeleted', () {
       test('props are [bookId]', () {
         const bookId = 1;
-        const state = BookDeleted(bookId);
+        final state = const BookDeleted(bookId);
 
         expect(state.props, [bookId]);
       });
@@ -54,14 +54,14 @@ void main() {
     group('BookOperationFailure', () {
       test('props are [error]', () {
         const error = Failure("error");
-        const state = BookOperationFailure(error);
+        final state = const BookOperationFailure(error);
 
         expect(state.props, [error]);
       });
 
       test('toString returns correct value', () {
         const error = Failure("error");
-        const state = BookOperationFailure(error);
+        final state = const BookOperationFailure(error);
 
         expect(state.toString(), 'BookOperationFailure { error: $error }');
       });
