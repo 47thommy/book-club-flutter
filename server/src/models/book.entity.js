@@ -1,47 +1,44 @@
 const BookSchema = require("typeorm").EntitySchema;
 
 const Book = new BookSchema({
-    name: "Book",
+  name: "Book",
 
-    columns: {
-        id: {
-            primary: true,
-            type: "int",
-            generated: true,
-        },
-
-        title: {
-            type: "varchar",
-        },
-
-        author: {
-            type: "varchar",
-        },
-
-        description: {
-            type: "varchar",
-        },
-
-        pageCount: {
-            type: "int",
-        },
-
-        genre: {
-            type: "varchar",
-        },
-
+  columns: {
+    id: {
+      primary: true,
+      type: "int",
+      generated: true,
     },
 
-    relations: {
+    title: {
+      type: "varchar",
+    },
 
-        group: {
-            target: "Group",
-            type: "one-to-one",
-            joinColumn: true,
-            eager: true,
-        },
-    }
+    author: {
+      type: "varchar",
+    },
 
-})
+    description: {
+      type: "varchar",
+    },
+
+    pageCount: {
+      type: "int",
+    },
+
+    genre: {
+      type: "varchar",
+    },
+  },
+
+  relations: {
+    group: {
+      target: "Group",
+      type: "many-to-one",
+      joinColumn: true,
+      eager: true,
+    },
+  },
+});
 
 module.exports = { Book };
