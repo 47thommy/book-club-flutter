@@ -1,7 +1,5 @@
 import 'package:client/application/login/login.dart';
-import 'package:client/domain/auth/login_form.dart';
-import 'package:client/infrastructure/auth/dto/dto.dart';
-import 'package:client/utils/either.dart';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:client/application/auth/auth_bloc.dart';
