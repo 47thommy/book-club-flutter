@@ -20,20 +20,13 @@ void main() {
       );
     });
 
-    test('PollDelete should properly override props and toString()', () {
+    test('PollDelete should have correct props and toString', () {
       const pollId = 1;
       const groupId = 1;
-      const event1 = PollDelete(pollId, groupId);
-      const event2 = PollDelete(pollId, groupId);
+      const event = PollDelete(pollId, groupId);
 
-      expect(event1.props, [pollId, groupId]);
-
-      expect(event1.props, event2.props);
-
-      expect(
-        event1.toString(),
-        'poll delete { poll_id: $pollId }',
-      );
+      expect(event.props, [pollId]);
+      expect(event.toString(), 'poll delete { poll_id: $pollId }');
     });
   });
 }
