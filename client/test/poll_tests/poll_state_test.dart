@@ -10,5 +10,13 @@ void main() {
 
       expect(state.props, isEmpty);
     });
+
+    test('PollCreated should  override props', () {
+      const poll = Poll(id: 1, options: [], question: '');
+      const groupId = 1;
+      const state = PollCreated(poll, groupId);
+
+      expect(state.props, [poll]);
+    });
   });
 }
