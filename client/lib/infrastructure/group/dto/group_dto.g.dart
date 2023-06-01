@@ -21,6 +21,9 @@ _$_GroupDto _$$_GroupDtoFromJson(Map<String, dynamic> json) => _$_GroupDto(
       polls: (json['polls'] as List<dynamic>)
           .map((e) => PollDto.fromJson(e as Map<String, dynamic>))
           .toList(),
+      books: (json['books'] as List<dynamic>)
+          .map((e) => BookDto.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$_GroupDtoToJson(_$_GroupDto instance) =>
@@ -33,4 +36,5 @@ Map<String, dynamic> _$$_GroupDtoToJson(_$_GroupDto instance) =>
       'members': instance.members,
       'roles': instance.roles,
       'polls': instance.polls,
+      'books': instance.books,
     };

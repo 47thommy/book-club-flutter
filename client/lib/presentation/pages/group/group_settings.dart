@@ -74,7 +74,8 @@ class _GroupEditPageState extends State<GroupEditPage> {
         creator: UserDto.empty,
         members: [],
         roles: [],
-        polls: []);
+        polls: [],
+        books: []);
 
     groupBloc.add(GroupUpdate(newGroup));
 

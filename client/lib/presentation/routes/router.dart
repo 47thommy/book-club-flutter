@@ -1,6 +1,9 @@
+import 'package:client/infrastructure/book/dto/book_dto.dart';
 import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/role/dto/role_dto.dart';
 import 'package:client/presentation/app.dart';
+import 'package:client/presentation/pages/books/book_detail.dart';
+import 'package:client/presentation/pages/common/page_mode.dart';
 import 'package:client/presentation/pages/profile/profile.dart';
 import 'package:client/presentation/pages/roles_permissions/role_detail.dart';
 import 'package:client/presentation/pages/poll/poll_form.dart';
@@ -84,6 +87,19 @@ final GoRouter router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
             builder: (context, state) {
               final groupId = int.parse(state.pathParameters['gid']!);
               return PollCreateScreen(groupId);
+            }),
+
+        //
+        // Book  screen
+        GoRoute(
+            name: BookDescription.routeName,
+            path: '/${BookDescription.routeName}/:gid',
+            builder: (context, state) {
+              final groupId = int.parse(state.pathParameters['gid']!);
+              final book = state.extra as BookDto;
+              final create = state.queryParameters.containsKey('create');
+              return BookDescription(
+                  book: book, groupId: groupId, mode: PageMode.create);
             }),
       ]),
 ]);

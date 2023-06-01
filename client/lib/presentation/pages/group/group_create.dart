@@ -59,7 +59,8 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
         creator: UserDto.empty,
         members: [],
         roles: [],
-        polls: []);
+        polls: [],
+        books: []);
 
     groupBloc.add(GroupCreate(newGroup));
 

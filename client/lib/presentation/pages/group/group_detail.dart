@@ -2,9 +2,11 @@ import 'dart:developer';
 import 'package:client/application/group/group.dart';
 import 'package:client/domain/group/group.dart';
 import 'package:client/domain/user/user.dart';
+import 'package:client/infrastructure/book/dto/book_dto.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
+import 'package:client/presentation/pages/books/book_detail.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_settings.dart';
 import 'package:client/presentation/pages/group/groups_screen.dart';
@@ -82,14 +84,22 @@ class _GroupDetailScreen extends State<GroupDetailPage>
         break;
 
       case 'create_reading_list':
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) {
-            // TODO: ReadingListForm()
-            return const Text('reading form');
-          }),
-        );
+        context
+            .pushNamed(BookDescription.routeName,
+                pathParameters: {
+                  'gid': widget.gid.toString(),
+                },
+                extra: const BookDto(
+                    id: 1,
+                    title: 'title',
+                    author: 'author',
+                    description: 'description',
+                    pageCount: 123,
+                    genre: 'genre'))
+            .then((value) =>
+                context.read<GroupBloc>().add(LoadGroupDetail(widget.gid)));
         break;
+
       case 'schedule_meeting':
         // Navigator.push(
         //   context,
@@ -368,22 +378,26 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                       label: 'Create Poll',
                       value: 'create_poll',
                     ),
-                  buildOptions(
-                    icon: Icons.calendar_today,
-                    label: 'Schedule a Meeting',
-                    value: 'schedule_meeting',
-                  ),
-                  buildOptions(
-                    icon: Icons.menu_book_outlined,
-                    label: 'Create a Reading List',
-                    value: 'create_reading_list',
-                  ),
+                  if (user.hasScheduleCreatePermission(group.toGroup()))
+                    buildOptions(
+                      icon: Icons.calendar_today,
+                      label: 'Schedule a Meeting',
+                      value: 'schedule_meeting',
+                    ),
+                  if (user.hasReadingListCreatePermission(group.toGroup()))
+                    buildOptions(
+                      icon: Icons.menu_book_outlined,
+                      label: 'Create a Reading List',
+                      value: 'create_reading_list',
+                    ),
                 ],
               ),
             ),
         ],
       ),
-      floatingActionButton: widget.isJoined
+      floatingActionButton: user.hasPollCreatePermission(group.toGroup()) ||
+              (user.hasScheduleCreatePermission(group.toGroup())) ||
+              (user.hasReadingListCreatePermission(group.toGroup()))
           ? FloatingActionButton(
               onPressed: toggleMenus,
               child: AnimatedIcon(

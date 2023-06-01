@@ -1,3 +1,4 @@
+import 'package:client/infrastructure/book/model/book_dto.dart';
 import 'package:equatable/equatable.dart';
 import 'package:client/infrastructure/poll/dto/poll_dto.dart';
 import 'package:client/infrastructure/role/dto/role_dto.dart';
@@ -16,6 +17,7 @@ class GroupDto extends Equatable {
   final List<UserDto> members;
   final List<RoleDto> roles;
   final List<PollDto> polls;
+  final List<BookDto> books;
 
   const GroupDto({
     required this.id,
