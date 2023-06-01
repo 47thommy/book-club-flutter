@@ -93,4 +93,95 @@ void main() {
       );
     });
   });
+
+  test('emits BookUpdated when BookUpdate event is added', () {
+    const book = Book(
+        author: 'test',
+        description: 'test',
+        genre: 'test',
+        id: 1,
+        pageCount: 255,
+        title: 'test');
+
+    const token = 'mock_token';
+
+    when(mockUserRepository.getToken()).thenAnswer((_) => Future.value(token));
+    when(mockBookRepository.updateBook(book, 1, token))
+        .thenAnswer((_) => Future.value(Either<Book>(value: book)));
+
+    final bloc = BookBloc(
+      bookRepository: mockBookRepository,
+      groupRepository: mockGroupRepository,
+      userRepository: mockUserRepository,
+    );
+
+    expect(bloc.state, equals(BookInit()));
+
+    bloc.add(const BookUpdate(book, 1));
+
+    expect(
+      bloc.stream,
+      emitsInOrder([const BookUpdated(book)]),
+    );
+  });
+  test('emits BookOperationFailure when BookUpdate fails', () {
+    const book = Book(
+        author: 'test',
+        description: 'test',
+        genre: 'test',
+        id: 1,
+        pageCount: 255,
+        title: 'test');
+
+    const token = 'mock_token';
+    const failure = Failure('Failed to update book');
+
+    // Mock the necessary dependencies and methods
+    when(mockUserRepository.getToken()).thenAnswer((_) => Future.value(token));
+    when(mockBookRepository.updateBook(book, 1, token))
+        .thenAnswer((_) => Future.value(Either<Book>(failure: failure)));
+
+    // Create the BookBloc instance
+    final bloc = BookBloc(
+      bookRepository: mockBookRepository,
+      groupRepository: mockGroupRepository,
+      userRepository: mockUserRepository,
+    );
+
+    // Expect that the initial state is BookInit
+    expect(bloc.state, equals(BookInit()));
+
+    // Add the BookUpdate event
+    bloc.add(const BookUpdate(book, 1));
+
+    // Expect that BookOperationFailure is emitted with the correct failure
+    expect(
+      bloc.stream,
+      emitsInOrder([const BookOperationFailure(failure)]),
+    );
+  });
+
+  test('emits BookDeleted when BookDelete event is added', () {
+    const token = 'mock_token';
+
+    when(mockUserRepository.getToken()).thenAnswer((_) => Future.value(token));
+    when(mockBookRepository.deleteBook(1, 1, token))
+        .thenAnswer((_) => Future.value(Either(value: true)));
+
+    // Create the BookBloc instance
+    final bloc = BookBloc(
+      bookRepository: mockBookRepository,
+      groupRepository: mockGroupRepository,
+      userRepository: mockUserRepository,
+    );
+
+    expect(bloc.state, equals(BookInit()));
+
+    bloc.add(const BookDelete(1, 1));
+
+    expect(
+      bloc.stream,
+      emitsInOrder([const BookDeleted(1)]),
+    );
+  });
 }
