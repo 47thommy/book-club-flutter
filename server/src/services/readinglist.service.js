@@ -17,16 +17,15 @@ const getReadingListById = async (id) => {
 
 const createReadingList = async (group, book, creator) => {
     const readingList = database.getRepository(ReadingList).create(({
-        group: group,
-        book: book,
-        creator: creator,
+        // group: group,
+        // book: book,
+        // creator: creator,
     }));
 
     readingList.group = group;
     readingList.book = book;
-    readingList.creator = creator;
 
-    const newReadingList = await database.getRepository(ReadingList);
+    const newReadingList = await database.getRepository(ReadingList).save(readingList);
     return newReadingList;
 
 };

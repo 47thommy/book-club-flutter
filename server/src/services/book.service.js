@@ -13,7 +13,7 @@ const getBookByID = async (id) => {
     return book;
 };
 
-const createBook = async (title, author, description, pageCount, genre) => {
+const createBook = async (title, author, description, pageCount, genre, group) => {
     const book = database.getRepository(Book).create(({
         title: title,
         author: author,
@@ -22,8 +22,9 @@ const createBook = async (title, author, description, pageCount, genre) => {
         genre: genre,
     }));
 
+    book.group = group;
 
-    const newBook = await database.getRepository(book);
+    const newBook = await database.getRepository(Book).save(book);
     return newBook;
 
 };
@@ -49,7 +50,7 @@ const updateBook = async (bookId, title, author, description, pageCount, genre) 
 };
 
 
-const deleteBook = async (id, user) => {
+const deleteBook = async (id) => {
     const book = await getBookByID(id);
 
     if (!book) {

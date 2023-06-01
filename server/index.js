@@ -33,6 +33,7 @@ const pollRouter = require("./src/routes/poll.routes");
 const voteRouter = require("./src/routes/vote.routes");
 const meetingRouter = require("./src/routes/meeting.routes");
 const bookRouter = require("./src/routes/book.routes");
+const readingListRouter = require("./src/routes/readinglist.routes");
 
 app.use("/uploads", uploadRoute);
 app.use("/auth", authRouter);
@@ -43,6 +44,7 @@ app.use("/poll", pollRouter);
 app.use("/vote", voteRouter);
 app.use("/meeting", meetingRouter);
 app.use("/book", bookRouter);
+app.use("/readinglist", readingListRouter);
 
 // ==================================================================
 //                      Initialize Database

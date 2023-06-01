@@ -57,6 +57,13 @@ const Group = new GroupSchema({
       onDelete: "CASCADE",
       eager: true,
     },
+
+    readingList: {
+      target: "Book",
+      type: "one-to-many",
+      inverseSide: "group",
+      cascade: true,
+    },
   },
 });
 
