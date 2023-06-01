@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
 
-ReadinglistDto _$ReadinglistDtoFromJson(Map<String, dynamic> json) {
+ReadingListDto _$ReadinglistDtoFromJson(Map<String, dynamic> json) {
   return _ReadinglistDto.fromJson(json);
 }
 
@@ -26,15 +26,15 @@ mixin _$ReadinglistDto {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ReadinglistDtoCopyWith<ReadinglistDto> get copyWith =>
+  $ReadinglistDtoCopyWith<ReadingListDto> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ReadinglistDtoCopyWith<$Res> {
   factory $ReadinglistDtoCopyWith(
-          ReadinglistDto value, $Res Function(ReadinglistDto) then) =
-      _$ReadinglistDtoCopyWithImpl<$Res, ReadinglistDto>;
+          ReadingListDto value, $Res Function(ReadingListDto) then) =
+      _$ReadinglistDtoCopyWithImpl<$Res, ReadingListDto>;
   @useResult
   $Res call({int id, BookDto book, GroupDto group});
 
@@ -43,7 +43,7 @@ abstract class $ReadinglistDtoCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$ReadinglistDtoCopyWithImpl<$Res, $Val extends ReadinglistDto>
+class _$ReadinglistDtoCopyWithImpl<$Res, $Val extends ReadingListDto>
     implements $ReadinglistDtoCopyWith<$Res> {
   _$ReadinglistDtoCopyWithImpl(this._value, this._then);
 
@@ -190,7 +190,7 @@ class _$_ReadinglistDto extends _ReadinglistDto {
   }
 }
 
-abstract class _ReadinglistDto extends ReadinglistDto {
+abstract class _ReadinglistDto extends ReadingListDto {
   const factory _ReadinglistDto(
       {required final int id,
       required final BookDto book,

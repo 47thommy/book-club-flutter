@@ -7,7 +7,9 @@ class DatabaseHelper {
 
   // Table names
   static const fileTable = 'images';
+  static const bookTable = 'book';
   static const groupTable = 'grouptable';
+  static const meetingTable = 'meeting';
   static const scheduleTable = 'schedule';
   static const readinglistTable = 'readinglist';
 
@@ -49,10 +51,17 @@ class DatabaseHelper {
       CREATE TABLE $readinglistTable (
         id INTEGER PRIMARY KEY                
       )''');
-
-    // Schedule cache
+  
+    // Meeting cache
     await db.execute('''
-      CREATE TABLE $scheduleTable (
+      CREATE TABLE $meetingTable (
+        id INTEGER PRIMARY KEY,
+        details TEXT
+      )''');
+      
+    // Book cache
+    await db.execute('''
+      CREATE TABLE $bookTable (
         id INTEGER PRIMARY KEY        
       )''');
   }

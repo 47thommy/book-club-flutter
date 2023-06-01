@@ -27,6 +27,7 @@ void main() {
         ),
         members: [],
         roles: [],
+        polls: [],
       );
       expect(const GroupDetailLoaded(group).props, [group]);
     });
@@ -48,6 +49,7 @@ void main() {
         ),
         members: [],
         roles: [],
+        polls: [],
       );
       expect(const GroupCreated(group).props, [group]);
     });
@@ -69,6 +71,7 @@ void main() {
         ),
         members: [],
         roles: [],
+        polls: [],
       );
       expect(const GroupUpdated(group).props, [group]);
     });
@@ -90,6 +93,7 @@ void main() {
         ),
         members: [],
         roles: [],
+        polls: [],
       );
       expect(const GroupJoined(group).props, [group]);
     });
@@ -111,6 +115,7 @@ void main() {
         ),
         members: [],
         roles: [],
+        polls: [],
       );
       expect(const GroupLeaved(group).props, [group]);
     });
@@ -133,6 +138,7 @@ void main() {
           ),
           members: [],
           roles: [],
+          polls: [],
         ),
         const GroupDto(
           id: 7,
@@ -150,6 +156,7 @@ void main() {
           ),
           members: [],
           roles: [],
+          polls: [],
         ),
       ];
       expect(

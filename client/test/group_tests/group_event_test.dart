@@ -30,6 +30,7 @@ void main() {
         ),
         members: [],
         roles: [],
+        polls: [],
       );
 
       expect(
