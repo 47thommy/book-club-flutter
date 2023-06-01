@@ -27,7 +27,6 @@ void main() {
     );
 
     expect(find.text("Book club"), findsOneWidget);
-    expect(find.text("Book club"),
-        findsNWidgets(1)); // Ensure only one instance of the title text exists
+    expect(find.text("Book club"), findsNWidgets(1));
   });
 }
