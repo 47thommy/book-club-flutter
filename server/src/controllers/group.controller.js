@@ -170,6 +170,7 @@ const removeMember = async (req, res) => {
   try {
     if (await groupService.isMember(groupId, memberId)) {
       await groupService.removeMember(memberId, groupId, req.user);
+
       return res.status(200).json({ message: "Member removed from the group" });
     } else {
       return res.status(StatusCodes.NOT_FOUND).json();
