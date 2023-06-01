@@ -46,7 +46,6 @@ void main() {
 
       final bloc = BookBloc(
         bookRepository: mockBookRepository,
-        groupRepository: mockGroupRepository,
         userRepository: mockUserRepository,
       );
 
@@ -79,7 +78,6 @@ void main() {
 
       final bloc = BookBloc(
         bookRepository: mockBookRepository,
-        groupRepository: mockGroupRepository,
         userRepository: mockUserRepository,
       );
 
@@ -111,7 +109,6 @@ void main() {
 
     final bloc = BookBloc(
       bookRepository: mockBookRepository,
-      groupRepository: mockGroupRepository,
       userRepository: mockUserRepository,
     );
 
@@ -144,7 +141,6 @@ void main() {
     // Create the BookBloc instance
     final bloc = BookBloc(
       bookRepository: mockBookRepository,
-      groupRepository: mockGroupRepository,
       userRepository: mockUserRepository,
     );
 
@@ -170,7 +166,6 @@ void main() {
 
     final bloc = BookBloc(
       bookRepository: mockBookRepository,
-      groupRepository: mockGroupRepository,
       userRepository: mockUserRepository,
     );
 
@@ -193,7 +188,6 @@ void main() {
 
     final bloc = BookBloc(
       bookRepository: mockBookRepository,
-      groupRepository: mockGroupRepository,
       userRepository: mockUserRepository,
     );
 
