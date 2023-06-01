@@ -26,5 +26,12 @@ void main() {
 
       expect(state.props, [error]);
     });
+
+    test('toString() returns correct string representation', () {
+      const error = Failure('Something went wrong');
+      const state = LoginFailure(error);
+
+      expect(state.toString(), 'LoginFailure { error: $error }');
+    });
   });
 }
