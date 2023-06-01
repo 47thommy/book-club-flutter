@@ -14,11 +14,18 @@ const createPoll = async (req, res) => {
   }
 
   try {
+    const group = await pollService.getPollById(req.body.groupId);
+
+    if (!group) {
+      return res.status(StatusCodes.NOT_FOUND).json();
+    }
+
     const newPoll = await pollService.createPoll(
       req.body.name,
       req.user,
       req.body.question,
-      req.body.options
+      req.body.options,
+      group
     );
 
     if (newPoll) {

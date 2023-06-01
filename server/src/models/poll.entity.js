@@ -34,6 +34,12 @@ const Poll = new PollSchema({
       type: "one-to-many",
       inverseSide: "poll",
     },
+
+    group: {
+      target: "Group",
+      type: "many-to-one",
+      joinColumn: true,
+    },
   },
 });
 

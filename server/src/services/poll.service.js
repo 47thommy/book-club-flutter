@@ -1,4 +1,6 @@
 const { Poll, Vote } = require("../models/");
+const permissionService = require("./permissions.service");
+const { Permissions } = permissionService;
 const database = require("../configs/db.config");
 
 const getPollById = async (id) => {
@@ -14,12 +16,18 @@ const getPollById = async (id) => {
   return poll;
 };
 
-const createPoll = async (pollName, creator, question, options) => {
+const createPoll = async (pollName, creator, question, options, group) => {
+  await permissionService.isAuthorized(creator, group, [
+    Permissions.CREATE_POLL,
+  ]);
+
   const poll = database.getRepository(Poll).create({
     name: pollName,
     question: question,
     options: JSON.stringify(options),
   });
+
+  poll.group = group;
 
   poll.creator = creator;
 
@@ -29,6 +37,8 @@ const createPoll = async (pollName, creator, question, options) => {
 };
 
 const deletePoll = async (id, user) => {
+  await permissionService.isAuthorized(user, group, [Permissions.DELETE_POLL]);
+
   const poll = await getPollById(id);
 
   if (!poll) {

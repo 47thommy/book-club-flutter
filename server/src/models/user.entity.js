@@ -20,16 +20,23 @@ const User = new UserSchema({
 
     bio: {
       type: "varchar",
-      default: ""
+      default: "",
+    },
+
+    imageUrl: {
+      default: "",
+      type: "varchar",
     },
 
     password: {
       type: "varchar",
       select: false,
     },
+
     first_name: {
       type: "varchar",
     },
+
     last_name: {
       type: "varchar",
     },

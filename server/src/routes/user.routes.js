@@ -8,12 +8,7 @@ const {
 const router = express.Router();
 
 router.get("/", loginRequired, userController.getUser);
-router.patch(
-  "/:id",
-  loginRequired,
-  updateValidation,
-  userController.updateUser
-);
-router.delete("/:id", loginRequired, userController.deleteUser);
+router.patch("/", loginRequired, updateValidation, userController.updateUser);
+router.delete("/", loginRequired, userController.deleteUser);
 
 module.exports = router;

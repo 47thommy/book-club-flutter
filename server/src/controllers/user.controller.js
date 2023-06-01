@@ -47,26 +47,32 @@ const updateUser = async (req, res) => {
     return;
   }
 
-  const id = req.params.id;
-  const { email, password, first_name, middle_name, last_name, username, bio } =
-    req.body;
-
-  if (req.user.id != id) return res.status(StatusCodes.FORBIDDEN).json();
+  const id = req.user.id;
+  const {
+    imageUrl,
+    password,
+    first_name,
+    middle_name,
+    last_name,
+    username,
+    bio,
+  } = req.body;
 
   try {
     const updatedUser = await userService.updateUser(
       id,
-      email,
       password,
       first_name,
       middle_name,
       last_name,
       username,
-      bio
+      bio,
+      imageUrl
     );
 
-    res.status(StatusCodes.OK).json({ success: true, user: updatedUser });
+    res.status(StatusCodes.OK).json(updatedUser);
   } catch (error) {
+    console.log(error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
       .json({ success: false, message: "Server Error" });
@@ -74,12 +80,8 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const { id } = req.params;
-
-  if (req.user.id != id) return res.status(StatusCodes.FORBIDDEN).json();
-
   try {
-    const user = await userService.deleteUser(id);
+    const user = await userService.deleteUser(req.user.id);
 
     if (user) return res.json();
   } catch (error) {

@@ -26,14 +26,14 @@ const getGroupsByName = async (name, exact = false) => {
   if (exact) {
     const group = await database.getRepository(Group).findOne({
       where: { name },
-      relations: { members: true, creator: true, roles: true },
+      relations: { members: true, creator: true, roles: true, polls: true },
     });
 
     return group;
   } else {
     const group = await database.getRepository(Group).find({
       where: { name: Like(`%${name}%`) },
-      relations: { members: true, creator: true, roles: true },
+      relations: { members: true, creator: true, roles: true, polls: true },
     });
 
     for (let member of group.members) {
@@ -49,7 +49,7 @@ const getGroupById = async (id) => {
 
   const group = await database.getRepository(Group).findOne({
     where: { id },
-    relations: { members: true, creator: true, roles: true },
+    relations: { members: true, creator: true, roles: true, polls: true },
   });
 
   for (let member of group.members) {
