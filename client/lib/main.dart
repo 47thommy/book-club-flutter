@@ -3,6 +3,7 @@ import 'package:client/application/file/file_bloc.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/application/user/user.dart';
 import 'package:client/block_observer.dart';
+import 'package:client/infrastructure/book/book_repository.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/poll/poll_repository.dart';
@@ -27,6 +28,7 @@ void main() async {
                 RepositoryProvider(create: (_) => FileRepository()),
                 RepositoryProvider(create: (_) => RoleRepository()),
                 RepositoryProvider(create: (_) => PollRepository()),
+                RepositoryProvider(create: (_) => BookRepository()),
               ],
 
                   // Bloc providers
