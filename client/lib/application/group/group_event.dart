@@ -84,3 +84,29 @@ class GroupLeave extends GroupEvent {
   @override
   String toString() => 'Group leave { group: $group }';
 }
+
+class GroupAddMember extends GroupEvent {
+  final int userId;
+  final GroupDto group;
+
+  const GroupAddMember(this.userId, this.group);
+
+  @override
+  List<Object?> get props => [userId, group];
+
+  @override
+  String toString() => 'Add member { uid: $userId -> gid: $group }';
+}
+
+class GroupRemoveMember extends GroupEvent {
+  final int userId;
+  final GroupDto group;
+
+  const GroupRemoveMember(this.userId, this.group);
+
+  @override
+  List<Object?> get props => [userId, group];
+
+  @override
+  String toString() => 'Remove member { uid: $userId -> gid: $group }';
+}

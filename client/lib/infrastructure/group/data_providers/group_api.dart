@@ -201,4 +201,51 @@ class GroupApi {
     }
     throw const BCHttpException();
   }
+
+  Future<void> addMember(GroupDto group, int userId, String token) async {
+    final groupUri = Uri.parse('$baseUrl/${group.id}');
+
+    final http.Response response = await _client
+        .post(groupUri,
+            headers: <String, String>{
+              "Content-Type": "application/json",
+              'token': token
+            },
+            body: jsonEncode({'memberId': userId}))
+        .timeout(connectionTimeoutLimit);
+
+    if (response.statusCode == HttpStatus.ok) {
+      return;
+    } else if (response.statusCode == HttpStatus.notFound) {
+      throw BCHttpException.notFound();
+    } else if (response.statusCode == HttpStatus.forbidden) {
+      throw BCHttpException.unauthorized();
+    } else if (response.statusCode == HttpStatus.unauthorized) {
+      throw AuthenticationFailure.sessionExpired();
+    }
+    throw const BCHttpException();
+  }
+
+  Future<void> removeMember(GroupDto group, int userId, String token) async {
+    final groupUri = Uri.parse('$baseUrl/${group.id}/members/$userId');
+
+    final http.Response response = await _client.delete(
+      groupUri,
+      headers: <String, String>{
+        "Content-Type": "application/json",
+        'token': token
+      },
+    ).timeout(connectionTimeoutLimit);
+
+    if (response.statusCode == HttpStatus.ok) {
+      return;
+    } else if (response.statusCode == HttpStatus.notFound) {
+      throw BCHttpException.notFound();
+    } else if (response.statusCode == HttpStatus.forbidden) {
+      throw BCHttpException.unauthorized();
+    } else if (response.statusCode == HttpStatus.unauthorized) {
+      throw AuthenticationFailure.sessionExpired();
+    }
+    throw const BCHttpException();
+  }
 }

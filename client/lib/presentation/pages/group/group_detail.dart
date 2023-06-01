@@ -5,23 +5,23 @@ import 'package:client/domain/user/user.dart';
 import 'package:client/infrastructure/book/dto/book_dto.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
+import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/books/book_detail.dart';
 import 'package:client/presentation/pages/books/book_list.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_settings.dart';
-import 'package:client/presentation/pages/group/groups_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:client/presentation/pages/poll/poll_form.dart';
 import 'package:client/presentation/pages/poll/polls_list.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/group/dto/group_mapper.dart';
-import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:client/domain/role/user_permission_validator.dart';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class GroupDetailPage extends StatefulWidget {
   static const routeName = 'group-detail';
@@ -44,6 +44,7 @@ class _GroupDetailScreen extends State<GroupDetailPage>
   bool isClicked = false;
   late AnimationController buttonController;
   late Animation<double> buttonAnimation;
+  Offset _tapPosition = Offset.zero;
 
   @override
   void initState() {
@@ -159,6 +160,16 @@ class _GroupDetailScreen extends State<GroupDetailPage>
           // on group leave
           else if (state is GroupLeaved) {
             showSuccess(context, 'You have left ${state.group.name}');
+          }
+
+          // on group member removed
+          else if (state is GroupMemberRemoved) {
+            showSuccess(context, 'Member removed.');
+          }
+
+          // on group member added
+          else if (state is GroupMemeberAdded) {
+            showSuccess(context, 'New member added.');
           }
 
           // on group edit
@@ -357,37 +368,65 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                         // physics: const NeverScrollableScrollPhysics(),
                         itemCount: group.members.length,
                         itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: const CircleAvatar(
-                              child: Icon(Icons.person),
-                            ),
-                            title: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                    '${group.members[index].firstName} ${group.members[index].lastName}'),
-                                Text(
-                                  group.members[index].role.name,
-                                  style: const TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 14.0,
-                                  ),
+                          return GestureDetector(
+                              onTapDown: (details) => _storePosition(details),
+                              onLongPress: () {
+                                if (group.members[index].id !=
+                                    group.creator.id) {
+                                  _showPopupMenu(
+                                      context,
+                                      group.members[index].toUser(),
+                                      group.toGroup());
+                                }
+                              },
+
+                              //
+                              // Member
+                              child: ListTile(
+                                // avatar
+                                leading: CircleAvatar(
+                                    child: CachedNetworkImage(
+                                  imageUrl: fileRepository.getFullUrl(
+                                      group.members[index].imageUrl),
+                                  fit: BoxFit.fill,
+                                  errorWidget:
+                                      (context, exception, stackTrace) {
+                                    return const Icon(Icons.person);
+                                  },
+                                  placeholder: (context, url) {
+                                    return const Icon(Icons.person);
+                                  },
+                                )),
+
+                                // name
+                                title: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        '${group.members[index].firstName} ${group.members[index].lastName}'),
+                                    Text(
+                                      group.members[index].role.name,
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14.0,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                            subtitle: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const Icon(
-                                  Icons.person,
-                                  color: Colors.grey,
-                                  size: 14,
+                                subtitle: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    const Icon(
+                                      Icons.person,
+                                      color: Colors.grey,
+                                      size: 14,
+                                    ),
+                                    const SizedBox(width: 7.0),
+                                    Text(group.members[index].username),
+                                  ],
                                 ),
-                                const SizedBox(width: 7.0),
-                                Text(group.members[index].username),
-                              ],
-                            ),
-                          );
+                              ));
                         },
                       ),
                     ],
@@ -471,5 +510,41 @@ class _GroupDetailScreen extends State<GroupDetailPage>
         ),
       ),
     );
+  }
+
+  Future<void> _showPopupMenu(
+      BuildContext context, User member, Group group) async {
+    final user = context.read<UserRepository>().getLoggedInUserSync();
+
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+
+    await showMenu(
+      context: context,
+      position: RelativeRect.fromRect(
+          _tapPosition & const Size(40, 40), // smaller rect, the touch area
+          Offset.zero & overlay.size // Bigger rect, the entire screen
+          ),
+      items: [
+        PopupMenuItem(
+          onTap: () {},
+          child: const Text("Manage role"),
+        ),
+        // if (user.hasPollDeletePermission(group))
+        PopupMenuItem(
+          onTap: () {
+            context
+                .read<GroupBloc>()
+                .add(GroupRemoveMember(member.id, group.toGroupDto()));
+          },
+          child: const Text("Remove from group"),
+        ),
+      ],
+      elevation: 8.0,
+    );
+  }
+
+  void _storePosition(TapDownDetails details) {
+    _tapPosition = details.globalPosition;
   }
 }
