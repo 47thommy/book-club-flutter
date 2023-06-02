@@ -10,7 +10,7 @@ void main() {
       final file = File('/path/to/file.txt');
       const reason = "test reason";
       final event = UploadFile(file: file, reason: reason);
-      expect(event.toString(), 'Upload file { email: /path/to/file.txt }');
+      expect(event.toString(), 'Upload file { path: /path/to/file.txt }');
     });
 
     test('props returns a list with the file', () {

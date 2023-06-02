@@ -27,5 +27,5 @@ class UploadFile extends FileEvent {
   List<Object?> get props => [file, reason];
 
   @override
-  String toString() => 'Upload file { email: ${file.path} }';
+  String toString() => 'Upload file { path: ${file.path} }';
 }
