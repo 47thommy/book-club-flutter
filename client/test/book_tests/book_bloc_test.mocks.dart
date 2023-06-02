@@ -316,6 +316,62 @@ class MockGroupRepository extends _i1.Mock implements _i8.GroupRepository {
           ),
         )),
       ) as _i6.Future<_i2.Either<_i9.GroupDto>>);
+  @override
+  _i6.Future<_i2.Either<_i9.GroupDto>> addMember(
+    _i9.GroupDto? group,
+    int? userId,
+    String? token,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #addMember,
+          [
+            group,
+            userId,
+            token,
+          ],
+        ),
+        returnValue: _i6.Future<_i2.Either<_i9.GroupDto>>.value(
+            _FakeEither_0<_i9.GroupDto>(
+          this,
+          Invocation.method(
+            #addMember,
+            [
+              group,
+              userId,
+              token,
+            ],
+          ),
+        )),
+      ) as _i6.Future<_i2.Either<_i9.GroupDto>>);
+  @override
+  _i6.Future<_i2.Either<_i9.GroupDto>> removeMember(
+    _i9.GroupDto? group,
+    int? userId,
+    String? token,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #removeMember,
+          [
+            group,
+            userId,
+            token,
+          ],
+        ),
+        returnValue: _i6.Future<_i2.Either<_i9.GroupDto>>.value(
+            _FakeEither_0<_i9.GroupDto>(
+          this,
+          Invocation.method(
+            #removeMember,
+            [
+              group,
+              userId,
+              token,
+            ],
+          ),
+        )),
+      ) as _i6.Future<_i2.Either<_i9.GroupDto>>);
 }
 
 /// A class which mocks [UserRepository].
