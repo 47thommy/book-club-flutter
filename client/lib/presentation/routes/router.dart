@@ -5,6 +5,8 @@ import 'package:client/presentation/app.dart';
 import 'package:client/presentation/pages/books/book_detail.dart';
 import 'package:client/presentation/pages/books/book_list.dart';
 import 'package:client/presentation/pages/common/page_mode.dart';
+import 'package:client/presentation/pages/meeting/create_meeting.dart';
+import 'package:client/presentation/pages/meeting/meeting_list.dart';
 import 'package:client/presentation/pages/profile/profile.dart';
 import 'package:client/presentation/pages/roles_permissions/role_detail.dart';
 import 'package:client/presentation/pages/poll/poll_form.dart';
@@ -111,6 +113,26 @@ final GoRouter router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
             builder: (context, state) {
               final groupId = int.parse(state.pathParameters['gid']!);
               return ReadingListScreen(groupId);
+            }),
+
+        //
+        // Meeting screen
+        GoRoute(
+            name: CreateScheduleForm.routeName,
+            path: '/${CreateScheduleForm.routeName}',
+            builder: (context, state) {
+              // final groupId = int.parse(state.pathParameters['gid']!);
+              return const CreateScheduleForm();
+            }),
+
+        //
+        // Meeting list screen
+        GoRoute(
+            name: ScheduleListPage.routeName,
+            path: '/${ScheduleListPage.routeName}',
+            builder: (context, state) {
+              // final groupId = int.parse(state.pathParameters['gid']!);
+              return const ScheduleListPage();
             }),
       ]),
 ]);
