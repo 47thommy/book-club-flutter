@@ -31,4 +31,11 @@ router.delete(
   roleController.deleteRole
 );
 
+router.post(
+  "/:groupId/assign",
+  loginRequired,
+  createRoleValidator,
+  roleController.assignRole
+);
+
 module.exports = router;

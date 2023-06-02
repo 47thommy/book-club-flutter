@@ -1,8 +1,6 @@
 const { Role, Group, User, Membership } = require("../models/");
 const database = require("../configs/db.config");
 const permissionService = require("./permissions.service");
-const userService = require("./user.service");
-const groupService = require("./group.service");
 
 const { Permissions } = permissionService;
 
@@ -134,9 +132,17 @@ const deleteRole = async (id, actionIssuer) => {
 };
 
 const assignRole = async (roleId, userId, groupId, actionIssuer) => {
+  const userService = require("./user.service");
+  const groupService = require("./group.service");
+
   const user = await userService.getUserById(userId);
-  const group = await groupService.getUserById(groupId);
+  console.log("1");
+  const group = await groupService.getGroupById(groupId);
+  console.log("2");
   const role = await getRoleById(roleId);
+  console.log("3");
+
+  console.log(user, group, role);
 
   if (!role || !user || !group) throw { error: "Not found" };
 
@@ -146,12 +152,15 @@ const assignRole = async (roleId, userId, groupId, actionIssuer) => {
     throw { error: "User is not member of this group" };
 
   await groupService.removeMember(userId, groupId, actionIssuer);
-  await groupService.addMember(userId, roleId, groupId, actionIssuer);
+  return await groupService.addMember(userId, roleId, groupId, actionIssuer);
 };
 
 const revokeRole = async (roleId, userId, groupId, actionIssuer) => {
+  const userService = require("./user.service");
+  const groupService = require("./group.service");
+
   const user = await userService.getUserById(userId);
-  const group = await groupService.getUserById(groupId);
+  const group = await groupService.getGroupById(groupId);
   const role = await getRoleById(roleId);
 
   if (!role || !user || !group) throw { error: "Not found" };
@@ -173,4 +182,5 @@ module.exports = {
   createRole,
   updateRole,
   deleteRole,
+  assignRole,
 };

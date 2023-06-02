@@ -77,9 +77,29 @@ const updateRole = async (req, res) => {
   }
   return res.status(StatusCodes.BAD_REQUEST).json(error);
 };
+
 const deleteRole = async (req, res) => {
   try {
     const role = await roleService.deleteRole(req.params.roleId, req.user);
+    if (role) {
+      return res.status(StatusCodes.OK).json();
+    }
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json(error);
+  }
+  return res.status(StatusCodes.BAD_REQUEST).json(error);
+};
+
+const assignRole = async (req, res) => {
+  try {
+    console.log("...");
+    const role = await roleService.assignRole(
+      req.body.roleId,
+      req.body.userId,
+      req.params.groupId,
+      req.user
+    );
+    console.log(role);
     if (role) {
       return res.status(StatusCodes.OK).json();
     }
@@ -95,4 +115,5 @@ module.exports = {
   getRole,
   updateRole,
   deleteRole,
+  assignRole,
 };

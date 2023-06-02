@@ -58,8 +58,6 @@ const updateMeeting = async (id, description, time, date, location, user) => {
   meeting.date = date;
   meeting.location = location;
 
-  console.log(meeting);
-
   return await database.getRepository(Meeting).save(meeting);
 };
 

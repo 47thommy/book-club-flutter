@@ -81,15 +81,19 @@ const updateMeeting = async (req, res) => {
     return res.status(StatusCodes.NOT_FOUND).json();
   }
 
-  const newMeeting = await meetingService.updateMeeting(
-    req.params.id,
-    req.body.description,
-    req.body.time,
-    req.body.date,
-    req.body.location,
-    req.user
-  );
-  res.status(StatusCodes.OK).json(newMeeting);
+  try {
+    const newMeeting = await meetingService.updateMeeting(
+      req.params.id,
+      req.body.description,
+      req.body.time,
+      req.body.date,
+      req.body.location,
+      req.user
+    );
+    return res.status(StatusCodes.OK).json(newMeeting);
+  } catch (error) {
+    return res.status(StatusCodes.FORBIDDEN).json();
+  }
 };
 
 module.exports = {
