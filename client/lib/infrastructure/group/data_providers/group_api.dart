@@ -56,6 +56,8 @@ class GroupApi {
     if (response.statusCode == HttpStatus.ok) {
       final data = jsonDecode(response.body);
 
+      log(data[0]['meetings'].toString());
+
       return data.map<GroupDto>((json) => GroupDto.fromJson(json)).toList();
     } else if (response.statusCode == HttpStatus.notFound) {
       throw BCHttpException.notFound();

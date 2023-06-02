@@ -75,7 +75,8 @@ class _GroupEditPageState extends State<GroupEditPage> {
         members: [],
         roles: [],
         polls: [],
-        books: []);
+        books: [],
+        meetings: []);
 
     groupBloc.add(GroupUpdate(newGroup));
 

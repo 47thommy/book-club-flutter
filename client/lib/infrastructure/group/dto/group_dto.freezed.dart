@@ -29,6 +29,7 @@ mixin _$GroupDto {
   List<RoleDto> get roles => throw _privateConstructorUsedError;
   List<PollDto> get polls => throw _privateConstructorUsedError;
   List<BookDto> get books => throw _privateConstructorUsedError;
+  List<MeetingDto> get meetings => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -50,7 +51,8 @@ abstract class $GroupDtoCopyWith<$Res> {
       List<UserDto> members,
       List<RoleDto> roles,
       List<PollDto> polls,
-      List<BookDto> books});
+      List<BookDto> books,
+      List<MeetingDto> meetings});
 
   $UserDtoCopyWith<$Res> get creator;
 }
@@ -77,6 +79,7 @@ class _$GroupDtoCopyWithImpl<$Res, $Val extends GroupDto>
     Object? roles = null,
     Object? polls = null,
     Object? books = null,
+    Object? meetings = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -115,6 +118,10 @@ class _$GroupDtoCopyWithImpl<$Res, $Val extends GroupDto>
           ? _value.books
           : books // ignore: cast_nullable_to_non_nullable
               as List<BookDto>,
+      meetings: null == meetings
+          ? _value.meetings
+          : meetings // ignore: cast_nullable_to_non_nullable
+              as List<MeetingDto>,
     ) as $Val);
   }
 
@@ -143,7 +150,8 @@ abstract class _$$_GroupDtoCopyWith<$Res> implements $GroupDtoCopyWith<$Res> {
       List<UserDto> members,
       List<RoleDto> roles,
       List<PollDto> polls,
-      List<BookDto> books});
+      List<BookDto> books,
+      List<MeetingDto> meetings});
 
   @override
   $UserDtoCopyWith<$Res> get creator;
@@ -169,6 +177,7 @@ class __$$_GroupDtoCopyWithImpl<$Res>
     Object? roles = null,
     Object? polls = null,
     Object? books = null,
+    Object? meetings = null,
   }) {
     return _then(_$_GroupDto(
       id: null == id
@@ -207,6 +216,10 @@ class __$$_GroupDtoCopyWithImpl<$Res>
           ? _value._books
           : books // ignore: cast_nullable_to_non_nullable
               as List<BookDto>,
+      meetings: null == meetings
+          ? _value._meetings
+          : meetings // ignore: cast_nullable_to_non_nullable
+              as List<MeetingDto>,
     ));
   }
 }
@@ -223,11 +236,13 @@ class _$_GroupDto extends _GroupDto {
       required final List<UserDto> members,
       required final List<RoleDto> roles,
       required final List<PollDto> polls,
-      required final List<BookDto> books})
+      required final List<BookDto> books,
+      required final List<MeetingDto> meetings})
       : _members = members,
         _roles = roles,
         _polls = polls,
         _books = books,
+        _meetings = meetings,
         super._();
 
   factory _$_GroupDto.fromJson(Map<String, dynamic> json) =>
@@ -275,9 +290,17 @@ class _$_GroupDto extends _GroupDto {
     return EqualUnmodifiableListView(_books);
   }
 
+  final List<MeetingDto> _meetings;
+  @override
+  List<MeetingDto> get meetings {
+    if (_meetings is EqualUnmodifiableListView) return _meetings;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_meetings);
+  }
+
   @override
   String toString() {
-    return 'GroupDto(id: $id, name: $name, description: $description, imageUrl: $imageUrl, creator: $creator, members: $members, roles: $roles, polls: $polls, books: $books)';
+    return 'GroupDto(id: $id, name: $name, description: $description, imageUrl: $imageUrl, creator: $creator, members: $members, roles: $roles, polls: $polls, books: $books, meetings: $meetings)';
   }
 
   @override
@@ -295,7 +318,8 @@ class _$_GroupDto extends _GroupDto {
             const DeepCollectionEquality().equals(other._members, _members) &&
             const DeepCollectionEquality().equals(other._roles, _roles) &&
             const DeepCollectionEquality().equals(other._polls, _polls) &&
-            const DeepCollectionEquality().equals(other._books, _books));
+            const DeepCollectionEquality().equals(other._books, _books) &&
+            const DeepCollectionEquality().equals(other._meetings, _meetings));
   }
 
   @JsonKey(ignore: true)
@@ -310,7 +334,8 @@ class _$_GroupDto extends _GroupDto {
       const DeepCollectionEquality().hash(_members),
       const DeepCollectionEquality().hash(_roles),
       const DeepCollectionEquality().hash(_polls),
-      const DeepCollectionEquality().hash(_books));
+      const DeepCollectionEquality().hash(_books),
+      const DeepCollectionEquality().hash(_meetings));
 
   @JsonKey(ignore: true)
   @override
@@ -336,7 +361,8 @@ abstract class _GroupDto extends GroupDto {
       required final List<UserDto> members,
       required final List<RoleDto> roles,
       required final List<PollDto> polls,
-      required final List<BookDto> books}) = _$_GroupDto;
+      required final List<BookDto> books,
+      required final List<MeetingDto> meetings}) = _$_GroupDto;
   const _GroupDto._() : super._();
 
   factory _GroupDto.fromJson(Map<String, dynamic> json) = _$_GroupDto.fromJson;
@@ -359,6 +385,8 @@ abstract class _GroupDto extends GroupDto {
   List<PollDto> get polls;
   @override
   List<BookDto> get books;
+  @override
+  List<MeetingDto> get meetings;
   @override
   @JsonKey(ignore: true)
   _$$_GroupDtoCopyWith<_$_GroupDto> get copyWith =>

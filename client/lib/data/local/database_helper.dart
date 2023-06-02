@@ -46,23 +46,26 @@ class DatabaseHelper {
         joined INTEGER              
       )''');
 
-    // Reading list cache
-    await db.execute('''
-      CREATE TABLE $readinglistTable (
-        id INTEGER PRIMARY KEY                
-      )''');
-  
     // Meeting cache
     await db.execute('''
       CREATE TABLE $meetingTable (
         id INTEGER PRIMARY KEY,
-        details TEXT
+        description TEXT,
+        time TEXT,
+        location TEXT,
+        date TEXT,
+        groupId INTEGER
       )''');
-      
+
     // Book cache
     await db.execute('''
       CREATE TABLE $bookTable (
-        id INTEGER PRIMARY KEY        
+        id INTEGER PRIMARY KEY,
+        title TEXT,
+        author TEXT,
+        pageCount INTEGER,
+        description TEXT,
+        groupId INTERGER
       )''');
   }
 

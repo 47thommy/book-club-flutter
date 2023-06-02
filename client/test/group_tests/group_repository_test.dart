@@ -46,7 +46,8 @@ void main() {
           members: [],
           roles: [],
           polls: [],
-          books: []);
+          books: [],
+          meetings: []);
 
       when(mockGroupApi.getGroup(groupId, token))
           .thenAnswer((_) async => group);
@@ -75,7 +76,8 @@ void main() {
           members: [],
           roles: [],
           polls: [],
-          books: []);
+          books: [],
+          meetings: []);
 
       when(mockGroupApi.getGroup(groupId, token))
           .thenThrow(TimeoutException('Connection timed out'));

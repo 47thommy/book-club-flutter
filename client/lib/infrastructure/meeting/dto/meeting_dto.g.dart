@@ -11,9 +11,8 @@ _$_MeetingDto _$$_MeetingDtoFromJson(Map<String, dynamic> json) =>
       id: json['id'] as int,
       description: json['description'] as String,
       time: json['time'] as String,
+      date: json['date'] as String,
       location: json['location'] as String,
-      creator: UserDto.fromJson(json['creator'] as Map<String, dynamic>),
-      group: GroupDto.fromJson(json['group'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$_MeetingDtoToJson(_$_MeetingDto instance) =>
@@ -21,7 +20,6 @@ Map<String, dynamic> _$$_MeetingDtoToJson(_$_MeetingDto instance) =>
       'id': instance.id,
       'description': instance.description,
       'time': instance.time,
+      'date': instance.date,
       'location': instance.location,
-      'creator': instance.creator,
-      'group': instance.group,
     };

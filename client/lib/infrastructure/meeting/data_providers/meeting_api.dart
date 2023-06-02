@@ -44,8 +44,10 @@ class MeetingApi {
   }
 
   Future<MeetingDto> createMeeting(
-      {required MeetingDto meeting, required String token}) async {
-    final meetingUri = Uri.parse(baseUrl);
+      {required MeetingDto meeting,
+      required int groupId,
+      required String token}) async {
+    final meetingUri = Uri.parse('$baseUrl/$groupId');
 
     final http.Response response = await _client
         .post(meetingUri,
@@ -67,11 +69,13 @@ class MeetingApi {
   }
 
   Future<MeetingDto> updateMeeting(
-      {required MeetingDto meeting, required String token}) async {
+      {required MeetingDto meeting,
+      required int groupId,
+      required String token}) async {
     final meetingUri = Uri.parse('$baseUrl/${meeting.id}');
 
     final http.Response response = await _client
-        .put(meetingUri,
+        .patch(meetingUri,
             headers: <String, String>{
               "Content-Type": "application/json",
               'token': token
@@ -90,14 +94,18 @@ class MeetingApi {
   }
 
   Future<MeetingDto> deleteMeeting(
-      {required MeetingDto meeting, required String token}) async {
-    final meetingUri = Uri.parse('$baseUrl/${meeting.id}');
-    final http.Response response = await _client.delete(meetingUri,
-        headers: <String, String>{
-          "Content-Type": "application/json",
-          'token': token
-        },
-        body: jsonEncode(meeting.toJson()));
+      {required int meetingId,
+      required int groupId,
+      required String token}) async {
+    final meetingUri = Uri.parse('$baseUrl/$meetingId');
+    final http.Response response = await _client.delete(
+      meetingUri,
+      headers: <String, String>{
+        "Content-Type": "application/json",
+        'token': token
+      },
+    ).timeout(connectionTimeoutLimit);
+
     if (response.statusCode == HttpStatus.ok) {
       final json = jsonDecode(response.body);
       return MeetingDto.fromJson(json);

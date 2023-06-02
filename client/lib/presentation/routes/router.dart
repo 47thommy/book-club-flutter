@@ -119,20 +119,20 @@ final GoRouter router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
         // Meeting screen
         GoRoute(
             name: CreateScheduleForm.routeName,
-            path: '/${CreateScheduleForm.routeName}',
+            path: '/${CreateScheduleForm.routeName}/:gid',
             builder: (context, state) {
-              // final groupId = int.parse(state.pathParameters['gid']!);
-              return const CreateScheduleForm();
+              final groupId = int.parse(state.pathParameters['gid']!);
+              return CreateScheduleForm(groupId);
             }),
 
         //
         // Meeting list screen
         GoRoute(
             name: ScheduleListPage.routeName,
-            path: '/${ScheduleListPage.routeName}',
+            path: '/${ScheduleListPage.routeName}/:gid',
             builder: (context, state) {
-              // final groupId = int.parse(state.pathParameters['gid']!);
-              return const ScheduleListPage();
+              final groupId = int.parse(state.pathParameters['gid']!);
+              return ScheduleListPage(groupId);
             }),
       ]),
 ]);

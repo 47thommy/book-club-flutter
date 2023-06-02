@@ -12,6 +12,8 @@ import 'package:client/presentation/pages/books/book_list.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_settings.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:client/presentation/pages/meeting/create_meeting.dart';
+import 'package:client/presentation/pages/meeting/meeting_list.dart';
 import 'package:client/presentation/pages/poll/poll_form.dart';
 import 'package:client/presentation/pages/poll/polls_list.dart';
 import 'package:client/infrastructure/group/dto/group_dto.dart';
@@ -103,10 +105,10 @@ class _GroupDetailScreen extends State<GroupDetailPage>
         break;
 
       case 'schedule_meeting':
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => CreateScheduleForm()),
-        // );
+        context.pushNamed(CreateScheduleForm.routeName, pathParameters: {
+          'gid': widget.gid.toString(),
+        }).then((value) =>
+            context.read<GroupBloc>().add(LoadGroupDetail(widget.gid)));
         break;
     }
     toggleMenus();
@@ -228,7 +230,10 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                         const PopupMenuItem(
                           value: 'books',
                           child: Row(children: [
-                            Icon(Icons.book),
+                            Icon(
+                              Icons.book,
+                              color: Colors.blue,
+                            ),
                             SizedBox(width: 10),
                             Text('Books'),
                           ]),
@@ -239,9 +244,26 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                         const PopupMenuItem(
                           value: 'polls',
                           child: Row(children: [
-                            Icon(Icons.poll),
+                            Icon(
+                              Icons.poll,
+                              color: Colors.blue,
+                            ),
                             SizedBox(width: 10),
                             Text('Polls'),
+                          ]),
+                        ),
+
+                        //
+                        // polls button
+                        const PopupMenuItem(
+                          value: 'meetings',
+                          child: Row(children: [
+                            Icon(
+                              Icons.schedule,
+                              color: Colors.blue,
+                            ),
+                            SizedBox(width: 10),
+                            Text('Meetings'),
                           ]),
                         ),
 
@@ -272,8 +294,12 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                           break;
 
                         case 'books':
-                          log('...');
                           context.pushNamed(ReadingListScreen.routeName,
+                              pathParameters: {'gid': group.id.toString()});
+                          break;
+
+                        case 'meetings':
+                          context.pushNamed(ScheduleListPage.routeName,
                               pathParameters: {'gid': group.id.toString()});
                           break;
                       }

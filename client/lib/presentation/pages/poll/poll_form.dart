@@ -47,6 +47,7 @@ class _PollCreateScreenState extends State<PollCreateScreen> {
 
   void createPoll(BuildContext context) {
     final String question = questionController.text.trim();
+
     final List<String> options = optionControllers
         .map((controller) => controller.text.trim())
         .where((option) => option.isNotEmpty)
@@ -75,7 +76,7 @@ class _PollCreateScreenState extends State<PollCreateScreen> {
 
         //
         // body
-        child: BlocConsumer<PollBloc, PollState>(listener: ((context, state) {
+        child: BlocConsumer<PollBloc, PollState>(listener: (context, state) {
           // on poll create
           if (state is PollCreated) {
             showSuccess(context, 'Poll created');
@@ -87,7 +88,7 @@ class _PollCreateScreenState extends State<PollCreateScreen> {
           else if (state is PollOperationFailure) {
             showFailure(context, state.error.failure.toString());
           }
-        }),
+        },
 
             //
             // screen

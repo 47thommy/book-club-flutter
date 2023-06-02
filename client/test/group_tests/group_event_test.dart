@@ -32,6 +32,7 @@ void main() {
         roles: [],
         polls: [],
         books: [],
+        meetings: []
       );
 
       expect(

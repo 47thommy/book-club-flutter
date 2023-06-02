@@ -6,6 +6,7 @@ import 'package:client/block_observer.dart';
 import 'package:client/infrastructure/book/book_repository.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
+import 'package:client/infrastructure/meeting/meeting_repository.dart';
 import 'package:client/infrastructure/poll/poll_repository.dart';
 import 'package:client/infrastructure/role/role_repository.dart';
 import 'package:client/presentation/routes/router.dart';
@@ -29,6 +30,7 @@ void main() async {
                 RepositoryProvider(create: (_) => RoleRepository()),
                 RepositoryProvider(create: (_) => PollRepository()),
                 RepositoryProvider(create: (_) => BookRepository()),
+                RepositoryProvider(create: (_) => MeetingRepository()),
               ],
 
                   // Bloc providers

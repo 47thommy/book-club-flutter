@@ -23,9 +23,8 @@ mixin _$MeetingDto {
   int get id => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
   String get time => throw _privateConstructorUsedError;
+  String get date => throw _privateConstructorUsedError;
   String get location => throw _privateConstructorUsedError;
-  UserDto get creator => throw _privateConstructorUsedError;
-  GroupDto get group => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,15 +39,7 @@ abstract class $MeetingDtoCopyWith<$Res> {
       _$MeetingDtoCopyWithImpl<$Res, MeetingDto>;
   @useResult
   $Res call(
-      {int id,
-      String description,
-      String time,
-      String location,
-      UserDto creator,
-      GroupDto group});
-
-  $UserDtoCopyWith<$Res> get creator;
-  $GroupDtoCopyWith<$Res> get group;
+      {int id, String description, String time, String date, String location});
 }
 
 /// @nodoc
@@ -67,9 +58,8 @@ class _$MeetingDtoCopyWithImpl<$Res, $Val extends MeetingDto>
     Object? id = null,
     Object? description = null,
     Object? time = null,
+    Object? date = null,
     Object? location = null,
-    Object? creator = null,
-    Object? group = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -84,35 +74,15 @@ class _$MeetingDtoCopyWithImpl<$Res, $Val extends MeetingDto>
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
               as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
-      creator: null == creator
-          ? _value.creator
-          : creator // ignore: cast_nullable_to_non_nullable
-              as UserDto,
-      group: null == group
-          ? _value.group
-          : group // ignore: cast_nullable_to_non_nullable
-              as GroupDto,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $UserDtoCopyWith<$Res> get creator {
-    return $UserDtoCopyWith<$Res>(_value.creator, (value) {
-      return _then(_value.copyWith(creator: value) as $Val);
-    });
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $GroupDtoCopyWith<$Res> get group {
-    return $GroupDtoCopyWith<$Res>(_value.group, (value) {
-      return _then(_value.copyWith(group: value) as $Val);
-    });
   }
 }
 
@@ -125,17 +95,7 @@ abstract class _$$_MeetingDtoCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int id,
-      String description,
-      String time,
-      String location,
-      UserDto creator,
-      GroupDto group});
-
-  @override
-  $UserDtoCopyWith<$Res> get creator;
-  @override
-  $GroupDtoCopyWith<$Res> get group;
+      {int id, String description, String time, String date, String location});
 }
 
 /// @nodoc
@@ -152,9 +112,8 @@ class __$$_MeetingDtoCopyWithImpl<$Res>
     Object? id = null,
     Object? description = null,
     Object? time = null,
+    Object? date = null,
     Object? location = null,
-    Object? creator = null,
-    Object? group = null,
   }) {
     return _then(_$_MeetingDto(
       id: null == id
@@ -169,18 +128,14 @@ class __$$_MeetingDtoCopyWithImpl<$Res>
           ? _value.time
           : time // ignore: cast_nullable_to_non_nullable
               as String,
+      date: null == date
+          ? _value.date
+          : date // ignore: cast_nullable_to_non_nullable
+              as String,
       location: null == location
           ? _value.location
           : location // ignore: cast_nullable_to_non_nullable
               as String,
-      creator: null == creator
-          ? _value.creator
-          : creator // ignore: cast_nullable_to_non_nullable
-              as UserDto,
-      group: null == group
-          ? _value.group
-          : group // ignore: cast_nullable_to_non_nullable
-              as GroupDto,
     ));
   }
 }
@@ -192,9 +147,8 @@ class _$_MeetingDto extends _MeetingDto {
       {required this.id,
       required this.description,
       required this.time,
-      required this.location,
-      required this.creator,
-      required this.group})
+      required this.date,
+      required this.location})
       : super._();
 
   factory _$_MeetingDto.fromJson(Map<String, dynamic> json) =>
@@ -207,15 +161,13 @@ class _$_MeetingDto extends _MeetingDto {
   @override
   final String time;
   @override
+  final String date;
+  @override
   final String location;
-  @override
-  final UserDto creator;
-  @override
-  final GroupDto group;
 
   @override
   String toString() {
-    return 'MeetingDto(id: $id, description: $description, time: $time, location: $location, creator: $creator, group: $group)';
+    return 'MeetingDto(id: $id, description: $description, time: $time, date: $date, location: $location)';
   }
 
   @override
@@ -227,16 +179,15 @@ class _$_MeetingDto extends _MeetingDto {
             (identical(other.description, description) ||
                 other.description == description) &&
             (identical(other.time, time) || other.time == time) &&
+            (identical(other.date, date) || other.date == date) &&
             (identical(other.location, location) ||
-                other.location == location) &&
-            (identical(other.creator, creator) || other.creator == creator) &&
-            (identical(other.group, group) || other.group == group));
+                other.location == location));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, description, time, location, creator, group);
+      Object.hash(runtimeType, id, description, time, date, location);
 
   @JsonKey(ignore: true)
   @override
@@ -257,9 +208,8 @@ abstract class _MeetingDto extends MeetingDto {
       {required final int id,
       required final String description,
       required final String time,
-      required final String location,
-      required final UserDto creator,
-      required final GroupDto group}) = _$_MeetingDto;
+      required final String date,
+      required final String location}) = _$_MeetingDto;
   const _MeetingDto._() : super._();
 
   factory _MeetingDto.fromJson(Map<String, dynamic> json) =
@@ -272,11 +222,9 @@ abstract class _MeetingDto extends MeetingDto {
   @override
   String get time;
   @override
+  String get date;
+  @override
   String get location;
-  @override
-  UserDto get creator;
-  @override
-  GroupDto get group;
   @override
   @JsonKey(ignore: true)
   _$$_MeetingDtoCopyWith<_$_MeetingDto> get copyWith =>

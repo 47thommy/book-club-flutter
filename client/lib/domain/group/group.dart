@@ -1,4 +1,5 @@
 import 'package:client/domain/book/book.dart';
+import 'package:client/domain/meeting/meeting.dart';
 import 'package:client/domain/poll/poll.dart';
 import 'package:client/domain/role/role.dart';
 import 'package:client/domain/user/user.dart';
@@ -14,6 +15,19 @@ class Group extends Equatable {
   final List<Role> roles;
   final List<Poll> polls;
   final List<Book> books;
+  final List<Meeting> meetings;
+
+  static const empty = Group(
+      id: -1,
+      name: '',
+      description: '',
+      imageUrl: '',
+      books: [],
+      creator: User.empty,
+      members: [],
+      polls: [],
+      roles: [],
+      meetings: []);
 
   const Group({
     required this.id,
@@ -25,6 +39,7 @@ class Group extends Equatable {
     required this.roles,
     required this.polls,
     required this.books,
+    required this.meetings,
   });
 
   @override

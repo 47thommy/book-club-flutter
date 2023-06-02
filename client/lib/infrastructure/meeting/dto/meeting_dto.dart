@@ -9,13 +9,14 @@ part 'meeting_dto.g.dart';
 class MeetingDto with _$MeetingDto {
   const MeetingDto._();
 
-  const factory MeetingDto(
-      {required int id,
-      required String description,
-      required String time,
-      required String location,
-      required UserDto creator,
-      required GroupDto group}) = _MeetingDto;
+  const factory MeetingDto({
+    required int id,
+    required String description,
+    required String time,
+    required String date,
+    required String location,
+  }) = _MeetingDto;
 
-  factory MeetingDto.fromJson(Map<String, dynamic> json) => _$MeetingDtoFromJson(json);
+  factory MeetingDto.fromJson(Map<String, dynamic> json) =>
+      _$MeetingDtoFromJson(json);
 }

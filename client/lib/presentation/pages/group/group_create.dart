@@ -60,7 +60,8 @@ class _GroupCreatePageState extends State<GroupCreatePage> {
         members: [],
         roles: [],
         polls: [],
-        books: []);
+        books: [],
+        meetings: []);
 
     groupBloc.add(GroupCreate(newGroup));
 
