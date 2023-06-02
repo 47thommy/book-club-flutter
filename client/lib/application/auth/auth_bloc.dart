@@ -21,6 +21,7 @@ class AuthenticationBloc
 
         if (user.isEmpty) {
           emit(Unauthenticated());
+          await userRepository.delete();
         } else {
           emit(Authenticated(user));
         }

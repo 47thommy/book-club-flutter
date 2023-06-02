@@ -18,6 +18,7 @@ import 'application/auth/auth_bloc.dart';
 import 'application/auth/auth_event.dart';
 
 void main() async {
+  
   BlocOverrides.runZoned(
       () => runApp(
 

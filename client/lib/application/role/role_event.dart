@@ -1,4 +1,6 @@
+import 'package:client/domain/role/role.dart';
 import 'package:client/domain/role/role_form.dart';
+import 'package:client/domain/user/user.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class RoleEvent extends Equatable {
@@ -45,4 +47,18 @@ class RoleDelete extends RoleEvent {
 
   @override
   String toString() => 'role delete { role_id: $roleId }';
+}
+
+class RoleAssign extends RoleEvent {
+  final Role role;
+  final User user;
+  final int groupId;
+
+  const RoleAssign(this.role, this.user, this.groupId);
+
+  @override
+  List<Object?> get props => [role, user, groupId];
+
+  @override
+  String toString() => 'role assign { role: ${role.id} user: ${user.id} }';
 }

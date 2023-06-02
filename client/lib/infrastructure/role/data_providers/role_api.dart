@@ -103,4 +103,25 @@ class RoleApi {
 
     throw BCHttpException(jsonDecode(response.body)['error']);
   }
+
+  Future<void> assignRole(
+      {required int roleId,
+      required int userId,
+      required int groupId,
+      required String token}) async {
+    final url = Uri.parse('$baseUrl/$groupId/assign');
+
+    final http.Response response = await _client
+        .post(url,
+            headers: <String, String>{
+              "Content-Type": "application/json",
+              'token': token
+            },
+            body: jsonEncode({'roleId': roleId, 'userId': userId}))
+        .timeout(connectionTimeoutLimit);
+
+    if (response.statusCode == HttpStatus.ok) return;
+
+    throw BCHttpException();
+  }
 }

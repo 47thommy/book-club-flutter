@@ -75,6 +75,9 @@ class GroupApi {
       "token": token
     }).timeout(connectionTimeoutLimit);
 
+    log(response.statusCode.toString());
+    log(response.body);
+
     if (response.statusCode == HttpStatus.ok) {
       final memberships = jsonDecode(response.body)['memberships'];
 

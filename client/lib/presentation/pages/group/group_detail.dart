@@ -1,10 +1,17 @@
 import 'dart:developer';
 import 'package:client/application/group/group.dart';
+import 'package:client/application/role/role_bloc.dart';
+import 'package:client/application/role/role_event.dart';
+import 'package:client/application/role/role_state.dart';
 import 'package:client/domain/group/group.dart';
+import 'package:client/domain/role/role.dart';
 import 'package:client/domain/user/user.dart';
 import 'package:client/infrastructure/book/dto/book_dto.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/file/file_repository.dart';
+import 'package:client/infrastructure/role/dto/role_dto.dart';
+import 'package:client/infrastructure/role/dto/role_mapper.dart';
+import 'package:client/infrastructure/role/role_repository.dart';
 import 'package:client/infrastructure/user/dto/dto.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/books/book_detail.dart';
@@ -19,6 +26,7 @@ import 'package:client/presentation/pages/poll/polls_list.dart';
 import 'package:client/infrastructure/group/dto/group_dto.dart';
 import 'package:client/infrastructure/group/dto/group_mapper.dart';
 import 'package:client/domain/role/user_permission_validator.dart';
+import 'package:client/presentation/pages/roles_permissions/role_assign.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,10 +37,7 @@ class GroupDetailPage extends StatefulWidget {
   static const routeName = 'group-detail';
 
   final int gid;
-  // final title = 'title';
-  // final String picture = 'assets/group_default.png';
-  // final int numberOfMembers = 10;
-  // final List<RoleDto> memberRoles = ['a', 'b'];
+
   final bool isJoined = true;
 
   const GroupDetailPage({super.key, required this.gid});
@@ -47,6 +52,7 @@ class _GroupDetailScreen extends State<GroupDetailPage>
   late AnimationController buttonController;
   late Animation<double> buttonAnimation;
   Offset _tapPosition = Offset.zero;
+  bool _managePermission = false;
 
   @override
   void initState() {
@@ -183,7 +189,34 @@ class _GroupDetailScreen extends State<GroupDetailPage>
             // builder
             builder: (context, state) {
           if (state is GroupDetailLoaded) {
-            return buildBody(context, state.group);
+            return BlocProvider(
+                create: (context) => RoleBloc(
+                    roleRepository: context.read<RoleRepository>(),
+                    userRepository: context.read<UserRepository>()),
+
+                //
+                child: BlocListener<RoleBloc, RoleState>(
+                    listener: (context, roleState) {
+                      // on role assign success
+                      if (roleState is RoleOperationFailure) {
+                        showFailure(context, roleState.error.toString());
+                        setState(() {
+                          _managePermission = false;
+                        });
+                      }
+
+                      // on group join
+                      else if (roleState is RoleAssigned) {
+                        showSuccess(context, 'Role changed');
+                        setState(() {
+                          _managePermission = false;
+                        });
+                        context
+                            .read<GroupBloc>()
+                            .add(LoadGroupDetail(state.group.id));
+                      }
+                    },
+                    child: buildBody(context, state.group)));
           }
 
           return const Scaffold(
@@ -273,9 +306,10 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                           const PopupMenuItem(
                             value: 'leave_group',
                             child: Row(children: [
-                              Icon(Icons.logout),
+                              Icon(Icons.logout, color: Colors.red),
                               SizedBox(width: 10),
-                              Text('Leave Group'),
+                              Text('Leave Group',
+                                  style: TextStyle(color: Colors.red)),
                             ]),
                           ),
                       ];
@@ -376,16 +410,33 @@ class _GroupDetailScreen extends State<GroupDetailPage>
 
                       // members title
                       const SizedBox(height: 16.0),
-                      const Padding(
-                        padding: EdgeInsets.symmetric(vertical: 10),
-                        child: Text(
-                          'Members',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                          ),
-                        ),
-                      ),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                //
+                                const Text(
+                                  'Members',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+
+                                // Edit permission
+                                if (user.id == group.creator.id)
+                                  GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _managePermission =
+                                              !_managePermission;
+                                        });
+                                      },
+                                      child: _managePermission
+                                          ? const Icon(Icons.save)
+                                          : const Icon(Icons.edit)),
+                              ])),
 
                       // members list
                       const SizedBox(height: 8.0),
@@ -431,13 +482,24 @@ class _GroupDetailScreen extends State<GroupDetailPage>
                                   children: [
                                     Text(
                                         '${group.members[index].firstName} ${group.members[index].lastName}'),
-                                    Text(
-                                      group.members[index].role.name,
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 14.0,
+
+                                    //
+                                    if (!_managePermission)
+                                      Text(
+                                        group.members[index].role.name,
+                                        style: const TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 14.0,
+                                        ),
                                       ),
-                                    ),
+                                    if (_managePermission &&
+                                        group.members[index].id !=
+                                            group.creator.id &&
+                                        group.roles.length >= 3)
+                                      DropdownManagePermission(
+                                          group.roles,
+                                          group.members[index].toUser(),
+                                          group.toGroup())
                                   ],
                                 ),
                                 subtitle: Row(
@@ -552,19 +614,26 @@ class _GroupDetailScreen extends State<GroupDetailPage>
           Offset.zero & overlay.size // Bigger rect, the entire screen
           ),
       items: [
-        PopupMenuItem(
-          onTap: () {},
-          child: const Text("Manage role"),
-        ),
-        // if (user.hasPollDeletePermission(group))
-        PopupMenuItem(
-          onTap: () {
-            context
-                .read<GroupBloc>()
-                .add(GroupRemoveMember(member.id, group.toGroupDto()));
-          },
-          child: const Text("Remove from group"),
-        ),
+        //
+
+        //
+        if (user.hasMemberRemovePermission(group) && user.id != member.id)
+          PopupMenuItem(
+            onTap: () {
+              context
+                  .read<GroupBloc>()
+                  .add(GroupRemoveMember(member.id, group.toGroupDto()));
+            },
+            child: const Text("Remove from group"),
+          ),
+        //
+        if (user.id == member.id)
+          PopupMenuItem(
+            onTap: () {
+              context.read<GroupBloc>().add(GroupLeave(group.toGroupDto()));
+            },
+            child: const Text("Leave"),
+          ),
       ],
       elevation: 8.0,
     );
@@ -572,5 +641,61 @@ class _GroupDetailScreen extends State<GroupDetailPage>
 
   void _storePosition(TapDownDetails details) {
     _tapPosition = details.globalPosition;
+  }
+}
+
+class DropdownManagePermission extends StatefulWidget {
+  final List<RoleDto> list;
+  final User user;
+  final Group group;
+
+  const DropdownManagePermission(this.list, this.user, this.group, {super.key});
+
+  @override
+  State<DropdownManagePermission> createState() =>
+      _DropdownManagePermissionState();
+}
+
+class _DropdownManagePermissionState extends State<DropdownManagePermission> {
+  late RoleDto role;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    role = widget.list[0];
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var items = <DropdownMenuItem<RoleDto>>[];
+
+    for (var role in widget.list) {
+      if (role.name != Role.owner) {
+        items.add(DropdownMenuItem<RoleDto>(
+          value: role,
+          child: Text(role.name),
+        ));
+      }
+    }
+
+    if (_loading) return const Center(child: CircularProgressIndicator());
+
+    return DropdownButton<RoleDto>(
+      value: role,
+      elevation: 16,
+      onChanged: (RoleDto? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          role = value!;
+          _loading = true;
+        });
+
+        context
+            .read<RoleBloc>()
+            .add(RoleAssign(value!.toRole(), widget.user, widget.group.id));
+      },
+      items: items,
+    );
   }
 }

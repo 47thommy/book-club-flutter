@@ -1,4 +1,6 @@
+import 'package:client/domain/group/group.dart';
 import 'package:client/domain/role/role.dart';
+import 'package:client/domain/user/user.dart';
 import 'package:client/utils/failure.dart';
 import 'package:equatable/equatable.dart';
 
@@ -37,6 +39,17 @@ class RoleDeleted extends RoleState {
 
   @override
   List<Object?> get props => [roleId];
+}
+
+class RoleAssigned extends RoleState {
+  final user;
+
+  const RoleAssigned(this.user);
+
+  @override
+  List<Object?> get props => [
+        user,
+      ];
 }
 
 class RoleOperationFailure extends RoleState {

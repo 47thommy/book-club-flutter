@@ -73,6 +73,6 @@ class DatabaseHelper {
     var path = join(await getDatabasesPath(), consts.databaseName);
     await _database?.close();
     _database = null;
-    deleteDatabase(path);
+    await deleteDatabase(path);
   }
 }

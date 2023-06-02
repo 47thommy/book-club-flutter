@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -19,7 +20,9 @@ class PollDto with _$PollDto {
 }
 
 PollDto _customPollDtoFromJson(Map<String, dynamic> json) {
-  json['options'] = jsonDecode(json['options']);
+  try {
+    json['options'] = jsonDecode(json['options']);
+  } catch (_) {}
 
   return _$PollDtoFromJson(json);
 }

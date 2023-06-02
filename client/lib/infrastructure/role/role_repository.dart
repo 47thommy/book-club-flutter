@@ -55,4 +55,23 @@ class RoleRepository implements IRoleRepository {
       return Either(failure: Failure(error.toString()));
     }
   }
+
+  @override
+  Future<Either<bool>> assignRole(
+      {required int roleId,
+      required int userId,
+      required int groupId,
+      required String token}) async {
+    try {
+      await _roleApi.assignRole(
+          userId: userId, roleId: roleId, groupId: groupId, token: token);
+      return Either(value: true);
+    } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error.message));
+    } catch (error) {
+      return Either(failure: Failure(error.toString()));
+    }
+  }
 }

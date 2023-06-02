@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:client/application/group/group.dart';
 import 'package:client/application/meeting/meeting_bloc.dart';
 import 'package:client/application/meeting/meeting_event.dart';
@@ -10,6 +12,7 @@ import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class Schedule {
   final String description;
@@ -40,20 +43,22 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   final _timeController = TextEditingController();
   final _dateController = TextEditingController();
   final _locationController = TextEditingController();
-  late TimeOfDay selectedTime;
+  late TimeOfDay _selectedTime;
   late DateTime _selectedDate;
   late int editedIndex;
 
   @override
   void initState() {
     super.initState();
-    selectedTime = TimeOfDay.now();
+    _selectedTime = TimeOfDay.now();
+    _selectedDate = DateTime.now();
   }
 
   @override
   void dispose() {
     _descriptionController.dispose();
     _timeController.dispose();
+    _dateController.dispose();
     _locationController.dispose();
     super.dispose();
   }
@@ -63,12 +68,15 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
       _isEditing = true;
       editedIndex = index;
       _descriptionController.text = meeting.description;
-      selectedTime = _tryParse(meeting.time);
+      _selectedTime = _tryParseTime(meeting.time);
+      _selectedDate = _tryParseDate(meeting.date);
       _locationController.text = meeting.location;
+      _dateController.text = _selectedDate.toString();
+      _timeController.text = _selectedTime.format(context);
     });
   }
 
-  TimeOfDay _tryParse(String time) {
+  TimeOfDay _tryParseTime(String time) {
     try {
       final hour = int.tryParse(time.split(":")[0]);
       final minute = int.tryParse(time.split(":")[1].split(" ")[0]);
@@ -78,13 +86,22 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
     }
   }
 
+  DateTime _tryParseDate(String date) {
+    try {
+      final dateTime = DateFormat('yyyy:MM:dd').parse(date);
+      return dateTime;
+    } catch (_) {
+      return DateTime.now();
+    }
+  }
+
   void saveEditedSchedule(BuildContext context, Meeting meeting) {
     final updatedMeeting = Meeting(
         id: meeting.id,
         description: _descriptionController.text,
-        date: _dateController.text,
+        date: _tryParseDate(_dateController.text).toString(),
         location: _locationController.text,
-        time: _tryParse(_timeController.text).format(context));
+        time: _tryParseTime(_timeController.text).format(context));
 
     context
         .read<MeetingBloc>()
@@ -100,28 +117,29 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
   Future<void> pickTime() async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialTime: selectedTime,
+      initialTime: _selectedTime,
     );
+
     if (pickedTime != null) {
       setState(() {
-        selectedTime = pickedTime;
-        _timeController.text = selectedTime.format(context);
+        _selectedTime = pickedTime;
+        _timeController.text = _selectedTime.format(context);
       });
     }
   }
 
   Future<void> _selectDate() async {
-    final selectedTime = await showDatePicker(
+    final pickDate = await showDatePicker(
       context: context,
-      firstDate: DateTime.now(),
-      initialDate: DateTime.now(),
+      firstDate: _selectedDate,
+      initialDate: _selectedDate,
       lastDate: DateTime(2100),
     );
 
-    if (selectedTime != null) {
+    if (pickDate != null) {
       setState(() {
-        _selectedDate = selectedTime;
-        _dateController.text = selectedTime.toLocal().toString().split(' ')[0];
+        _selectedDate = pickDate;
+        _dateController.text = pickDate.toLocal().toString().split(' ')[0];
       });
     }
   }
@@ -144,6 +162,7 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
             //
             child: BlocConsumer<MeetingBloc, MeetingState>(
                 listener: (context, state) {
+                  log(state.toString());
                   // on meeting update
                   if (state is MeetingUpdated) {
                     showSuccess(context, 'Meeting updated');
@@ -158,6 +177,9 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                   // on meeting delete
                   else if (state is MeetingDeleted) {
                     showSuccess(context, 'Meeting deleted');
+                    setState(() {
+                      _isEditing = false;
+                    });
                     context
                         .read<GroupBloc>()
                         .add(LoadGroupDetail(widget.groupId));
@@ -167,6 +189,10 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                   else if (state is MeetingOperationFailure) {
                     showFailure(context, state.error.failure.toString());
                   }
+
+                  setState(() {
+                    _isEditing = false;
+                  });
                 },
 
                 // body
@@ -346,11 +372,15 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                                                 if (_isEditing &&
                                                     editedIndex == index)
                                                   IconButton(
-                                                    onPressed: () =>
-                                                        saveEditedSchedule(
-                                                            context,
-                                                            schedule
-                                                                .toMeeting()),
+                                                    onPressed: () {
+                                                      log('...........');
+                                                      setState(() {
+                                                        _isEditing = false;
+                                                      });
+                                                      saveEditedSchedule(
+                                                          context,
+                                                          schedule.toMeeting());
+                                                    },
                                                     icon:
                                                         const Icon(Icons.check),
                                                   ),

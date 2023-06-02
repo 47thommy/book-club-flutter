@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:client/data/local/database_helper.dart';
 import 'package:client/infrastructure/meeting/dto/meeting_dto.dart';
@@ -14,7 +15,7 @@ class MeetingCacheClient {
     final db = await _storage.database;
     final result = await db
         .query(DatabaseHelper.meetingTable, where: 'id = ?', whereArgs: [id]);
-
+    log('meeting not found get............');
     if (result.isEmpty) return Either(failure: const Failure('Not Found'));
 
     final meetingJson = jsonDecode(result[0]['detail'] as String);

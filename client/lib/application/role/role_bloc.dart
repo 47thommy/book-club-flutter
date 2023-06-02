@@ -59,5 +59,24 @@ class RoleBloc extends Bloc<RoleEvent, RoleState> {
         emit(RoleDeleted(event.roleId));
       }
     });
+
+    //
+    // Role assign
+    on<RoleAssign>((event, emit) async {
+      final token = await userRepository.getToken();
+
+      final result = await roleRepository.assignRole(
+          roleId: event.role.id,
+          groupId: event.groupId,
+          userId: event.user.id,
+          token: token);
+          
+
+      if (result.hasError) {
+        emit(RoleOperationFailure(result.failure!));
+      } else {
+        emit(RoleAssigned(event.user));
+      }
+    });
   }
 }

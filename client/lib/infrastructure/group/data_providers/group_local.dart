@@ -17,6 +17,7 @@ class GroupCacheClient {
     final result = await db
         .query(DatabaseHelper.groupTable, where: 'id = ?', whereArgs: [id]);
 
+    log('group not found get............');
     if (result.isEmpty) return Either(failure: const Failure('Not found'));
 
     final groupJson = jsonDecode(result[0]['detail'] as String);
@@ -30,11 +31,23 @@ class GroupCacheClient {
 
     if (result.isEmpty) return Either(failure: const Failure('Not found'));
 
-    return Either(
-        value: result.map((row) {
+    final value = result.map((row) {
       final groupJson = jsonDecode(row['detail'] as String);
+
+      for (var row in groupJson.keys) {
+        log(row.toString());
+
+        if (row.toString() == 'polls') {
+          log(groupJson['polls'].toString());
+        }
+      }
+
       return GroupDto.fromJson(groupJson);
-    }).toList());
+    }).toList();
+
+    log('.....');
+
+    return Either(value: value);
   }
 
   Future<Either<List<GroupDto>>> getJoined() async {
@@ -44,11 +57,14 @@ class GroupCacheClient {
 
     if (result.isEmpty) return Either(failure: const Failure('Not found'));
 
-    return Either(
-        value: result.map((row) {
+    final value = result.map((row) {
       final groupJson = jsonDecode(row['detail'] as String);
       return GroupDto.fromJson(groupJson);
-    }).toList());
+    }).toList();
+
+    log(value.toString());
+
+    return Either(value: value);
   }
 
   Future<void> save(GroupDto group, [bool joined = false]) async {

@@ -134,6 +134,8 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
       final result =
           await groupRepository.removeMember(event.group, event.userId, token);
 
+      log(result.toString());
+
       if (result.hasError) {
         emit(GroupOperationFailure(result.failure!));
       } else {
