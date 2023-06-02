@@ -1,6 +1,8 @@
 const { Role, Group, User, Membership } = require("../models/");
 const database = require("../configs/db.config");
 const permissionService = require("./permissions.service");
+const userService = require("./user.service");
+const groupService = require("./group.service");
 
 const { Permissions } = permissionService;
 
@@ -129,6 +131,38 @@ const deleteRole = async (id, actionIssuer) => {
   await database.getRepository(Role).remove(role);
 
   return role;
+};
+
+const assignRole = async (roleId, userId, groupId, actionIssuer) => {
+  const user = await userService.getUserById(userId);
+  const group = await groupService.getUserById(groupId);
+  const role = await getRoleById(roleId);
+
+  if (!role || !user || !group) throw { error: "Not found" };
+
+  if (group.creator.id != actionIssuer.id) throw { error: "Unauthorized" };
+
+  if (!(await groupService.isMember(groupId, userId)))
+    throw { error: "User is not member of this group" };
+
+  await groupService.removeMember(userId, groupId, actionIssuer);
+  await groupService.addMember(userId, roleId, groupId, actionIssuer);
+};
+
+const revokeRole = async (roleId, userId, groupId, actionIssuer) => {
+  const user = await userService.getUserById(userId);
+  const group = await groupService.getUserById(groupId);
+  const role = await getRoleById(roleId);
+
+  if (!role || !user || !group) throw { error: "Not found" };
+
+  if (group.creator.id != actionIssuer.id) throw { error: "Unauthorized" };
+
+  if (!(await groupService.isMember(groupId, userId)))
+    throw { error: "User is not member of this group" };
+
+  await groupService.removeMember(userId, groupId, actionIssuer);
+  await groupService.addMember(userId, MEMBER, groupId, actionIssuer);
 };
 
 module.exports = {

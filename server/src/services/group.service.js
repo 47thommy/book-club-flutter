@@ -192,10 +192,13 @@ const removeMember = async (userId, groupId, actionIssuer) => {
   ]);
 
   if (group.creator.id == userId) {
-    throw Error("Unauthorized");
+    throw { error: "Unauthorized" };
   }
+
+  console.log("....");
   for (let membership of group.members) {
     if (membership.user.id == userId) {
+      console.log(membership);
       await database.getRepository(Membership).remove(membership);
     }
   }

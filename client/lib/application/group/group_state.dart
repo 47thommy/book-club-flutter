@@ -67,6 +67,24 @@ class GroupsFetchSuccess extends GroupState {
   List<Object?> get props => [trendingGroups, joinedGroups];
 }
 
+class GroupMemberRemoved extends GroupState {
+  final GroupDto group;
+
+  const GroupMemberRemoved(this.group);
+
+  @override
+  List<Object?> get props => [group];
+}
+
+class GroupMemeberAdded extends GroupState {
+  final GroupDto group;
+
+  const GroupMemeberAdded(this.group);
+
+  @override
+  List<Object?> get props => [group];
+}
+
 class GroupOperationFailure extends GroupState {
   final Failure error;
 

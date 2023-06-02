@@ -152,4 +152,36 @@ class GroupRepository {
       return Either(failure: Failure(error.toString()));
     }
   }
+
+  Future<Either<GroupDto>> addMember(
+      GroupDto group, int userId, String token) async {
+    try {
+      await _groupApi.addMember(group, userId, token);
+      return Either(value: group);
+    } on TimeoutException catch (_) {
+      return Either(failure: const Failure("Connection timed out"));
+    } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error));
+    } catch (error) {
+      return Either(failure: Failure(error.toString()));
+    }
+  }
+
+  Future<Either<GroupDto>> removeMember(
+      GroupDto group, int userId, String token) async {
+    try {
+      await _groupApi.removeMember(group, userId, token);
+      return Either(value: group);
+    } on TimeoutException catch (_) {
+      return Either(failure: const Failure("Connection timed out"));
+    } on BCHttpException catch (error) {
+      return Either(failure: Failure(error.message));
+    } on AuthenticationFailure catch (error) {
+      return Either(failure: Failure(error));
+    } catch (error) {
+      return Either(failure: Failure(error.toString()));
+    }
+  }
 }

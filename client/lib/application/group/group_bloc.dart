@@ -108,5 +108,39 @@ class GroupBloc extends Bloc<GroupEvent, GroupState> {
 
       add(LoadGroupDetail(event.group.id));
     });
+
+    //
+    // Add member
+    on<GroupAddMember>((event, emit) async {
+      final token = await userRepository.getToken();
+
+      final result =
+          await groupRepository.addMember(event.group, event.userId, token);
+
+      if (result.hasError) {
+        emit(GroupOperationFailure(result.failure!));
+      } else {
+        emit(GroupMemeberAdded(result.value!));
+      }
+
+      add(LoadGroupDetail(event.group.id));
+    });
+
+    //
+    // Remove member
+    on<GroupRemoveMember>((event, emit) async {
+      final token = await userRepository.getToken();
+
+      final result =
+          await groupRepository.removeMember(event.group, event.userId, token);
+
+      if (result.hasError) {
+        emit(GroupOperationFailure(result.failure!));
+      } else {
+        emit(GroupMemberRemoved(result.value!));
+      }
+
+      add(LoadGroupDetail(event.group.id));
+    });
   }
 }
