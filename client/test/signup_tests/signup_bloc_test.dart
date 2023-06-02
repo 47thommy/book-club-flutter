@@ -1,6 +1,5 @@
 import 'package:client/application/auth/auth.dart';
 import 'package:client/application/login/login.dart';
-import 'package:client/application/login/login_bloc.dart';
 import 'package:client/infrastructure/auth/dto/login_form_dto.dart';
 import 'package:client/infrastructure/auth/dto/registration_form_dto.dart';
 

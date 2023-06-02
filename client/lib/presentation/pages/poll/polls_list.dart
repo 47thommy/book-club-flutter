@@ -96,6 +96,8 @@ class _PollsListState extends State<PollsList> {
   }
 
   Widget _buildPoll(BuildContext context, PollDto poll, GroupDto group) {
+    final user = context.read<UserRepository>().getLoggedInUserSync();
+
     return GestureDetector(
         onTapDown: (details) => _storePosition(details),
         onLongPress: () {

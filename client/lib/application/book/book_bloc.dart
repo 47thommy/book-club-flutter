@@ -24,8 +24,6 @@ class BookBloc extends Bloc<BookEvent, BookState> {
       final result =
           await bookRepository.createBook(event.book, event.groupId, token);
 
-      // log(result.failure.toString());
-
       if (result.hasError) {
         emit(BookOperationFailure(result.failure!));
       } else {

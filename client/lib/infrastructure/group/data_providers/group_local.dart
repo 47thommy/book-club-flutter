@@ -17,7 +17,6 @@ class GroupCacheClient {
     final result = await db
         .query(DatabaseHelper.groupTable, where: 'id = ?', whereArgs: [id]);
 
-    log('group not found get............');
     if (result.isEmpty) return Either(failure: const Failure('Not found'));
 
     final groupJson = jsonDecode(result[0]['detail'] as String);
@@ -34,18 +33,8 @@ class GroupCacheClient {
     final value = result.map((row) {
       final groupJson = jsonDecode(row['detail'] as String);
 
-      for (var row in groupJson.keys) {
-        log(row.toString());
-
-        if (row.toString() == 'polls') {
-          log(groupJson['polls'].toString());
-        }
-      }
-
       return GroupDto.fromJson(groupJson);
     }).toList();
-
-    log('.....');
 
     return Either(value: value);
   }
@@ -61,8 +50,6 @@ class GroupCacheClient {
       final groupJson = jsonDecode(row['detail'] as String);
       return GroupDto.fromJson(groupJson);
     }).toList();
-
-    log(value.toString());
 
     return Either(value: value);
   }

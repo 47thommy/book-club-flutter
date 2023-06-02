@@ -54,7 +54,6 @@ class GroupRepository {
 
     // cache
     on TimeoutException catch (_) {
-      log((await _cache.getAll()).toString());
       return await _cache.getAll();
     }
 

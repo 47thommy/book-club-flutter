@@ -7,6 +7,7 @@ import 'package:client/domain/book/book.dart';
 
 import 'package:client/domain/group/group.dart';
 import 'package:client/infrastructure/book/book_repository.dart';
+import 'package:client/infrastructure/book/dto/book_dto.dart';
 import 'package:client/infrastructure/book/dto/book_mapper.dart';
 import 'package:client/infrastructure/group/group_repository.dart';
 import 'package:client/infrastructure/user/user_repository.dart';
@@ -69,13 +70,12 @@ class _ReadingListState extends State<MyReadingListScreen> {
                         builder: (context, state) {
                       if (state is GroupsFetchSuccess) {
                         final groups = state.joinedGroups;
-                        final books = [];
+                        final books = <BookDto>[];
 
                         final bookToGroupMap = {};
 
                         for (var group in groups) {
                           for (var book in group.books) {
-                            log(book.toString());
                             books.add(book);
                             bookToGroupMap[book] = group;
                           }

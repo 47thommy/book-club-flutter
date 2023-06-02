@@ -31,7 +31,6 @@ import 'package:client/presentation/pages/roles_permissions/role_assign.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class GroupDetailPage extends StatefulWidget {
   static const routeName = 'group-detail';

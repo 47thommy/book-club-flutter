@@ -61,12 +61,12 @@ class AuthApi {
 
     url = url.replace(
         queryParameters: {"id": id, "email": email, "username": username});
-    log(token + ' <<<');
+
     final response = await _client.get(url, headers: {
       "Content-Type": "application/json",
       "token": token
     }).timeout(connectionTimeoutLimit);
-    log(token + ' <<<');
+
     if (response.statusCode == HttpStatus.ok) {
       final user = UserDto.fromJson(jsonDecode(response.body));
 

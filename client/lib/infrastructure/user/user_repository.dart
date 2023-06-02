@@ -138,6 +138,5 @@ class UserRepository {
   Future<void> delete() async {
     await _cache.deleteAll();
     await DatabaseHelper().dropDatabase();
-    log('.............');
   }
 }

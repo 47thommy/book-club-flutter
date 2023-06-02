@@ -28,24 +28,26 @@ class GroupDto extends Equatable {
     required this.members,
     required this.roles,
     required this.polls,
+    required this.books,
   });
 
   factory GroupDto.fromJson(Map<String, dynamic> json) {
     return GroupDto(
-        id: json['id'],
-        name: json['name'],
-        description: json['description'],
-        imageUrl: json['imageUrl'],
-        creator: UserDto.fromJson(json['creator'] as Map<String, dynamic>),
-        members: (json['members'] as List<dynamic>)
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      imageUrl: json['imageUrl'],
+      creator: UserDto.fromJson(json['creator'] as Map<String, dynamic>),
+      members: (json['members'] as List<dynamic>)
           .map((e) => UserDto.fromJson(e as Map<String, dynamic>))
           .toList(),
-        roles:  (json['roles'] as List<dynamic>)
+      roles: (json['roles'] as List<dynamic>)
           .map((e) => RoleDto.fromJson(e as Map<String, dynamic>))
           .toList(),
-        polls:  (json['polls'] as List<dynamic>)
+      polls: (json['polls'] as List<dynamic>)
           .map((e) => PollDto.fromJson(e as Map<String, dynamic>))
-          .toList(),);
+          .toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {

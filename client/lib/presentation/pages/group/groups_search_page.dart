@@ -5,72 +5,24 @@ import 'package:client/application/group/group.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_create.dart';
-import 'package:client/presentation/pages/group/groups_search_page.dart';
 import 'package:client/presentation/pages/group/widgets/joined_groups_card.dart';
 import 'package:client/presentation/pages/group/widgets/trending_groups_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class GroupsPage extends StatefulWidget {
-  const GroupsPage({super.key});
+class SearchPage extends StatefulWidget {
+  static const routeName = 'search';
+  
+  const SearchPage({super.key});
 
   @override
-  State<GroupsPage> createState() => _GroupsPageState();
+  State<SearchPage> createState() => _SearchPageState();
 }
 
-class _GroupsPageState extends State<GroupsPage> {
+class _SearchPageState extends State<SearchPage> {
   int _selectedIndex = 0;
   final icons = [const Icon(Icons.add), const Icon(Icons.chevron_left)];
-
-  Widget trendingClubsBuilder(context) {
-    return BlocConsumer<GroupBloc, GroupState>(listener: (context, state) {
-      if (state is GroupCreated) {
-        context.read<GroupBloc>().add(LoadGroups());
-      }
-
-      //
-      else if (state is GroupOperationFailure) {
-        if (state.error.failure is AuthenticationFailure) {
-          context.read<AuthenticationBloc>().add(AppStarted());
-          context.go('/');
-        }
-      }
-    }, builder: (context, state) {
-      // Show loading progress while loading groups
-      if (state is GroupsLoading) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      }
-
-      // Show trending groups on success
-      else if (state is GroupsFetchSuccess) {
-        if (state.trendingGroups.isEmpty) {
-          return const Center(
-            child: Text('No groups'),
-          );
-        }
-
-        return ListView(
-          shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          children: state.trendingGroups
-              .map((group) => TrendingClubCard(group: group))
-              .toList(),
-        );
-      }
-
-      // Show error incase of failure
-      // else if (state is GroupOperationFailure) {
-      //   return ErrorWidget(state.error.toString());
-      // }
-
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    });
-  }
 
   Widget joinedClubsBuilder(context) {
     return BlocBuilder<GroupBloc, GroupState>(builder: (context, state) {
@@ -83,10 +35,10 @@ class _GroupsPageState extends State<GroupsPage> {
 
       // Show joined groups on success
       else if (state is GroupsFetchSuccess) {
-        if (state.joinedGroups.isEmpty) {
+        if (state.trendingGroups.isEmpty) {
           return const Padding(
             padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-            child: Center(child: Text('You haven\'t joined any groups yet.')),
+            child: Center(child: Text('No groups')),
           );
         }
 
@@ -133,9 +85,7 @@ class _GroupsPageState extends State<GroupsPage> {
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: () {
-                    context.pushNamed(SearchPage.routeName);
-                  },
+                  onPressed: () {},
                   child: const Text('Search'),
                 ),
               ],
@@ -150,7 +100,6 @@ class _GroupsPageState extends State<GroupsPage> {
                 ),
               ),
             ),
-            SizedBox(height: 200, child: trendingClubsBuilder(context)),
             const Padding(
               padding:
                   EdgeInsets.only(top: 6.0, right: 16, left: 16, bottom: 12.0),

@@ -162,7 +162,6 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
             //
             child: BlocConsumer<MeetingBloc, MeetingState>(
                 listener: (context, state) {
-                  log(state.toString());
                   // on meeting update
                   if (state is MeetingUpdated) {
                     showSuccess(context, 'Meeting updated');
@@ -373,7 +372,6 @@ class _ScheduleListPageState extends State<ScheduleListPage> {
                                                     editedIndex == index)
                                                   IconButton(
                                                     onPressed: () {
-                                                      log('...........');
                                                       setState(() {
                                                         _isEditing = false;
                                                       });

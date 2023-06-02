@@ -9,6 +9,7 @@ import 'package:client/presentation/pages/books/book_detail.dart';
 import 'package:client/presentation/pages/books/book_list.dart';
 import 'package:client/presentation/pages/books/user_books.dart';
 import 'package:client/presentation/pages/common/page_mode.dart';
+import 'package:client/presentation/pages/group/groups_search_page.dart';
 import 'package:client/presentation/pages/meeting/create_meeting.dart';
 import 'package:client/presentation/pages/meeting/meeting_list.dart';
 import 'package:client/presentation/pages/meeting/user_meetings.dart';
@@ -44,6 +45,13 @@ final GoRouter router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
             name: GroupsScreen.routeName,
             path: '/${GroupsScreen.routeName}',
             builder: (context, state) => const GroupsScreen()),
+
+        //
+        // Groups search screen
+        GoRoute(
+            name: SearchPage.routeName,
+            path: '/${SearchPage.routeName}',
+            builder: (context, state) => const SearchPage()),
 
         //
         // Group detail screen

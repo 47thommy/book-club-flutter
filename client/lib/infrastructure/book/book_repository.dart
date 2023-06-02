@@ -20,7 +20,7 @@ class BookRepository implements IBookRepository {
     try {
       final newBook =
           await _bookApi.createBook(book.toBookDto(), groupId, token);
-      log(newBook.toString());
+
       return Either(value: newBook.toBook());
     } on BCHttpException catch (error) {
       return Either(failure: Failure(error.message));

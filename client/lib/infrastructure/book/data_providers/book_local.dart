@@ -15,7 +15,7 @@ class BookCacheClient {
     final db = await _storage.database;
     final result = await db
         .query(DatabaseHelper.bookTable, where: 'id = ?', whereArgs: [id]);
-    log('...............book');
+
     if (result.isEmpty) return Either(failure: const Failure('Not Found'));
 
     final bookJson = jsonDecode(result[0]['detail'] as String);
