@@ -3,17 +3,19 @@ import 'dart:developer';
 import 'package:client/application/auth/auth.dart';
 import 'package:client/application/group/group.dart';
 import 'package:client/infrastructure/auth/exceptions.dart';
+import 'package:client/infrastructure/group/group_repository.dart';
+import 'package:client/infrastructure/user/user_repository.dart';
 import 'package:client/presentation/pages/common/snackbar.dart';
 import 'package:client/presentation/pages/group/group_create.dart';
 import 'package:client/presentation/pages/group/widgets/joined_groups_card.dart';
-import 'package:client/presentation/pages/group/widgets/trending_groups_card.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class SearchPage extends StatefulWidget {
   static const routeName = 'search';
-  
+
   const SearchPage({super.key});
 
   @override
@@ -63,12 +65,11 @@ class _SearchPageState extends State<SearchPage> {
 
   Widget buildBody(context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(8.0),
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 50),
             Row(
               children: [
                 const Expanded(
@@ -91,20 +92,10 @@ class _SearchPageState extends State<SearchPage> {
               ],
             ),
             const Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Text(
-                'Trending Clubs',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const Padding(
               padding:
                   EdgeInsets.only(top: 6.0, right: 16, left: 16, bottom: 12.0),
               child: Text(
-                'Joined Clubs',
+                'Search results',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -125,38 +116,48 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<GroupBloc, GroupState>(
-        listener: (context, state) {
-          if (state is GroupCreated) {
-            showSuccess(context, "Group created.");
+    return BlocProvider(
+        create: (context) => GroupBloc(
+            groupRepository: context.read<GroupRepository>(),
+            userRepository: context.read<UserRepository>())
+          ..add(LoadGroups()),
 
-            setState(() {
-              _selectedIndex = 0;
-            });
-          } else if (state is GroupOperationFailure) {
-            showFailure(context, state.error.toString());
-          }
-        },
-        child: Scaffold(
-          body: IndexedStack(
-            index: _selectedIndex,
-            children: [
-              buildBody(context),
-              const GroupCreatePage(),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              if (_selectedIndex == 1) {
-                BlocProvider.of<GroupBloc>(context).add(LoadGroups());
+        //
+        child: BlocListener<GroupBloc, GroupState>(
+            listener: (context, state) {
+              if (state is GroupCreated) {
+                showSuccess(context, "Group created.");
+
+                setState(() {
+                  _selectedIndex = 0;
+                });
+              } else if (state is GroupOperationFailure) {
+                showFailure(context, state.error.toString());
               }
-              setState(() {
-                _selectedIndex += 1;
-                _selectedIndex %= 2;
-              });
             },
-            child: icons[_selectedIndex],
-          ),
-        ));
+            child: Scaffold(
+              appBar: AppBar(
+                title: const Text('Search'),
+              ),
+              body: IndexedStack(
+                index: _selectedIndex,
+                children: [
+                  buildBody(context),
+                  const GroupCreatePage(),
+                ],
+              ),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  if (_selectedIndex == 1) {
+                    BlocProvider.of<GroupBloc>(context).add(LoadGroups());
+                  }
+                  setState(() {
+                    _selectedIndex += 1;
+                    _selectedIndex %= 2;
+                  });
+                },
+                child: icons[_selectedIndex],
+              ),
+            )));
   }
 }

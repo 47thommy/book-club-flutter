@@ -109,7 +109,7 @@ class _GroupsPageState extends State<GroupsPage> {
     });
   }
 
-  Widget buildBody(context) {
+  Widget buildBody(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: SingleChildScrollView(
