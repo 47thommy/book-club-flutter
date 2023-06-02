@@ -8,7 +8,13 @@ const { Permissions } = permissionService;
 const getAllGroups = async () => {
   const groups = await database.getRepository(Group).find({
     include: { all: true },
-    relations: { members: true, roles: true, creator: true, books: true },
+    relations: {
+      members: true,
+      roles: true,
+      creator: true,
+      books: true,
+      meetings: true,
+    },
   });
 
   for (let group of groups) {
@@ -32,6 +38,7 @@ const getGroupsByName = async (name, exact = false) => {
         roles: true,
         polls: true,
         books: true,
+        meetings: true,
       },
     });
 
@@ -45,6 +52,7 @@ const getGroupsByName = async (name, exact = false) => {
         roles: true,
         polls: true,
         books: true,
+        meetings: true,
       },
     });
 
@@ -67,6 +75,7 @@ const getGroupById = async (id) => {
       roles: true,
       polls: true,
       books: true,
+      meetings: true,
     },
   });
 
@@ -195,10 +204,8 @@ const removeMember = async (userId, groupId, actionIssuer) => {
     throw { error: "Unauthorized" };
   }
 
-  console.log("....");
   for (let membership of group.members) {
     if (membership.user.id == userId) {
-      console.log(membership);
       await database.getRepository(Membership).remove(membership);
     }
   }

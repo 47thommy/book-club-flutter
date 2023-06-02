@@ -31,7 +31,6 @@ const createBook = async (req, res) => {
     );
 
     if (newBook) {
-      console.log(newBook);
       return res.status(StatusCodes.CREATED).json(newBook);
     }
     res.status(StatusCodes.BAD_REQUEST).json();

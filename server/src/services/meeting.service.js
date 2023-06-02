@@ -1,72 +1,86 @@
 const { Meeting } = require("../models/");
 const database = require("../configs/db.config");
-
+const { Permissions } = require("./permissions.service");
+const permissionService = require("./permissions.service");
 
 const getMeetingById = async (id) => {
-    if (!id) return null;
+  if (!id) return null;
 
-    const meeting = await database
-        .getRepository(Meeting)
-        .findOne({ where: { id } });
+  const meeting = await database
+    .getRepository(Meeting)
+    .findOne({ where: { id }, relations: { group: true, creator: true } });
 
-    if (!meeting) return null;
+  if (!meeting) return null;
 
-    return meeting;
+  return meeting;
 };
 
+const createMeeting = async (
+  description,
+  time,
+  location,
+  date,
+  creator,
+  group
+) => {
+  await permissionService.isAuthorized(creator, group, [
+    Permissions.CREATE_MEETING,
+  ]);
 
-const createMeeting = async (description, time, location, creator, group) => {
+  const meeting = database.getRepository(Meeting).create({
+    description: description,
+    time: time,
+    location: location,
+    date: date,
+  });
 
-    const meeting = database.getRepository(Meeting).create({
-        description: description,
-        time: time,
-        location: location,
-    });
-    
-    meeting.creator = creator;
-    meeting.group = group;
+  meeting.creator = creator;
+  meeting.group = group;
 
-    const newMeeting = await database.getRepository(Meeting).save(meeting);
-        
-    return newMeeting;
+  const newMeeting = await database.getRepository(Meeting).save(meeting);
+
+  return newMeeting;
 };
 
+const updateMeeting = async (id, description, time, date, location, user) => {
+  const meeting = await getMeetingById(id);
 
-const updateMeeting = async (id, description, time, location, user) => {
-    const meeting = await getMeetingById(id);
+  if (!meeting) {
+    throw new Error("Meeting Not Found");
+  }
 
-    if (!meeting) {
-        throw new Error("Meeting Not Found");
-    }
+  await permissionService.isAuthorized(user, meeting.group, [
+    Permissions.MODIFY_MEETING,
+  ]);
 
-    meeting.description = description;
-    meeting.time = time;
-    meeting.location = location;
+  meeting.description = description;
+  meeting.time = time;
+  meeting.date = date;
+  meeting.location = location;
 
-    await database.getRepository(Meeting).save(meeting);
+  console.log(meeting);
 
-    return meeting;
-
-}
-
+  return await database.getRepository(Meeting).save(meeting);
+};
 
 const deleteMeeting = async (id, user) => {
-    const meeting = await getMeetingById(id);
+  await permissionService.isAuthorized(creator, group, [
+    Permissions.MODIFY_MEETING,
+  ]);
 
-    if (!meeting) {
-        throw new Error("Meeting Not Found");
-    };
+  const meeting = await getMeetingById(id);
 
-    await database.getRepository(Meeting).remove(meeting);
-    return meeting;
+  if (!meeting) {
+    throw new Error("Meeting Not Found");
+  }
 
+  await database.getRepository(Meeting).remove(meeting);
+  return meeting;
 };
 
-
-
 module.exports = {
-    getMeetingById,
-    createMeeting,
-    updateMeeting,
-    deleteMeeting,
+  getMeetingById,
+  createMeeting,
+  updateMeeting,
+  deleteMeeting,
 };

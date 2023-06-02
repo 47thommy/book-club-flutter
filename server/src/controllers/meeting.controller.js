@@ -13,7 +13,7 @@ const createMeeting = async (req, res) => {
   // }
 
   try {
-    const group = await groupService.getGroupById(req.body.groupId);
+    const group = await groupService.getGroupById(req.params.groupId);
 
     if (!group) {
       return res.status(StatusCodes.NOT_FOUND).json();
@@ -23,6 +23,7 @@ const createMeeting = async (req, res) => {
       req.body.description,
       req.body.time,
       req.body.location,
+      req.body.date,
       req.user,
       group
     );
@@ -84,6 +85,7 @@ const updateMeeting = async (req, res) => {
     req.params.id,
     req.body.description,
     req.body.time,
+    req.body.date,
     req.body.location,
     req.user
   );

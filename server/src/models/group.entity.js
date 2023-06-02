@@ -64,6 +64,13 @@ const Group = new GroupSchema({
       inverseSide: "group",
       cascade: true,
     },
+
+    meetings: {
+      target: "Meeting",
+      type: "one-to-many",
+      inverseSide: "group",
+      cascade: true,
+    },
   },
 });
 
