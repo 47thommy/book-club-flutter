@@ -7,9 +7,11 @@ import 'package:client/infrastructure/user/model/user_dto.dart';
 import 'package:client/presentation/app.dart';
 import 'package:client/presentation/pages/books/book_detail.dart';
 import 'package:client/presentation/pages/books/book_list.dart';
+import 'package:client/presentation/pages/books/user_books.dart';
 import 'package:client/presentation/pages/common/page_mode.dart';
 import 'package:client/presentation/pages/meeting/create_meeting.dart';
 import 'package:client/presentation/pages/meeting/meeting_list.dart';
+import 'package:client/presentation/pages/meeting/user_meetings.dart';
 import 'package:client/presentation/pages/profile/profile.dart';
 import 'package:client/presentation/pages/roles_permissions/role_assign.dart';
 import 'package:client/presentation/pages/roles_permissions/role_detail.dart';
@@ -137,6 +139,24 @@ final GoRouter router = GoRouter(navigatorKey: _rootNavigatorKey, routes: [
             builder: (context, state) {
               final groupId = int.parse(state.pathParameters['gid']!);
               return ScheduleListPage(groupId);
+            }),
+
+        //
+        // My meeting list screen
+        GoRoute(
+            name: MyScheduleListPage.routeName,
+            path: '/${MyScheduleListPage.routeName}',
+            builder: (context, state) {
+              return const MyScheduleListPage();
+            }),
+
+        //
+        // My reading list screen
+        GoRoute(
+            name: MyReadingListScreen.routeName,
+            path: '/${MyReadingListScreen.routeName}',
+            builder: (context, state) {
+              return const MyReadingListScreen();
             }),
 
         //

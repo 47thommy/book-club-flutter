@@ -1,10 +1,12 @@
 import 'package:client/application/auth/auth.dart';
 import 'package:client/application/login/login.dart';
 import 'package:client/application/signup/signup.dart';
+import 'package:client/presentation/pages/books/user_books.dart';
 import 'package:client/presentation/pages/group/group.dart';
 import 'package:client/presentation/pages/login/login_screen.dart';
 import 'package:client/presentation/pages/meeting/create_meeting.dart';
 import 'package:client/presentation/pages/meeting/meeting_list.dart';
+import 'package:client/presentation/pages/meeting/user_meetings.dart';
 import 'package:client/presentation/pages/profile/profile.dart';
 import 'package:client/presentation/pages/signup/signup_screen.dart';
 import 'package:client/presentation/pages/splash/splash_screen.dart';
@@ -87,8 +89,8 @@ class _HomeState extends State<Home> {
           ),
           BottomNavigationBarItem(
             backgroundColor: Colors.black45,
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.book),
+            label: 'Books',
           ),
           BottomNavigationBarItem(
             backgroundColor: Colors.black45,
@@ -106,12 +108,12 @@ class _HomeState extends State<Home> {
     if (location.endsWith(GroupsScreen.routeName)) {
       return 0;
     }
-    if (location.endsWith(ScheduleListPage.routeName)) {
+    if (location.endsWith(MyScheduleListPage.routeName)) {
       return 1;
     }
-    // if (location.endsWith(GroupDetailPage.routeName)) {
-    //   return 2;
-    // }
+    if (location.endsWith(MyReadingListScreen.routeName)) {
+      return 2;
+    }
     if (location.endsWith(ProfilePage.routeName)) {
       return 3;
     }
@@ -123,9 +125,9 @@ class _HomeState extends State<Home> {
       case 0:
         return context.goNamed(GroupsScreen.routeName);
       case 1:
-        return context.goNamed(ScheduleListPage.routeName);
-      // case 2:
-      //   return context.goNamed(GroupDetailPage.routeName);
+        return context.goNamed(MyScheduleListPage.routeName);
+      case 2:
+        return context.goNamed(MyReadingListScreen.routeName);
       case 3:
         return context.goNamed(ProfilePage.routeName);
       // default:
